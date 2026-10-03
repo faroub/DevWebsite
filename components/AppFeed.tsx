@@ -49,25 +49,25 @@ export function AppFeed({ initialApps }: AppFeedProps) {
   return (
     <section className="w-full space-y-6">
       {/* Control Bar: Terminal Search, Tag Pills, and View Switcher */}
-      <div className="rounded-lg border border-git-border bg-git-card p-4 space-y-4 shadow-sm">
+      <div className="rounded-lg border border-slate-200 dark:border-git-border bg-white dark:bg-git-card p-4 space-y-4 shadow-sm transition-colors">
         <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
           {/* Terminal Search Box */}
           <div className="relative flex-1">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-git-muted font-mono text-xs">
-              <Terminal className="h-4 w-4 text-git-accent mr-1.5" />
-              <span>filter:</span>
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 font-mono text-xs text-brand-red">
+              <Terminal className="h-4 w-4 mr-1.5" />
+              <span className="font-bold">filter:</span>
             </div>
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search apps by name, tech stack, or platform..."
-              className="w-full rounded-md border border-git-border bg-git-canvas py-2 pl-20 pr-8 font-mono text-xs text-git-bright placeholder-git-muted focus:border-git-accent focus:outline-none transition-colors"
+              className="w-full rounded-md border border-slate-200 dark:border-git-border bg-slate-50 dark:bg-git-canvas py-2 pl-20 pr-8 font-mono text-xs text-slate-900 dark:text-git-bright placeholder-slate-400 dark:placeholder-git-muted focus:border-brand-red focus:outline-none transition-colors"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-git-muted hover:text-git-bright"
+                className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-slate-400 dark:text-git-muted hover:text-brand-red"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
@@ -76,16 +76,16 @@ export function AppFeed({ initialApps }: AppFeedProps) {
 
           {/* View Mode Switcher */}
           <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0">
-            <span className="font-mono text-xs text-git-muted hidden sm:inline">
+            <span className="font-mono text-xs text-slate-500 dark:text-git-muted hidden sm:inline">
               Mode:
             </span>
-            <div className="flex rounded-md border border-git-border bg-git-canvas p-0.5 font-mono text-xs">
+            <div className="flex rounded-md border border-slate-200 dark:border-git-border bg-slate-50 dark:bg-git-canvas p-0.5 font-mono text-xs">
               <button
                 onClick={() => setViewMode('grid')}
                 className={`flex items-center gap-1.5 rounded px-2.5 py-1 transition-all ${
                   viewMode === 'grid'
-                    ? 'bg-git-subtle text-git-accent border border-git-border shadow-sm'
-                    : 'text-git-muted hover:text-git-bright'
+                    ? 'bg-brand-red text-white font-bold shadow-sm'
+                    : 'text-slate-600 dark:text-git-muted hover:text-slate-900 dark:hover:text-git-bright'
                 }`}
                 title="Grid View"
               >
@@ -96,8 +96,8 @@ export function AppFeed({ initialApps }: AppFeedProps) {
                 onClick={() => setViewMode('rows')}
                 className={`flex items-center gap-1.5 rounded px-2.5 py-1 transition-all ${
                   viewMode === 'rows'
-                    ? 'bg-git-subtle text-git-accent border border-git-border shadow-sm'
-                    : 'text-git-muted hover:text-git-bright'
+                    ? 'bg-brand-red text-white font-bold shadow-sm'
+                    : 'text-slate-600 dark:text-git-muted hover:text-slate-900 dark:hover:text-git-bright'
                 }`}
                 title="List View"
               >
@@ -109,9 +109,9 @@ export function AppFeed({ initialApps }: AppFeedProps) {
         </div>
 
         {/* Tag Pills Feed */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none pt-1 border-t border-git-border/50">
-          <span className="font-mono text-xs text-git-muted flex items-center gap-1 shrink-0">
-            <Filter className="h-3 w-3 text-git-accent" />
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none pt-1 border-t border-slate-100 dark:border-git-border/50">
+          <span className="font-mono text-xs text-brand-green flex items-center gap-1 shrink-0 font-bold">
+            <Filter className="h-3 w-3" />
             <span>Tags:</span>
           </span>
           {availableTags.map((tag) => (
@@ -120,8 +120,8 @@ export function AppFeed({ initialApps }: AppFeedProps) {
               onClick={() => setSelectedTag(tag)}
               className={`shrink-0 font-mono text-xs px-2.5 py-1 rounded-full border transition-all ${
                 selectedTag === tag
-                  ? 'border-git-accent bg-git-accent/10 text-git-accent font-semibold'
-                  : 'border-git-border bg-git-canvas text-git-muted hover:border-git-muted hover:text-git-bright'
+                  ? 'border-brand-red bg-brand-red text-white font-bold shadow-sm'
+                  : 'border-slate-200 dark:border-git-border bg-slate-50 dark:bg-git-canvas text-slate-600 dark:text-git-muted hover:border-brand-red hover:text-brand-red'
               }`}
             >
               {tag === 'All' ? 'All Apps' : tag}
@@ -131,15 +131,15 @@ export function AppFeed({ initialApps }: AppFeedProps) {
       </div>
 
       {/* Results Header Status */}
-      <div className="flex items-center justify-between font-mono text-xs text-git-muted px-1">
+      <div className="flex items-center justify-between font-mono text-xs text-slate-500 dark:text-git-muted px-1">
         <div>
-          Showing <span className="text-git-accent font-bold">{filteredApps.length}</span> of{' '}
-          <span className="text-git-bright">{initialApps.length}</span> repositories
+          Showing <span className="text-brand-red font-bold">{filteredApps.length}</span> of{' '}
+          <span className="text-slate-900 dark:text-git-bright font-semibold">{initialApps.length}</span> repositories
         </div>
         {selectedTag !== 'All' && (
           <button
             onClick={() => setSelectedTag('All')}
-            className="text-git-accent hover:underline flex items-center gap-1"
+            className="text-brand-red hover:underline flex items-center gap-1 font-bold"
           >
             Clear filter &times;
           </button>
@@ -148,16 +148,16 @@ export function AppFeed({ initialApps }: AppFeedProps) {
 
       {/* Apps Render Grid or Rows */}
       {filteredApps.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-git-border bg-git-card p-12 text-center font-mono">
-          <Terminal className="mx-auto h-8 w-8 text-git-muted mb-3" />
-          <p className="text-sm text-git-bright font-bold">No apps matching query</p>
-          <p className="text-xs text-git-muted mt-1">Try adjusting your terminal filter or tag selection.</p>
+        <div className="rounded-lg border border-dashed border-slate-300 dark:border-git-border bg-white dark:bg-git-card p-12 text-center font-mono">
+          <Terminal className="mx-auto h-8 w-8 text-brand-red mb-3" />
+          <p className="text-sm text-slate-900 dark:text-git-bright font-bold">No apps matching query</p>
+          <p className="text-xs text-slate-500 dark:text-git-muted mt-1">Try adjusting your terminal filter or tag selection.</p>
           <button
             onClick={() => {
               setSearchQuery('');
               setSelectedTag('All');
             }}
-            className="mt-4 inline-flex items-center rounded-md border border-git-border bg-git-canvas px-3 py-1.5 text-xs text-git-accent hover:border-git-accent"
+            className="mt-4 inline-flex items-center rounded-md border border-brand-red bg-brand-red/10 px-3 py-1.5 text-xs text-brand-red font-bold hover:bg-brand-red hover:text-white transition-all"
           >
             Reset Filters
           </button>

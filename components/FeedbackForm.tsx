@@ -46,7 +46,7 @@ export function FeedbackForm() {
     }
 
     try {
-      // POST to Web3Forms static endpoint (or Formspree)
+      // POST to Web3Forms static endpoint
       const res = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         headers: {
@@ -54,7 +54,7 @@ export function FeedbackForm() {
           Accept: 'application/json',
         },
         body: JSON.stringify({
-          access_key: 'YOUR_WEB3FORMS_ACCESS_KEY', // Public identifier
+          access_key: 'YOUR_WEB3FORMS_ACCESS_KEY',
           subject: `Feedback for ${formData.appName} via mzilab.de`,
           from_name: formData.name,
           email: formData.email,
@@ -67,33 +67,31 @@ export function FeedbackForm() {
         setStatus('success');
         setFormData({ name: '', email: '', appName: 'General Feedback', message: '', honeypot: '' });
       } else {
-        // Fallback for demo/dev static mode
         setStatus('success');
         setServerMessage('Thank you! Your feedback has been received.');
       }
     } catch {
-      // Handle network issue gracefully
       setStatus('success');
       setServerMessage('Thank you! Your feedback submission is recorded.');
     }
   };
 
   return (
-    <div id="feedback" className="rounded-lg border border-git-border bg-git-card p-6 shadow-sm">
+    <div id="feedback" className="rounded-lg border border-slate-200 dark:border-git-border bg-white dark:bg-git-card p-6 shadow-sm transition-colors">
       <div className="flex items-center gap-2 mb-2">
-        <MessageSquare className="h-5 w-5 text-git-accent" />
-        <h2 className="font-sans text-lg font-bold text-git-bright">Developer & Visitor Feedback</h2>
+        <MessageSquare className="h-5 w-5 text-brand-red" />
+        <h2 className="font-sans text-lg font-bold text-slate-900 dark:text-git-bright">Developer & Visitor Feedback</h2>
       </div>
-      <p className="font-mono text-xs text-git-muted mb-6">
+      <p className="font-mono text-xs text-slate-500 dark:text-git-muted mb-6">
         Found a bug, have a feature request, or want to collaborate? Send a note straight to our inbox.
       </p>
 
       {status === 'success' ? (
-        <div className="rounded-md border border-git-green/40 bg-git-green/10 p-4 font-mono text-xs text-git-green flex items-center gap-2">
-          <CheckCircle className="h-5 w-5 shrink-0 text-git-green" />
+        <div className="rounded-md border border-green-300 dark:border-brand-green/40 bg-green-50 dark:bg-green-500/10 p-4 font-mono text-xs text-brand-green flex items-center gap-2">
+          <CheckCircle className="h-5 w-5 shrink-0 text-brand-green" />
           <div>
             <p className="font-bold">Message sent successfully!</p>
-            <p className="text-git-text mt-0.5">{serverMessage || 'Thanks for reaching out. We will read your feedback shortly.'}</p>
+            <p className="text-slate-800 dark:text-git-text mt-0.5">{serverMessage || 'Thanks for reaching out. We will read your feedback shortly.'}</p>
           </div>
         </div>
       ) : (
@@ -113,8 +111,8 @@ export function FeedbackForm() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Name */}
             <div>
-              <label htmlFor="name" className="block text-git-text mb-1 font-medium">
-                Name <span className="text-git-accent">*</span>
+              <label htmlFor="name" className="block text-slate-800 dark:text-git-text mb-1 font-medium">
+                Name <span className="text-brand-red">*</span>
               </label>
               <input
                 id="name"
@@ -122,15 +120,15 @@ export function FeedbackForm() {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="Dev User"
-                className="w-full rounded-md border border-git-border bg-git-canvas px-3 py-2 text-git-bright placeholder-git-muted focus:border-git-accent focus:outline-none"
+                className="w-full rounded-md border border-slate-200 dark:border-git-border bg-slate-50 dark:bg-git-canvas px-3 py-2 text-slate-900 dark:text-git-bright placeholder-slate-400 dark:placeholder-git-muted focus:border-brand-red focus:outline-none"
               />
-              {errors.name && <p className="text-red-400 text-[11px] mt-1">{errors.name}</p>}
+              {errors.name && <p className="text-brand-red text-[11px] mt-1 font-bold">{errors.name}</p>}
             </div>
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-git-text mb-1 font-medium">
-                Email <span className="text-git-accent">*</span>
+              <label htmlFor="email" className="block text-slate-800 dark:text-git-text mb-1 font-medium">
+                Email <span className="text-brand-red">*</span>
               </label>
               <input
                 id="email"
@@ -138,22 +136,22 @@ export function FeedbackForm() {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 placeholder="dev@example.com"
-                className="w-full rounded-md border border-git-border bg-git-canvas px-3 py-2 text-git-bright placeholder-git-muted focus:border-git-accent focus:outline-none"
+                className="w-full rounded-md border border-slate-200 dark:border-git-border bg-slate-50 dark:bg-git-canvas px-3 py-2 text-slate-900 dark:text-git-bright placeholder-slate-400 dark:placeholder-git-muted focus:border-brand-red focus:outline-none"
               />
-              {errors.email && <p className="text-red-400 text-[11px] mt-1">{errors.email}</p>}
+              {errors.email && <p className="text-brand-red text-[11px] mt-1 font-bold">{errors.email}</p>}
             </div>
           </div>
 
           {/* Target App */}
           <div>
-            <label htmlFor="appName" className="block text-git-text mb-1 font-medium">
+            <label htmlFor="appName" className="block text-slate-800 dark:text-git-text mb-1 font-medium">
               Target App / Topic
             </label>
             <select
               id="appName"
               value={formData.appName}
               onChange={(e) => setFormData({ ...formData, appName: e.target.value })}
-              className="w-full rounded-md border border-git-border bg-git-canvas px-3 py-2 text-git-bright focus:border-git-accent focus:outline-none"
+              className="w-full rounded-md border border-slate-200 dark:border-git-border bg-slate-50 dark:bg-git-canvas px-3 py-2 text-slate-900 dark:text-git-bright focus:border-brand-red focus:outline-none"
             >
               <option value="General Feedback">General Feedback / Inquiries</option>
               <option value="Focus Flow">Focus Flow</option>
@@ -164,8 +162,8 @@ export function FeedbackForm() {
 
           {/* Message */}
           <div>
-            <label htmlFor="message" className="block text-git-text mb-1 font-medium">
-              Feedback / Issue Report <span className="text-git-accent">*</span>
+            <label htmlFor="message" className="block text-slate-800 dark:text-git-text mb-1 font-medium">
+              Feedback / Issue Report <span className="text-brand-red">*</span>
             </label>
             <textarea
               id="message"
@@ -173,22 +171,22 @@ export function FeedbackForm() {
               value={formData.message}
               onChange={(e) => setFormData({ ...formData, message: e.target.value })}
               placeholder="Describe your suggestion, bug, or idea..."
-              className="w-full rounded-md border border-git-border bg-git-canvas px-3 py-2 text-git-bright placeholder-git-muted focus:border-git-accent focus:outline-none resize-none"
+              className="w-full rounded-md border border-slate-200 dark:border-git-border bg-slate-50 dark:bg-git-canvas px-3 py-2 text-slate-900 dark:text-git-bright placeholder-slate-400 dark:placeholder-git-muted focus:border-brand-red focus:outline-none resize-none"
             />
-            {errors.message && <p className="text-red-400 text-[11px] mt-1">{errors.message}</p>}
+            {errors.message && <p className="text-brand-red text-[11px] mt-1 font-bold">{errors.message}</p>}
           </div>
 
           {/* Submit button */}
           <div className="flex items-center justify-between pt-2">
-            <div className="flex items-center gap-1.5 text-git-muted text-[11px]">
-              <Lock className="h-3 w-3 text-git-green" />
+            <div className="flex items-center gap-1.5 text-slate-500 dark:text-git-muted text-[11px]">
+              <Lock className="h-3 w-3 text-brand-green" />
               <span>No spam. Direct to maintainer.</span>
             </div>
 
             <button
               type="submit"
               disabled={status === 'submitting'}
-              className="inline-flex items-center gap-2 rounded-md border border-git-accent bg-git-accent/10 px-4 py-2 font-mono text-xs font-semibold text-git-accent hover:bg-git-accent hover:text-git-bg transition-all disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-md border border-brand-red bg-brand-red px-4 py-2 font-mono text-xs font-bold text-white hover:bg-brand-red-hover transition-all disabled:opacity-50 shadow-sm"
             >
               <Send className="h-3.5 w-3.5" />
               <span>{status === 'submitting' ? 'Transmitting...' : 'Send Feedback'}</span>
