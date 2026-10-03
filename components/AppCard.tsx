@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Star, GitFork, Smartphone, ExternalLink, Calendar, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Star, GitFork, Smartphone, ExternalLink } from 'lucide-react';
 import { AppFrontmatter } from '@/lib/apps';
 
 interface AppCardProps {

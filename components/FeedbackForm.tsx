@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { z } from 'zod';
-import { Send, MessageSquare, CheckCircle, AlertCircle, Terminal, Lock } from 'lucide-react';
+import { Send, MessageSquare, CheckCircle, Lock } from 'lucide-react';
 
 const feedbackSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -71,7 +71,7 @@ export function FeedbackForm() {
         setStatus('success');
         setServerMessage('Thank you! Your feedback has been received.');
       }
-    } catch (err) {
+    } catch {
       // Handle network issue gracefully
       setStatus('success');
       setServerMessage('Thank you! Your feedback submission is recorded.');

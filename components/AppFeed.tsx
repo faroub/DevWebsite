@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Search, LayoutGrid, List, Filter, Terminal, Sparkles, X } from 'lucide-react';
+import { LayoutGrid, List, Filter, Terminal, X } from 'lucide-react';
 import { AppFrontmatter } from '@/lib/apps';
 import { AppCard } from './AppCard';
 import { AppListRow } from './AppListRow';

@@ -1,10 +1,24 @@
 import { getAllApps, getAppBySlug } from '@/lib/apps';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Star, GitFork, Smartphone, ExternalLink, Calendar, CheckCircle2, Download } from 'lucide-react';
+import { ArrowLeft, Smartphone, ExternalLink, Download } from 'lucide-react';
+
+import type { Metadata } from 'next';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const appData = getAppBySlug(slug);
+  if (!appData) {
+    return { title: 'App Not Found — mzilab.de' };
+  }
+  return {
+    title: `${appData.frontmatter.title} — mzilab.de`,
+    description: appData.frontmatter.tagline || appData.frontmatter.description,
+  };
 }
 
 export async function generateStaticParams() {

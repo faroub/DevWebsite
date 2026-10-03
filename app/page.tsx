@@ -1,7 +1,7 @@
 import { getAllApps } from '@/lib/apps';
 import { AppFeed } from '@/components/AppFeed';
 import { FeedbackForm } from '@/components/FeedbackForm';
-import { Terminal, GitBranch, Cpu, Sparkles, Layers, ArrowUpRight } from 'lucide-react';
+import { Terminal } from 'lucide-react';
 
 export default function HomePage() {
   const apps = getAllApps();

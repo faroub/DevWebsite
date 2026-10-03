@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Terminal, GitBranch, Sparkles, ExternalLink, ShieldCheck } from 'lucide-react';
+import { Terminal, GitBranch, ExternalLink } from 'lucide-react';
 
 export function Header() {
   return (
@@ -39,7 +39,7 @@ export function Header() {
           </Link>
           <Link
             href="#feedback"
-            className="rounded-md px-3 py-1.5 text-xs font-mono text-git-muted hover:bg-git-card hover:text-git-bright transition-colors border border-transparent hover:border-git-border"
+            className="rounded-md px-3 py-1.5 text-xs font-mono text-git-muted hover:bg-git-bright transition-colors border border-transparent hover:border-git-border"
           >
             /feedback
           </Link>

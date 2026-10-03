@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Star, GitFork, Smartphone, ExternalLink, Calendar } from 'lucide-react';
+import { Star, GitFork, Smartphone } from 'lucide-react';
 import { AppFrontmatter } from '@/lib/apps';
 
 interface AppListRowProps {
