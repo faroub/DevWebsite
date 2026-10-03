@@ -1,0 +1,62 @@
+import { getAllApps } from '@/lib/apps';
+import { AppFeed } from '@/components/AppFeed';
+import { FeedbackForm } from '@/components/FeedbackForm';
+import { Terminal, GitBranch, Cpu, Sparkles, Layers, ArrowUpRight } from 'lucide-react';
+
+export default function HomePage() {
+  const apps = getAllApps();
+
+  return (
+    <div className="space-y-10">
+      {/* GitDiagram-inspired Hero Header */}
+      <section className="relative overflow-hidden rounded-xl border border-git-border bg-git-bg p-6 sm:p-8 shadow-glow-blue/10">
+        {/* Glow accent in top right */}
+        <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-git-accent/10 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-git-green/10 blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 space-y-4">
+          {/* Terminal Command Header */}
+          <div className="inline-flex items-center gap-2 rounded-md border border-git-border bg-git-canvas px-3 py-1 font-mono text-xs text-git-accent">
+            <Terminal className="h-3.5 w-3.5" />
+            <span>mzilab@developer-station:~$ ./list-apps.sh</span>
+          </div>
+
+          <div className="max-w-3xl space-y-2">
+            <h1 className="font-sans text-2xl sm:text-4xl font-extrabold tracking-tight text-git-bright">
+              Mobile Engineering & <span className="text-git-accent">App Showcase</span>
+            </h1>
+            <p className="font-sans text-sm sm:text-base text-git-text leading-relaxed">
+              Explore production and beta mobile apps developed with modern stacks (Kotlin, Swift, Jetpack Compose, React Native, Rust). Each app includes release builds, feature notes, and technical architecture graphs.
+            </p>
+          </div>
+
+          {/* Quick Metrics Bar */}
+          <div className="pt-4 grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs border-t border-git-border/60">
+            <div className="rounded-lg border border-git-border bg-git-card p-3">
+              <span className="text-git-muted block text-[11px]">Total Repos</span>
+              <span className="text-lg font-bold text-git-bright">{apps.length} Apps</span>
+            </div>
+            <div className="rounded-lg border border-git-border bg-git-card p-3">
+              <span className="text-git-muted block text-[11px]">Architecture</span>
+              <span className="text-lg font-bold text-git-accent">Next.js 16 Static</span>
+            </div>
+            <div className="rounded-lg border border-git-border bg-git-card p-3">
+              <span className="text-git-muted block text-[11px]">Content Format</span>
+              <span className="text-lg font-bold text-git-purple">MDX Driven</span>
+            </div>
+            <div className="rounded-lg border border-git-border bg-git-card p-3">
+              <span className="text-git-muted block text-[11px]">Deployment</span>
+              <span className="text-lg font-bold text-git-green">Static Export</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Interactive App Feed (Grid & Rows view toggle) */}
+      <AppFeed initialApps={apps} />
+
+      {/* Feedback Section */}
+      <FeedbackForm />
+    </div>
+  );
+}
