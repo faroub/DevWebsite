@@ -14,7 +14,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+    <html lang="en" className="dark scroll-smooth" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -22,10 +22,12 @@ export default function RootLayout({
               (function() {
                 try {
                   var stored = localStorage.getItem('theme');
-                  if (stored === 'dark') {
-                    document.documentElement.classList.add('dark');
-                  } else {
+                  if (stored === 'light') {
                     document.documentElement.classList.remove('dark');
+                    document.documentElement.classList.add('light');
+                  } else {
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.classList.remove('light');
                   }
                 } catch (e) {}
               })();
@@ -33,7 +35,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen bg-white dark:bg-git-canvas text-slate-900 dark:text-git-text flex flex-col bg-grid-dots selection:bg-brand-red/10 selection:text-brand-red transition-colors duration-200">
+      <body className="min-h-screen bg-dev-bg dark:bg-dev-bg text-dev-bright dark:text-dev-bright flex flex-col bg-grid-dots selection:bg-dev-accent/20 selection:text-dev-accent transition-colors duration-200">
         <Header />
         <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-8 sm:px-6">
           {children}

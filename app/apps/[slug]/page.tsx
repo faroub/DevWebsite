@@ -42,53 +42,53 @@ export default async function AppDetailPage({ params }: PageProps) {
       {/* Back link */}
       <Link
         href="/"
-        className="inline-flex items-center gap-1.5 font-mono text-xs text-slate-500 dark:text-git-muted hover:text-brand-red dark:hover:text-brand-red transition-colors"
+        className="inline-flex items-center gap-1.5 font-mono text-xs text-dev-muted hover:text-dev-accent transition-colors"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
         <span>Back to all apps</span>
       </Link>
 
       {/* App Header Banner */}
-      <div className="rounded-xl border border-slate-200 dark:border-git-border bg-white dark:bg-git-card p-6 sm:p-8 space-y-6 transition-colors shadow-sm">
+      <div className="rounded-xl border border-dev-border bg-dev-card p-6 sm:p-8 space-y-6 transition-colors shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-slate-200 dark:border-git-border bg-slate-50 dark:bg-git-canvas text-brand-red shadow-sm">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-dev-border bg-dev-bg text-dev-accent shadow-sm">
               <Smartphone className="h-8 w-8" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-git-bright">{frontmatter.title}</h1>
-                <span className="font-mono text-xs text-brand-red bg-red-50 dark:bg-git-subtle px-2 py-0.5 rounded border border-red-200 dark:border-git-border font-bold">
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-dev-bright">{frontmatter.title}</h1>
+                <span className="font-mono text-xs text-dev-accent bg-dev-accent/10 px-2 py-0.5 rounded border border-dev-accent/30 font-bold">
                   {frontmatter.version}
                 </span>
               </div>
-              <p className="text-sm text-slate-500 dark:text-git-muted mt-1">{frontmatter.category}</p>
+              <p className="text-sm text-dev-muted mt-1">{frontmatter.category}</p>
             </div>
           </div>
 
           {/* Status Badge */}
           <div className="flex items-center gap-2 font-mono text-xs">
-            <span className="text-slate-500 dark:text-git-muted">Status:</span>
-            <span className="rounded-full border border-green-200 dark:border-brand-green/30 bg-green-50 dark:bg-green-500/10 px-3 py-1 text-brand-green font-bold">
+            <span className="text-dev-muted">Status:</span>
+            <span className="rounded-full border border-dev-green/30 bg-dev-green/10 px-3 py-1 text-dev-green font-bold">
               {frontmatter.status}
             </span>
           </div>
         </div>
 
-        <p className="text-sm sm:text-base text-slate-700 dark:text-git-text leading-relaxed">
+        <p className="text-sm sm:text-base text-dev-text leading-relaxed">
           {frontmatter.description}
         </p>
 
         {/* Tags */}
-        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100 dark:border-git-border/60">
-          <span className="font-mono text-xs text-slate-500 dark:text-git-muted mr-1">Platforms & Tech:</span>
+        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-dev-border/60">
+          <span className="font-mono text-xs text-dev-muted mr-1">Platforms & Tech:</span>
           {frontmatter.platforms.map((p) => (
-            <span key={p} className="font-mono text-xs rounded bg-slate-100 dark:bg-git-subtle border border-slate-200 dark:border-git-border px-2 py-0.5 text-slate-800 dark:text-git-bright font-medium">
+            <span key={p} className="font-mono text-xs rounded bg-dev-subtle border border-dev-border px-2 py-0.5 text-dev-bright font-medium">
               {p}
             </span>
           ))}
           {frontmatter.languages.map((l) => (
-            <span key={l} className="font-mono text-xs rounded bg-green-50 dark:bg-git-canvas border border-green-200 dark:border-brand-green/30 px-2 py-0.5 text-brand-green font-semibold">
+            <span key={l} className="font-mono text-xs rounded bg-dev-accent/10 border border-dev-accent/30 px-2 py-0.5 text-dev-accent font-semibold">
               #{l}
             </span>
           ))}
@@ -96,13 +96,13 @@ export default async function AppDetailPage({ params }: PageProps) {
 
         {/* Download links */}
         {frontmatter.downloadLinks && (
-          <div className="flex flex-wrap gap-3 pt-4 border-t border-slate-100 dark:border-git-border/60">
+          <div className="flex flex-wrap gap-3 pt-4 border-t border-dev-border/60">
             {frontmatter.downloadLinks.appStore && (
               <a
                 href={frontmatter.downloadLinks.appStore}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-md border border-brand-red bg-brand-red px-4 py-2 font-mono text-xs font-bold text-white hover:bg-brand-red-hover transition-colors shadow-sm"
+                className="inline-flex items-center gap-2 rounded-md border border-dev-accent bg-dev-accent px-4 py-2 font-mono text-xs font-bold text-dev-bg hover:bg-dev-accent-hover transition-colors shadow-sm"
               >
                 <Download className="h-3.5 w-3.5" />
                 <span>App Store</span>
@@ -113,7 +113,7 @@ export default async function AppDetailPage({ params }: PageProps) {
                 href={frontmatter.downloadLinks.playStore}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-md border border-brand-green bg-brand-green px-4 py-2 font-mono text-xs font-bold text-white hover:bg-brand-green-hover transition-colors shadow-sm"
+                className="inline-flex items-center gap-2 rounded-md border border-dev-green bg-dev-green px-4 py-2 font-mono text-xs font-bold text-dev-bg hover:opacity-90 transition-colors shadow-sm"
               >
                 <Download className="h-3.5 w-3.5" />
                 <span>Google Play</span>
@@ -124,9 +124,9 @@ export default async function AppDetailPage({ params }: PageProps) {
                 href={frontmatter.downloadLinks.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-md border border-slate-200 dark:border-git-border bg-slate-50 dark:bg-git-canvas px-4 py-2 font-mono text-xs text-slate-800 dark:text-git-bright hover:border-brand-red font-semibold transition-colors"
+                className="inline-flex items-center gap-2 rounded-md border border-dev-border bg-dev-bg px-4 py-2 font-mono text-xs text-dev-bright hover:border-dev-accent font-semibold transition-colors"
               >
-                <ExternalLink className="h-3.5 w-3.5 text-brand-red" />
+                <ExternalLink className="h-3.5 w-3.5 text-dev-accent" />
                 <span>GitHub Repository</span>
               </a>
             )}
@@ -135,13 +135,13 @@ export default async function AppDetailPage({ params }: PageProps) {
       </div>
 
       {/* Content / Features Documentation */}
-      <div className="rounded-xl border border-slate-200 dark:border-git-border bg-white dark:bg-git-card p-6 sm:p-8 space-y-4 transition-colors shadow-sm">
-        <h2 className="font-sans text-xl font-bold text-slate-900 dark:text-git-bright border-b border-slate-100 dark:border-git-border/60 pb-3">
+      <div className="rounded-xl border border-dev-border bg-dev-card p-6 sm:p-8 space-y-4 transition-colors shadow-sm">
+        <h2 className="font-sans text-xl font-bold text-dev-bright border-b border-dev-border/60 pb-3">
           Architecture & Overview
         </h2>
-        <div className="prose dark:prose-invert max-w-none text-sm text-slate-700 dark:text-git-text space-y-4 font-sans leading-relaxed">
+        <div className="prose dark:prose-invert max-w-none text-sm text-dev-text space-y-4 font-sans leading-relaxed">
           <p>{frontmatter.tagline}</p>
-          <div className="rounded-lg border border-slate-200 dark:border-git-border bg-slate-50 dark:bg-git-canvas p-4 font-mono text-xs text-slate-800 dark:text-git-muted whitespace-pre-wrap">
+          <div className="rounded-lg border border-dev-border bg-dev-bg p-4 font-mono text-xs text-dev-muted whitespace-pre-wrap">
             {content}
           </div>
         </div>
