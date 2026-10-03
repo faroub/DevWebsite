@@ -5,8 +5,7 @@ import { Footer } from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'mzilab.de — Mobile App Showcase & Developer Feed',
-  description: 'Sleek static showcase for mobile applications built with AI assistance, featuring GitDiagram style repository grid feed, release tags, and MDX logs.',
-  keywords: ['mzilab', 'mobile apps', 'Android', 'iOS', 'Next.js', 'GitDiagram', 'MDX', 'Kotlin', 'Swift'],
+  description: 'Sleek static showcase for mobile applications featuring GitDiagram style repository grid feed, release tags, and MDX logs.',
 };
 
 export default function RootLayout({
@@ -16,7 +15,25 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark scroll-smooth" suppressHydrationWarning>
-      <body className="min-h-screen bg-git-canvas text-git-text flex flex-col bg-grid-dots selection:bg-git-accent/20 selection:text-git-bright">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var stored = localStorage.getItem('theme');
+                  if (stored === 'light') {
+                    document.documentElement.classList.remove('dark');
+                  } else {
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body className="min-h-screen bg-light-canvas dark:bg-git-canvas text-light-bright dark:text-git-text flex flex-col bg-grid-dots selection:bg-brand-red/20 selection:text-brand-red transition-colors duration-200">
         <Header />
         <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-8 sm:px-6">
           {children}
