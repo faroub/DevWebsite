@@ -1,0 +1,20 @@
+---
+title: "Optimizing Jetpack Compose Frame Rates in Production"
+slug: "jetpack-compose-performance"
+excerpt: "Deep dive into Compose recomposition optimization, Stability tags, TransformingLazyColumn, and Perfetto trace profiling."
+publishedAt: "2026-02-05"
+readTime: "8 min read"
+author: "Faroub / mzilab"
+tags: ["Android", "Jetpack Compose", "Performance", "Kotlin"]
+featured: true
+---
+
+# Optimizing Jetpack Compose Frame Rates in Production
+
+Achieving smooth 120Hz scrolling in complex Android apps requires understanding Compose recomposition mechanics and avoiding unnecessary layout passes.
+
+## Key Performance Checklist
+
+1. **Use Immutable Data Models**: Mark UI state classes `@Immutable` or `@Stable` to allow Compose to skip recomposition.
+2. **Defer State Reads to Draw/Layout Phase**: Pass lambda blocks ` { state.value } ` to Modifiers rather than raw state values.
+3. **Analyze with Perfetto**: Trace frame rendering timelines and inspect GPU rendering passes using Perfetto SQL queries.
