@@ -5,7 +5,6 @@ import { getAllBlogs } from '@/lib/blogs';
 import { AppCard } from '@/components/AppCard';
 import { ProjectCard } from '@/components/ProjectCard';
 import { BlogCard } from '@/components/BlogCard';
-import { FeedbackForm } from '@/components/FeedbackForm';
 import { Terminal, Smartphone, FolderGit2, BookOpen, ArrowRight } from 'lucide-react';
 
 export default function HomePage() {
@@ -127,9 +126,6 @@ export default function HomePage() {
           ))}
         </div>
       </section>
-
-      {/* Feedback Section */}
-      <FeedbackForm />
     </div>
   );
 }
