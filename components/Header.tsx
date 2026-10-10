@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { GitBranch } from 'lucide-react';
+import { GitBranch, Settings } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 
 export function Header() {
@@ -17,7 +17,7 @@ export function Header() {
             </div>
             <span className="text-text-primary font-bold text-base">mzi</span>
             <span className="text-accent-primary font-mono font-bold text-base">lab</span>
-            <span className="text-text-secondary font-normal text-xs">.de</span>
+            <span className="text-text-secondary font-normal text-xs font-mono">.de</span>
           </Link>
 
           <span className="hidden sm:inline-block h-4 w-[1px] bg-divider mx-1" />
@@ -62,6 +62,14 @@ export function Header() {
               className="rounded-md px-2.5 py-1.5 text-xs font-mono text-text-primary hover:bg-canvas hover:text-accent-primary transition-colors border border-transparent hover:border-divider"
             >
               /about
+            </Link>
+            <Link
+              href="/admin"
+              className="rounded-md px-2 py-1.5 text-xs font-mono text-accent-primary bg-canvas border border-divider hover:border-accent-primary transition-all flex items-center gap-1 font-bold"
+              title="Local Content Admin Studio"
+            >
+              <Settings className="h-3 w-3" />
+              <span className="hidden sm:inline">/admin</span>
             </Link>
           </nav>
 
