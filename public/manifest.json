@@ -1,0 +1,16 @@
+{
+  "name": "mzilab.de — Mobile Showcase",
+  "short_name": "mzilab",
+  "description": "Sleek static showcase for mobile applications and developer tools.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0D1117",
+  "theme_color": "#0969DA",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}

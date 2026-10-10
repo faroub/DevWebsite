@@ -65,7 +65,7 @@ export function FeedbackForm({ defaultTopic = 'General Feedback', itemType = 'ge
           Accept: 'application/json',
         },
         body: JSON.stringify({
-          access_key: 'YOUR_WEB3FORMS_ACCESS_KEY',
+          access_key: process.env.NEXT_PUBLIC_WEB3FORMS_KEY || 'YOUR_WEB3FORMS_ACCESS_KEY',
           subject: `Feedback for ${formData.appName} via mzilab.de`,
           from_name: formData.name,
           email: formData.email,
