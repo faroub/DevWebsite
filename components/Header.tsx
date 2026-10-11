@@ -1,8 +1,14 @@
+'use client';
+
 import Link from 'next/link';
-import { GitBranch, Settings } from 'lucide-react';
+import { GitBranch } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
+import { LanguageSwitcher } from './LanguageSwitcher';
+import { useLanguage } from './LanguageContext';
 
 export function Header() {
+  const { t } = useLanguage();
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-divider bg-surface/90 backdrop-blur-md transition-colors shadow-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
@@ -25,55 +31,50 @@ export function Header() {
           {/* Terminal / Static export badge */}
           <div className="hidden md:flex items-center gap-1.5 rounded-full border border-divider bg-canvas/80 px-2.5 py-1 text-xs font-mono text-text-secondary">
             <span className="h-2 w-2 rounded-full bg-accent-success animate-pulse" />
-            <span className="text-text-primary font-medium">static_export</span>
+            <span className="text-text-primary font-medium">{t.nav.staticExport}</span>
             <span className="text-accent-success font-bold">:ready</span>
           </div>
         </div>
 
-        {/* Navigation links & Theme Switcher */}
+        {/* Navigation links, Language Switcher & Theme Switcher */}
         <div className="flex items-center gap-2">
           <nav className="flex items-center gap-1 sm:gap-2">
             <Link
               href="/"
-              className="rounded-md px-2.5 py-1.5 text-xs font-mono text-text-primary hover:bg-canvas hover:text-accent-primary transition-colors border border-transparent hover:border-divider"
+              className="rounded-md px-2 py-1.5 text-xs font-mono text-text-primary hover:bg-canvas hover:text-accent-primary transition-colors border border-transparent hover:border-divider"
             >
-              /home
+              {t.nav.home}
             </Link>
             <Link
               href="/apps"
-              className="rounded-md px-2.5 py-1.5 text-xs font-mono text-text-primary hover:bg-canvas hover:text-accent-primary transition-colors border border-transparent hover:border-divider"
+              className="rounded-md px-2 py-1.5 text-xs font-mono text-text-primary hover:bg-canvas hover:text-accent-primary transition-colors border border-transparent hover:border-divider"
             >
-              /apps
+              {t.nav.apps}
             </Link>
             <Link
               href="/projects"
-              className="rounded-md px-2.5 py-1.5 text-xs font-mono text-text-primary hover:bg-canvas hover:text-accent-primary transition-colors border border-transparent hover:border-divider"
+              className="rounded-md px-2 py-1.5 text-xs font-mono text-text-primary hover:bg-canvas hover:text-accent-primary transition-colors border border-transparent hover:border-divider hidden sm:inline-block"
             >
-              /projects
+              {t.nav.projects}
             </Link>
             <Link
               href="/blogs"
-              className="rounded-md px-2.5 py-1.5 text-xs font-mono text-text-primary hover:bg-canvas hover:text-accent-primary transition-colors border border-transparent hover:border-divider"
+              className="rounded-md px-2 py-1.5 text-xs font-mono text-text-primary hover:bg-canvas hover:text-accent-primary transition-colors border border-transparent hover:border-divider hidden md:inline-block"
             >
-              /blogs
+              {t.nav.blogs}
             </Link>
             <Link
               href="/about"
-              className="rounded-md px-2.5 py-1.5 text-xs font-mono text-text-primary hover:bg-canvas hover:text-accent-primary transition-colors border border-transparent hover:border-divider"
+              className="rounded-md px-2 py-1.5 text-xs font-mono text-text-primary hover:bg-canvas hover:text-accent-primary transition-colors border border-transparent hover:border-divider"
             >
-              /about
-            </Link>
-            <Link
-              href="/admin"
-              className="rounded-md px-2 py-1.5 text-xs font-mono text-accent-primary bg-canvas border border-divider hover:border-accent-primary transition-all flex items-center gap-1 font-bold"
-              title="Local Content Admin Studio"
-            >
-              <Settings className="h-3 w-3" />
-              <span className="hidden sm:inline">/admin</span>
+              {t.nav.about}
             </Link>
           </nav>
 
           <span className="h-4 w-[1px] bg-divider mx-1" />
+
+          {/* Language Switcher (EN / FR / AR) */}
+          <LanguageSwitcher />
 
           {/* Theme Toggle Button */}
           <ThemeToggle />

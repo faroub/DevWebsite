@@ -27,6 +27,7 @@ interface ContentItem {
 type CollectionType = 'apps' | 'projects' | 'blogs';
 
 export default function LocalAdminPage() {
+  const [isLocalHost, setIsLocalHost] = useState<boolean | null>(null);
   const [activeTab, setActiveTab] = useState<CollectionType>('apps');
   const [bridgeConnected, setBridgeConnected] = useState<boolean | null>(null);
   const [items, setItems] = useState<Record<CollectionType, ContentItem[]>>({
@@ -44,6 +45,18 @@ export default function LocalAdminPage() {
   // New Item Template State
   const [newItemTitle, setNewItemTitle] = useState('');
   const [newItemSlug, setNewItemSlug] = useState('');
+
+  // Localhost Verification Check
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname;
+      const isLocal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.startsWith('192.168.');
+      setIsLocalHost(isLocal);
+      if (isLocal) {
+        fetchLocalContent();
+      }
+    }
+  }, []);
 
   // Fetch content from local admin file bridge server
   const fetchLocalContent = async () => {
@@ -63,10 +76,6 @@ export default function LocalAdminPage() {
       setBridgeConnected(false);
     }
   };
-
-  useEffect(() => {
-    fetchLocalContent();
-  }, []);
 
   // Sync selected item when tab or items change
   useEffect(() => {
@@ -108,7 +117,6 @@ export default function LocalAdminPage() {
         setStatusMessage(`Network error saving file: ${message}`);
       }
     } else {
-      // Fallback: Download MDX file
       downloadMdxFile(editedItem);
       setStatusMessage(`Downloaded ${editedItem.fileName} as fallback.`);
     }
@@ -221,6 +229,32 @@ export default function LocalAdminPage() {
     setNewItemSlug('');
   };
 
+  // If accessed on a deployed production domain, render 404 Page Not Found!
+  if (isLocalHost === false) {
+    return (
+      <div className="max-w-2xl mx-auto my-12 text-center space-y-6 font-sans">
+        <div className="rounded-xl border border-divider bg-surface p-8 sm:p-12 space-y-6 shadow-sm">
+          <div className="inline-flex items-center gap-2 rounded-md border border-accent-error/30 bg-accent-error/10 px-3 py-1 font-mono text-xs text-accent-error font-bold">
+            <Terminal className="h-3.5 w-3.5" />
+            <span>404: RESOURCE_NOT_FOUND</span>
+          </div>
+
+          <h1 className="font-heading text-3xl sm:text-4xl font-extrabold text-text-primary">
+            Page Not Found
+          </h1>
+
+          <p className="font-sans text-sm text-text-secondary leading-relaxed max-w-md mx-auto">
+            The page or route you are looking for does not exist or may have been moved.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLocalHost === null) {
+    return null; // Initial mount check
+  }
+
   return (
     <div className="space-y-8 font-sans">
       {/* Top Banner & Local Bridge Status */}
@@ -235,7 +269,7 @@ export default function LocalAdminPage() {
               Local Admin & Content Studio
             </h1>
             <p className="text-xs text-text-secondary mt-1 font-mono">
-              Directly edit, upload, and create Apps, Projects, and Blog MDX files on your disk.
+              Directly edit, upload, and create Apps, Projects, and Blog MDX files on your local disk.
             </p>
           </div>
 
