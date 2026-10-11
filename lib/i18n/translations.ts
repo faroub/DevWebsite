@@ -145,7 +145,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       successTitle: 'Message sent successfully!',
     },
     footer: {
-      copy: 'AppForge Algeria © 2026 — Designed & Managed by Farid Oubbati',
+      copy: 'mzilab © 2026',
       zeroServer: 'Zero Server / Static Export',
       mdxDriven: 'MDX Driven',
       privacy: '/privacy',
@@ -221,7 +221,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       successTitle: 'Message envoyé avec succès !',
     },
     footer: {
-      copy: 'AppForge Algérie © 2026 — Conçu et géré par Farid Oubbati',
+      copy: 'mzilab © 2026',
       zeroServer: 'Sans Serveur / Export Statique',
       mdxDriven: 'Alimenté par MDX',
       privacy: '/confidentialite',
@@ -297,7 +297,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       successTitle: 'تم إرسال الرسالة بنجاح!',
     },
     footer: {
-      copy: 'AppForge الجزائر © 2026 — تصميم وإدارة فريد أوباتي',
+      copy: 'mzilab © 2026',
       zeroServer: 'تصدير ثابت / بدون خادم',
       mdxDriven: 'مدعوم بـ MDX',
       privacy: '/الخصوصية',

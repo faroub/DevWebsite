@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Terminal, Cpu, Code2 } from 'lucide-react';
+import { Terminal } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 
 export function Footer() {
@@ -23,16 +23,6 @@ export function Footer() {
           <Link href="/terms" className="hover:text-accent-primary transition-colors">
             {t.footer.terms}
           </Link>
-          <span className="text-divider">|</span>
-          <span className="flex items-center gap-1 text-text-primary font-medium">
-            <Cpu className="h-3.5 w-3.5 text-accent-success" />
-            <span>{t.footer.zeroServer}</span>
-          </span>
-          <span className="text-divider">|</span>
-          <span className="flex items-center gap-1 text-text-primary font-medium">
-            <Code2 className="h-3.5 w-3.5 text-accent-primary" />
-            <span>{t.footer.mdxDriven}</span>
-          </span>
         </div>
       </div>
     </footer>

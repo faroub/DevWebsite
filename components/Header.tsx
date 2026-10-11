@@ -14,7 +14,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-divider bg-surface/90 backdrop-blur-md transition-colors shadow-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
-        {/* Brand / Logo - "mzilab" without .de */}
+        {/* Brand / Logo - "mzilab" */}
         <div className="flex items-center gap-3">
           <Link
             href="/"
@@ -27,21 +27,18 @@ export function Header() {
               mzi<span className="text-accent-primary">lab</span>
             </span>
           </Link>
-
-          <span className="hidden sm:inline-block h-4 w-[1px] bg-divider mx-1" />
-
-          {/* Terminal / Static export badge */}
-          <div className="hidden md:flex items-center gap-1.5 rounded-full border border-divider bg-canvas/80 px-2.5 py-1 text-xs font-mono text-text-secondary">
-            <span className="h-2 w-2 rounded-full bg-accent-success animate-pulse" />
-            <span className="text-text-primary font-medium">{t.nav.staticExport}</span>
-            <span className="text-accent-success font-bold">:ready</span>
-          </div>
         </div>
 
         {/* Desktop & Mobile Control Bar */}
         <div className="flex items-center gap-2">
-          {/* Desktop Nav (home link removed) */}
+          {/* Desktop Nav: blog - apps - projects - about */}
           <nav className="hidden md:flex items-center gap-1 sm:gap-2">
+            <Link
+              href="/blogs"
+              className="rounded-md px-2.5 py-1.5 text-xs font-mono text-text-primary hover:bg-canvas hover:text-accent-primary transition-colors border border-transparent hover:border-divider"
+            >
+              {t.nav.blogs}
+            </Link>
             <Link
               href="/apps"
               className="rounded-md px-2.5 py-1.5 text-xs font-mono text-text-primary hover:bg-canvas hover:text-accent-primary transition-colors border border-transparent hover:border-divider"
@@ -53,12 +50,6 @@ export function Header() {
               className="rounded-md px-2.5 py-1.5 text-xs font-mono text-text-primary hover:bg-canvas hover:text-accent-primary transition-colors border border-transparent hover:border-divider"
             >
               {t.nav.projects}
-            </Link>
-            <Link
-              href="/blogs"
-              className="rounded-md px-2.5 py-1.5 text-xs font-mono text-text-primary hover:bg-canvas hover:text-accent-primary transition-colors border border-transparent hover:border-divider"
-            >
-              {t.nav.blogs}
             </Link>
             <Link
               href="/about"
@@ -87,9 +78,16 @@ export function Header() {
         </div>
       </div>
 
-      {/* Responsive Mobile Dropdown Navigation */}
+      {/* Responsive Mobile Dropdown Navigation: blog - apps - projects - about */}
       {isMobileMenuOpen && (
         <div className="md:hidden border-t border-divider bg-surface px-4 py-3 font-mono text-xs space-y-2 animate-in fade-in slide-in-from-top-2">
+          <Link
+            href="/blogs"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="block rounded-md px-3 py-2 text-text-primary hover:bg-canvas hover:text-accent-primary border border-divider"
+          >
+            {t.nav.blogs}
+          </Link>
           <Link
             href="/apps"
             onClick={() => setIsMobileMenuOpen(false)}
@@ -103,13 +101,6 @@ export function Header() {
             className="block rounded-md px-3 py-2 text-text-primary hover:bg-canvas hover:text-accent-primary border border-divider"
           >
             {t.nav.projects}
-          </Link>
-          <Link
-            href="/blogs"
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="block rounded-md px-3 py-2 text-text-primary hover:bg-canvas hover:text-accent-primary border border-divider"
-          >
-            {t.nav.blogs}
           </Link>
           <Link
             href="/about"
