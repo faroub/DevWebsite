@@ -2,7 +2,7 @@ import { getAllProjects, getProjectBySlug } from '@/lib/projects';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, FolderGit2, ExternalLink } from 'lucide-react';
-import { FeedbackForm } from '@/components/FeedbackForm';
+import { CommentThread } from '@/components/CommentThread';
 import type { Metadata } from 'next';
 
 interface PageProps {
@@ -108,8 +108,12 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         </div>
       </div>
 
-      {/* Associated Feedback Card for this specific project */}
-      <FeedbackForm defaultTopic={frontmatter.title} itemType="project" />
+      {/* Interactive Comment & Discussion Thread */}
+      <CommentThread
+        itemSlug={frontmatter.slug}
+        itemTitle={frontmatter.title}
+        itemType="project"
+      />
     </article>
   );
 }

@@ -1,8 +1,9 @@
 import { getAllApps, getAppBySlug } from '@/lib/apps';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Script from 'next/script';
 import { ArrowLeft, Smartphone, ExternalLink, Download } from 'lucide-react';
-import { FeedbackForm } from '@/components/FeedbackForm';
+import { CommentThread } from '@/components/CommentThread';
 import type { Metadata } from 'next';
 
 interface PageProps {
@@ -55,7 +56,8 @@ export default async function AppDetailPage({ params }: PageProps) {
 
   return (
     <>
-      <script
+      <Script
+        id={`jsonld-app-${slug}`}
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
@@ -168,8 +170,8 @@ export default async function AppDetailPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* Associated Feedback Card for this specific app */}
-        <FeedbackForm defaultTopic={frontmatter.title} itemType="app" />
+        {/* Interactive Comment & Discussion Thread */}
+        <CommentThread itemSlug={frontmatter.slug} itemTitle={frontmatter.title} itemType="app" />
       </article>
     </>
   );

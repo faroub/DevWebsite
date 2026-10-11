@@ -1,8 +1,9 @@
 import { getAllBlogs, getBlogBySlug } from '@/lib/blogs';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Script from 'next/script';
 import { ArrowLeft, Calendar, Clock } from 'lucide-react';
-import { FeedbackForm } from '@/components/FeedbackForm';
+import { CommentThread } from '@/components/CommentThread';
 import type { Metadata } from 'next';
 
 interface PageProps {
@@ -57,7 +58,8 @@ export default async function BlogDetailPage({ params }: PageProps) {
 
   return (
     <>
-      <script
+      <Script
+        id={`jsonld-blog-${slug}`}
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
@@ -111,8 +113,8 @@ export default async function BlogDetailPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* Associated Feedback Card for this specific blog post */}
-        <FeedbackForm defaultTopic={frontmatter.title} itemType="blog" />
+        {/* Interactive Comment & Discussion Thread */}
+        <CommentThread itemSlug={frontmatter.slug} itemTitle={frontmatter.title} itemType="blog" />
       </article>
     </>
   );
