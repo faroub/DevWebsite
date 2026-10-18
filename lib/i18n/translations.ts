@@ -91,11 +91,11 @@ export interface TranslationDictionary {
 export const translations: Record<Locale, TranslationDictionary> = {
   en: {
     nav: {
-      home: '/home',
-      apps: '/apps',
-      projects: '/projects',
-      blogs: '/blog',
-      about: '/about',
+      home: 'home',
+      apps: 'apps',
+      projects: 'projects',
+      blogs: 'blog',
+      about: 'about',
       staticExport: 'static_export',
     },
     hero: {
@@ -177,17 +177,17 @@ export const translations: Record<Locale, TranslationDictionary> = {
       copy: 'mzilab © 2026',
       zeroServer: 'Zero Server / Static Export',
       mdxDriven: 'MDX Driven',
-      privacy: '/privacy',
-      terms: '/terms',
+      privacy: 'Privacy',
+      terms: 'Terms',
     },
   },
   fr: {
     nav: {
-      home: '/accueil',
-      apps: '/applications',
-      projects: '/projets',
-      blogs: '/blog',
-      about: '/a-propos',
+      home: 'accueil',
+      apps: 'applications',
+      projects: 'projets',
+      blogs: 'blog',
+      about: 'a-propos',
       staticExport: 'exportation_statique',
     },
     hero: {
@@ -269,17 +269,17 @@ export const translations: Record<Locale, TranslationDictionary> = {
       copy: 'mzilab © 2026',
       zeroServer: 'Sans Serveur / Export Statique',
       mdxDriven: 'Alimenté par MDX',
-      privacy: '/confidentialite',
-      terms: '/conditions',
+      privacy: 'Confidentialité',
+      terms: 'Conditions',
     },
   },
   ar: {
     nav: {
-      home: '/الرئيسية',
-      apps: '/التطبيقات',
-      projects: '/المشاريع',
-      blogs: '/مدونة',
-      about: '/عن-الموقع',
+      home: 'الرئيسية',
+      apps: 'تطبيقات',
+      projects: 'مشاريع',
+      blogs: 'مدونة',
+      about: 'عن الموقع',
       staticExport: 'تصدير_ثابت',
     },
     hero: {
@@ -288,7 +288,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       titleHighlight: 'معرض التطبيقات',
       subtitle: 'تصميم وإدارة فريد أوباتي.',
       description:
-        'استكشف تطبيقات الجوال والبرمجيات مفتوحة المصدر والمقالات التقنية حول Jetpack Compose و Next.js و Rust والبرمجة المدعومة بالذكاء الاصطناعي.',
+        'استكشف تطبيقات الجوال والمشاريع مفتوحة المصدر والمقالات التقنية حول Jetpack Compose و Next.js و Rust والذكاء الاصطناعي.',
       exploreApps: 'تصفح التطبيقات',
       requestApp: 'طلب تطبيق',
       featuredAppsTitle: 'تطبيقات مختارة',
@@ -302,7 +302,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       title: 'دليل تطبيقات الجوال',
       subtitle:
         'تصفح تطبيقات مخصصة للتجار والعائلات والمستخدمين في الجزائر. تصفية حسب المنصة أو حالة الإصدار.',
-      searchPlaceholder: 'بحث عن تطبيق بالاسم أو الوصف...',
+      searchPlaceholder: 'البحث عن تطبيق بالاسم أو الوصف...',
       statusLabel: 'الحالة:',
       platformLabel: 'المنصة:',
       allStatuses: 'جميع الحالات',
@@ -322,11 +322,11 @@ export const translations: Record<Locale, TranslationDictionary> = {
       backToApps: 'العودة لجميع التطبيقات',
       status: 'الحالة:',
       updated: 'آخر تحديث',
-      problemSolved: 'المشكلة الحقيقية المعالجة',
+      problemSolved: 'المشكلة المعالجة',
       platformsAndTech: 'المنصات والتقنيات:',
       keyFeatures: 'الميزات الرئيسية',
       screenshots: 'لقطات الشاشة',
-      changelog: 'سجل التغييرات والإصدارات',
+      changelog: 'سجل الإصدارات',
       feedbackHeader: 'الاستفسارات والملاحظات',
       feedbackSub: 'هل لديك اقتراح أو استفسار؟ أرسل رسالتك مباشرة.',
     },
@@ -342,15 +342,15 @@ export const translations: Record<Locale, TranslationDictionary> = {
       successTitle: 'تم إرسال الرسالة بنجاح!',
     },
     aboutPage: {
-      whatIsTitle: 'ما هو mzilab؟',
+      whatIsTitle: '؟ mzilab ما هو',
       whatIsBody:
-        'منصة mzilab هي بيئة متخصصة لتطوير البرمجيات والأجهزة الإلكترونية، يصممها ويديرها مطور مستقل. تُعد المنصة مركزًا تفاعليًا لعرض الحلول الرقمية والفيزيائية المخصصة وتنزيلها واختبارها، مع جمع ملاحظات المستخدمين لتطويرها وتحسينها باستمرار.',
+        ' mzilab منصة هي بيئة متخصصة لتطوير البرمجيات والأجهزة الإلكترونية، يصممها ويديرها مطور مستقل. تُعد المنصة مركزًا تفاعليًا لعرض الحلول الرقمية والفيزيائية المخصصة وتنزيلها واختبارها، مع جمع ملاحظات المستخدمين لتطويرها وتحسينها باستمرار.',
       whoAmITitle: 'من أنا؟',
       whoAmIBody:
         'أنا مهندس بشغف عميق بتطوير البرمجيات والهندسة الإلكترونية والتقنيات الناشئة. يركز عملي على تحويل التحديات التقنية والتشغيلية المعقدة إلى تطبيقات ويب وتطبيقات جوال ومشاريع أجهزة مدمجة عالية الأداء والسلاسة.',
       originTitle: 'أصل التسمية "mzi"',
       originBody:
-        'يرتبط اسم mzilab ارتباطًا وثيقًا بجذوري؛ حيث أستلهم الاسم من وادي أمزي (Oued M’Zi)، وهو وادٍ نهري شرياني يقع بالقرب من مدينتي الأغواط في الجزائر. ينبع وادي أمزي من جبال الأطلس الصحراوي الخلابة، ويُعد شريان حياة تاريخيًا وبوابة جغرافية تلتقي عندها الهضاب المرتفعة بالصحراء الشاسعة.',
+        'يرتبط اسم mzilab ارتباطًا وثيقًا بجذوري؛ حيث أستلهم الاسم من وادي أمزي (Oued M’Zi)، وهو وادٍ نهري حيوي يقع بالقرب من مدينتي الأغواط في الجزائر. ينبع وادي أمزي من جبال الأطلس الصحراوي الخلابة، ويُعد شريان حياة تاريخيًا وبوابة جغرافية تلتقي عندها الهضاب المرتفعة بالصحراء الشاسعة.',
       bridgeTitle: 'الجسر الكبير على وادي أمزي',
       bridgeSub: 'معبر نهري تاريخي • الأغواط، الجزائر',
       cascadeTitle: 'شلالات وادي أمزي الطبيعية',
@@ -361,8 +361,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
       copy: 'mzilab © 2026',
       zeroServer: 'تصدير ثابت / بدون خادم',
       mdxDriven: 'مدعوم بـ MDX',
-      privacy: '/الخصوصية',
-      terms: '/الشروط',
+      privacy: 'الخصوصية',
+      terms: 'الشروط',
     },
   },
 };
