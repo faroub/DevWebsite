@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Script from 'next/script';
 import './globals.css';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
@@ -18,34 +17,6 @@ export default function RootLayout({
   return (
     <html lang="en" dir="ltr" className="dark scroll-smooth" suppressHydrationWarning>
       <body className="min-h-screen bg-canvas text-text-primary flex flex-col bg-grid-dots selection:bg-accent-primary/20 selection:text-accent-primary" suppressHydrationWarning>
-        <Script
-          id="theme-init"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var storedTheme = localStorage.getItem('theme');
-                  if (storedTheme === 'light') {
-                    document.documentElement.classList.remove('dark');
-                  } else if (storedTheme === 'dark') {
-                    document.documentElement.classList.add('dark');
-                  } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    document.documentElement.classList.add('dark');
-                  } else {
-                    document.documentElement.classList.remove('dark');
-                  }
-
-                  var storedLocale = localStorage.getItem('mzilab_locale');
-                  if (storedLocale) {
-                    document.documentElement.lang = storedLocale;
-                  }
-                  document.documentElement.dir = 'ltr';
-                } catch (e) {}
-              })();
-            `,
-          }}
-        />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-accent-primary focus:px-4 focus:py-2 focus:text-white focus:font-mono focus:text-xs shadow-md"
