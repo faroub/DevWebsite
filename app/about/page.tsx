@@ -1,62 +1,61 @@
+'use client';
+
 import Image from 'next/image';
 import { Terminal, Code, Compass, MapPin, ExternalLink } from 'lucide-react';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'About — mzilab',
-  description: 'Learn about mzilab, developer profile, software and hardware development platform.',
-};
+import { useLanguage } from '@/components/LanguageContext';
 
 export default function AboutPage() {
+  const { t } = useLanguage();
+
   return (
     <div className="max-w-4xl mx-auto space-y-8 font-sans">
       {/* Section 1: What is mzilab? */}
-      <section className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-3 shadow-sm">
+      <section className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-3 shadow-sm transition-colors">
         <h2 className="text-xl sm:text-2xl font-bold text-text-primary border-b border-divider pb-3 flex items-center gap-2">
           <Code className="h-5 w-5 text-accent-primary" />
-          <span>What is mzilab?</span>
+          <span>{t.aboutPage.whatIsTitle}</span>
         </h2>
         <p className="text-sm sm:text-base text-text-secondary leading-relaxed font-sans">
-          mzilab is a dedicated software and hardware development platform engineered and operated by a solo developer. The platform serves as an interactive hub to showcase, download, and test custom digital and physical solutions while actively gathering user feedback for continuous refinement and growth.
+          {t.aboutPage.whatIsBody}
         </p>
       </section>
 
       {/* Section 2: Who am I? */}
-      <section className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-3 shadow-sm">
+      <section className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-3 shadow-sm transition-colors">
         <h2 className="text-xl sm:text-2xl font-bold text-text-primary border-b border-divider pb-3 flex items-center gap-2">
           <Terminal className="h-5 w-5 text-accent-primary" />
-          <span>Who am I?</span>
+          <span>{t.aboutPage.whoAmITitle}</span>
         </h2>
         <p className="text-sm sm:text-base text-text-secondary leading-relaxed font-sans">
-          I am an engineer with a deep passion for software development, hardware engineering, and emerging technologies. My focus is on transforming complex technical and operational challenges into seamless, high-performance web applications, mobile apps, and integrated hardware projects.
+          {t.aboutPage.whoAmIBody}
         </p>
       </section>
 
       {/* Section 3: The Origin of "mzi" */}
-      <section className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-6 shadow-sm">
+      <section className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-6 shadow-sm transition-colors">
         <h2 className="text-xl sm:text-2xl font-bold text-text-primary border-b border-divider pb-3 flex items-center gap-2">
           <Compass className="h-5 w-5 text-accent-primary" />
-          <span>The Origin of &ldquo;mzi&rdquo;</span>
+          <span>{t.aboutPage.originTitle}</span>
         </h2>
 
         <p className="text-sm sm:text-base text-text-secondary leading-relaxed font-sans">
-          The name mzilab is deeply tied to my roots. It is inspired by Oued M’Zi, a vital river valley located near my home city of Laghouat, Algeria. Originating in the breathtaking Saharan Atlas mountains, Oued M’Zi serves as a historic life source and a geographic gateway where rugged highlands transition into the expansive desert.
+          {t.aboutPage.originBody}
         </p>
 
-        {/* Attached Photography Cards (ouad1.jpeg & ouad2.jpeg) */}
+        {/* Attached Photography Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
           <div className="rounded-lg border border-divider bg-canvas overflow-hidden space-y-2 p-3 shadow-sm group">
             <div className="relative aspect-[4/3] w-full rounded border border-divider overflow-hidden bg-surface">
               <Image
                 src="/images/ouad1.jpeg"
-                alt="Oued M'Zi natural stream and cascade in Saharan Atlas mountains"
+                alt={t.aboutPage.bridgeTitle}
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-300"
               />
             </div>
             <div className="font-mono text-xs">
-              <div className="font-bold text-text-primary">Oued M&apos;Zi Natural Cascade</div>
-              <div className="text-text-secondary text-[11px]">Saharan Atlas Mountains • Laghouat, Algeria</div>
+              <div className="font-bold text-text-primary">{t.aboutPage.bridgeTitle}</div>
+              <div className="text-text-secondary text-[11px]">{t.aboutPage.bridgeSub}</div>
             </div>
           </div>
 
@@ -64,14 +63,14 @@ export default function AboutPage() {
             <div className="relative aspect-[4/3] w-full rounded border border-divider overflow-hidden bg-surface">
               <Image
                 src="/images/ouad2.jpeg"
-                alt="Grand bridge crossing Oued M'Zi river in Laghouat"
+                alt={t.aboutPage.cascadeTitle}
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-300"
               />
             </div>
             <div className="font-mono text-xs">
-              <div className="font-bold text-text-primary">Grand Bridge over Oued M&apos;Zi</div>
-              <div className="text-text-secondary text-[11px]">Historic River Crossing • Laghouat, Algeria</div>
+              <div className="font-bold text-text-primary">{t.aboutPage.cascadeTitle}</div>
+              <div className="text-text-secondary text-[11px]">{t.aboutPage.cascadeSub}</div>
             </div>
           </div>
         </div>
@@ -85,7 +84,7 @@ export default function AboutPage() {
             className="inline-flex items-center gap-2 rounded-md border border-accent-primary/40 bg-accent-primary/10 px-4 py-2 font-mono text-xs font-bold text-accent-primary hover:bg-accent-primary hover:text-white transition-all shadow-sm"
           >
             <MapPin className="h-4 w-4" />
-            <span>View Oued M&apos;Zi (Laghouat, Algeria) on Google Maps</span>
+            <span>{t.aboutPage.mapsButton}</span>
             <ExternalLink className="h-3.5 w-3.5" />
           </a>
         </div>

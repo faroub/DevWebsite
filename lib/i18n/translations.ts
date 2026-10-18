@@ -66,6 +66,19 @@ export interface TranslationDictionary {
     sendingButton: string;
     successTitle: string;
   };
+  aboutPage: {
+    whatIsTitle: string;
+    whatIsBody: string;
+    whoAmITitle: string;
+    whoAmIBody: string;
+    originTitle: string;
+    originBody: string;
+    bridgeTitle: string;
+    bridgeSub: string;
+    cascadeTitle: string;
+    cascadeSub: string;
+    mapsButton: string;
+  };
   footer: {
     copy: string;
     zeroServer: string;
@@ -144,6 +157,22 @@ export const translations: Record<Locale, TranslationDictionary> = {
       sendingButton: 'Transmitting...',
       successTitle: 'Message sent successfully!',
     },
+    aboutPage: {
+      whatIsTitle: 'What is mzilab?',
+      whatIsBody:
+        'mzilab is a dedicated software and hardware development platform engineered and operated by a solo developer. The platform serves as an interactive hub to showcase, download, and test custom digital and physical solutions while actively gathering user feedback for continuous refinement and growth.',
+      whoAmITitle: 'Who am I?',
+      whoAmIBody:
+        'I am an engineer with a deep passion for software development, hardware engineering, and emerging technologies. My focus is on transforming complex technical and operational challenges into seamless, high-performance web applications, mobile apps, and integrated hardware projects.',
+      originTitle: 'The Origin of "mzi"',
+      originBody:
+        'The name mzilab is deeply tied to my roots. It is inspired by Oued M’Zi, a vital river valley located near my home city of Laghouat, Algeria. Originating in the breathtaking Saharan Atlas mountains, Oued M’Zi serves as a historic life source and a geographic gateway where rugged highlands transition into the expansive desert.',
+      bridgeTitle: 'Grand Bridge over Oued M\'Zi',
+      bridgeSub: 'Historic River Crossing • Laghouat, Algeria',
+      cascadeTitle: 'Oued M\'Zi Natural Cascade',
+      cascadeSub: 'Saharan Atlas Mountains • Laghouat, Algeria',
+      mapsButton: 'View Oued M\'Zi (Laghouat, Algeria) on Google Maps',
+    },
     footer: {
       copy: 'mzilab © 2026',
       zeroServer: 'Zero Server / Static Export',
@@ -220,6 +249,22 @@ export const translations: Record<Locale, TranslationDictionary> = {
       sendingButton: 'Transmission...',
       successTitle: 'Message envoyé avec succès !',
     },
+    aboutPage: {
+      whatIsTitle: 'Qu\'est-ce que mzilab ?',
+      whatIsBody:
+        'mzilab est une plateforme dédiée au développement logiciel et matériel conçue et gérée par un développeur indépendant. La plateforme sert de centre interactif pour présenter, télécharger et tester des solutions numériques et physiques sur mesure, tout en recueillant activement les retours des utilisateurs pour une amélioration continue.',
+      whoAmITitle: 'Qui suis-je ?',
+      whoAmIBody:
+        'Je suis un ingénieur passionné par le développement logiciel, l\'ingénierie matérielle et les technologies émergentes. Mon objectif est de transformer des défis techniques et opérationnels complexes en applications web, applications mobiles et projets matériels intégrés performants et fluides.',
+      originTitle: 'L\'Origine de « mzi »',
+      originBody:
+        'Le nom mzilab est profondément lié à mes racines. Il s\'inspire de l\'Oued M\'Zi, une vallée fluviale essentielle située près de ma ville natale de Laghouat, en Algérie. Prenant sa source dans les magnifiques montagnes de l\'Atlas saharien, l\'Oued M\'Zi constitue une source de vie historique et une porte géographique où les hauts plateaux rencontrent le vaste désert.',
+      bridgeTitle: 'Le Grand Pont sur l\'Oued M\'Zi',
+      bridgeSub: 'Traversée historique • Laghouat, Algérie',
+      cascadeTitle: 'Cascade Naturelle de l\'Oued M\'Zi',
+      cascadeSub: 'Montagnes de l\'Atlas saharien • Laghouat, Algérie',
+      mapsButton: 'Voir l\'Oued M\'Zi (Laghouat, Algérie) sur Google Maps',
+    },
     footer: {
       copy: 'mzilab © 2026',
       zeroServer: 'Sans Serveur / Export Statique',
@@ -295,6 +340,22 @@ export const translations: Record<Locale, TranslationDictionary> = {
       sendButton: 'إرسال الرسالة',
       sendingButton: 'جاري الإرسال...',
       successTitle: 'تم إرسال الرسالة بنجاح!',
+    },
+    aboutPage: {
+      whatIsTitle: 'ما هو mzilab؟',
+      whatIsBody:
+        'منصة mzilab هي بيئة متخصصة لتطوير البرمجيات والأجهزة الإلكترونية، يصممها ويديرها مطور مستقل. تُعد المنصة مركزًا تفاعليًا لعرض الحلول الرقمية والفيزيائية المخصصة وتنزيلها واختبارها، مع جمع ملاحظات المستخدمين لتطويرها وتحسينها باستمرار.',
+      whoAmITitle: 'من أنا؟',
+      whoAmIBody:
+        'أنا مهندس بشغف عميق بتطوير البرمجيات والهندسة الإلكترونية والتقنيات الناشئة. يركز عملي على تحويل التحديات التقنية والتشغيلية المعقدة إلى تطبيقات ويب وتطبيقات جوال ومشاريع أجهزة مدمجة عالية الأداء والسلاسة.',
+      originTitle: 'أصل التسمية "mzi"',
+      originBody:
+        'يرتبط اسم mzilab ارتباطًا وثيقًا بجذوري؛ حيث أستلهم الاسم من وادي أمزي (Oued M’Zi)، وهو وادٍ نهري شرياني يقع بالقرب من مدينتي الأغواط في الجزائر. ينبع وادي أمزي من جبال الأطلس الصحراوي الخلابة، ويُعد شريان حياة تاريخيًا وبوابة جغرافية تلتقي عندها الهضاب المرتفعة بالصحراء الشاسعة.',
+      bridgeTitle: 'الجسر الكبير على وادي أمزي',
+      bridgeSub: 'معبر نهري تاريخي • الأغواط، الجزائر',
+      cascadeTitle: 'شلالات وادي أمزي الطبيعية',
+      cascadeSub: 'جبال الأطلس الصحراوي • الأغواط، الجزائر',
+      mapsButton: 'عرض وادي أمزي (الأغواط، الجزائر) على خرائط Google',
     },
     footer: {
       copy: 'mzilab © 2026',
