@@ -27,7 +27,7 @@ interface ContentItem {
 type CollectionType = 'apps' | 'projects' | 'blogs';
 
 export default function LocalAdminPage() {
-  const [isLocalHost, setIsLocalHost] = useState<boolean | null>(null);
+  const [isLocalHost, setIsLocalHost] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<CollectionType>('apps');
   const [bridgeConnected, setBridgeConnected] = useState<boolean | null>(null);
   const [items, setItems] = useState<Record<CollectionType, ContentItem[]>>({
@@ -46,11 +46,15 @@ export default function LocalAdminPage() {
   const [newItemTitle, setNewItemTitle] = useState('');
   const [newItemSlug, setNewItemSlug] = useState('');
 
-  // Localhost Verification Check
+  // Localhost Verification Check & Fetch
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const hostname = window.location.hostname;
-      const isLocal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.startsWith('192.168.');
+      const isLocal =
+        hostname === 'localhost' ||
+        hostname === '127.0.0.1' ||
+        hostname.startsWith('192.168.') ||
+        hostname.endsWith('.local');
       setIsLocalHost(isLocal);
       if (isLocal) {
         fetchLocalContent();
@@ -67,7 +71,7 @@ export default function LocalAdminPage() {
         if (json.success) {
           setItems(json.data);
           setBridgeConnected(true);
-          setStatusMessage('Local admin bridge connected.');
+          setStatusMessage('Local admin bridge connected (Port 3001).');
           return;
         }
       }
@@ -229,7 +233,7 @@ export default function LocalAdminPage() {
     setNewItemSlug('');
   };
 
-  // If accessed on a deployed production domain, render 404 Page Not Found!
+  // If accessed on a deployed non-local production domain, render 404
   if (isLocalHost === false) {
     return (
       <div className="max-w-2xl mx-auto my-12 text-center space-y-6 font-sans">
@@ -249,10 +253,6 @@ export default function LocalAdminPage() {
         </div>
       </div>
     );
-  }
-
-  if (isLocalHost === null) {
-    return null; // Initial mount check
   }
 
   return (
@@ -288,10 +288,10 @@ export default function LocalAdminPage() {
             )}
             <button
               onClick={fetchLocalContent}
-              className="inline-flex items-center gap-1 text-[11px] text-text-secondary hover:text-accent-primary transition-colors"
+              className="inline-flex items-center gap-1 text-[11px] text-text-secondary hover:text-accent-primary transition-colors font-bold"
             >
               <RefreshCw className="h-3 w-3" />
-              <span>Refresh local files</span>
+              <span>Connect / Refresh Bridge</span>
             </button>
           </div>
         </div>
@@ -371,9 +371,10 @@ export default function LocalAdminPage() {
 
           <div className="space-y-2 max-h-[600px] overflow-y-auto pr-1">
             {(items[activeTab] || []).length === 0 ? (
-              <p className="font-mono text-xs text-text-secondary p-4 text-center">
-                No items found. Click + New or check bridge connection.
-              </p>
+              <div className="p-4 text-center font-mono text-xs text-text-secondary space-y-2">
+                <p>No items found.</p>
+                <p className="text-[11px]">Click <strong>+ New</strong> to create one, or click <strong>Connect / Refresh Bridge</strong>.</p>
+              </div>
             ) : (
               (items[activeTab] || []).map((item, idx) => (
                 <button
@@ -598,8 +599,9 @@ export default function LocalAdminPage() {
               )}
             </div>
           ) : (
-            <div className="p-12 text-center font-mono text-xs text-text-secondary">
-              Select an item from the sidebar or click + New to create content.
+            <div className="p-12 text-center font-mono text-xs text-text-secondary space-y-2">
+              <p className="font-bold text-text-primary text-sm">Welcome to Local Content Studio</p>
+              <p>Select an item from the sidebar list, or click <strong>+ New</strong> to start creating.</p>
             </div>
           )}
         </div>

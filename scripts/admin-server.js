@@ -21,6 +21,13 @@ const server = http.createServer((req, res) => {
 
   const url = new URL(req.url, `http://localhost:${PORT}`);
 
+  // Auto-redirect browser visits from port 3001 to Next.js app on port 3000
+  if (url.pathname === '/' || url.pathname === '/admin') {
+    res.writeHead(302, { Location: 'http://localhost:3000/admin' });
+    res.end();
+    return;
+  }
+
   // List all content items
   if (req.method === 'GET' && url.pathname === '/api/content') {
     try {
@@ -120,6 +127,7 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, () => {
   console.log(`\n==================================================`);
   console.log(`🚀 Local Admin File Bridge active on http://localhost:${PORT}`);
+  console.log(`💻 Open Web Admin Studio at: http://localhost:3000/admin`);
   console.log(`📁 Managing files in: ${CONTENT_DIR}`);
   console.log(`==================================================\n`);
 });
