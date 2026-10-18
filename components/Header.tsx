@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { GitBranch, Menu, X } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 import { LanguageSwitcher } from './LanguageSwitcher';
@@ -9,7 +10,27 @@ import { useLanguage } from './LanguageContext';
 
 export function Header() {
   const { t } = useLanguage();
+  const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const isActive = (path: string) => {
+    if (path === '/') return pathname === '/';
+    return pathname === path || pathname.startsWith(`${path}/`);
+  };
+
+  const linkClass = (path: string) =>
+    `rounded-md px-2.5 py-1.5 text-xs font-mono transition-all border ${
+      isActive(path)
+        ? 'bg-accent-primary/10 border-accent-primary text-accent-primary font-bold shadow-sm'
+        : 'text-text-primary hover:bg-canvas hover:text-accent-primary border-transparent hover:border-divider font-medium'
+    }`;
+
+  const mobileLinkClass = (path: string) =>
+    `block rounded-md px-3 py-2 text-xs font-mono transition-all border ${
+      isActive(path)
+        ? 'bg-accent-primary/10 border-accent-primary text-accent-primary font-bold shadow-sm'
+        : 'text-text-primary hover:bg-canvas hover:text-accent-primary border-divider font-medium'
+    }`;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-divider bg-surface/90 backdrop-blur-md transition-colors shadow-sm">
@@ -33,28 +54,16 @@ export function Header() {
         <div className="flex items-center gap-2">
           {/* Desktop Nav: blog - apps - projects - about */}
           <nav className="hidden md:flex items-center gap-1 sm:gap-2">
-            <Link
-              href="/blogs"
-              className="rounded-md px-2.5 py-1.5 text-xs font-mono text-text-primary hover:bg-canvas hover:text-accent-primary transition-colors border border-transparent hover:border-divider"
-            >
+            <Link href="/blogs" className={linkClass('/blogs')}>
               {t.nav.blogs}
             </Link>
-            <Link
-              href="/apps"
-              className="rounded-md px-2.5 py-1.5 text-xs font-mono text-text-primary hover:bg-canvas hover:text-accent-primary transition-colors border border-transparent hover:border-divider"
-            >
+            <Link href="/apps" className={linkClass('/apps')}>
               {t.nav.apps}
             </Link>
-            <Link
-              href="/projects"
-              className="rounded-md px-2.5 py-1.5 text-xs font-mono text-text-primary hover:bg-canvas hover:text-accent-primary transition-colors border border-transparent hover:border-divider"
-            >
+            <Link href="/projects" className={linkClass('/projects')}>
               {t.nav.projects}
             </Link>
-            <Link
-              href="/about"
-              className="rounded-md px-2.5 py-1.5 text-xs font-mono text-text-primary hover:bg-canvas hover:text-accent-primary transition-colors border border-transparent hover:border-divider"
-            >
+            <Link href="/about" className={linkClass('/about')}>
               {t.nav.about}
             </Link>
           </nav>
@@ -84,28 +93,28 @@ export function Header() {
           <Link
             href="/blogs"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="block rounded-md px-3 py-2 text-text-primary hover:bg-canvas hover:text-accent-primary border border-divider"
+            className={mobileLinkClass('/blogs')}
           >
             {t.nav.blogs}
           </Link>
           <Link
             href="/apps"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="block rounded-md px-3 py-2 text-text-primary hover:bg-canvas hover:text-accent-primary border border-divider"
+            className={mobileLinkClass('/apps')}
           >
             {t.nav.apps}
           </Link>
           <Link
             href="/projects"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="block rounded-md px-3 py-2 text-text-primary hover:bg-canvas hover:text-accent-primary border border-divider"
+            className={mobileLinkClass('/projects')}
           >
             {t.nav.projects}
           </Link>
           <Link
             href="/about"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="block rounded-md px-3 py-2 text-text-primary hover:bg-canvas hover:text-accent-primary border border-divider"
+            className={mobileLinkClass('/about')}
           >
             {t.nav.about}
           </Link>
