@@ -15,6 +15,9 @@ import {
   Edit3,
   Download,
   RefreshCw,
+  Settings,
+  Mail,
+  Send,
 } from 'lucide-react';
 
 interface ContentItem {
@@ -24,17 +27,21 @@ interface ContentItem {
   body: string;
 }
 
-type CollectionType = 'apps' | 'projects' | 'blogs';
+type CollectionType = 'apps' | 'projects' | 'blogs' | 'settings';
 
 export default function LocalAdminPage() {
   const [isLocalHost, setIsLocalHost] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<CollectionType>('apps');
   const [bridgeConnected, setBridgeConnected] = useState<boolean | null>(null);
-  const [items, setItems] = useState<Record<CollectionType, ContentItem[]>>({
+  const [items, setItems] = useState<Record<'apps' | 'projects' | 'blogs', ContentItem[]>>({
     apps: [],
     projects: [],
     blogs: [],
   });
+
+  // Settings State
+  const [notifyEmail, setNotifyEmail] = useState<string>('mzilab.dev@gmail.com');
+  const [web3formsKey, setWeb3formsKey] = useState<string>('');
 
   const [selectedItemIndex, setSelectedItemIndex] = useState<number>(0);
   const [editedItem, setEditedItem] = useState<ContentItem | null>(null);
@@ -58,6 +65,7 @@ export default function LocalAdminPage() {
       setIsLocalHost(isLocal);
       if (isLocal) {
         fetchLocalContent();
+        fetchSettings();
       }
     }
   }, []);
@@ -81,8 +89,85 @@ export default function LocalAdminPage() {
     }
   };
 
+  // Fetch email notification settings
+  const fetchSettings = async () => {
+    try {
+      const res = await fetch('http://localhost:3001/api/settings');
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && json.settings) {
+          if (json.settings.notifyEmail) setNotifyEmail(json.settings.notifyEmail);
+          if (json.settings.web3formsKey) setWeb3formsKey(json.settings.web3formsKey);
+          localStorage.setItem('mzilab_settings', JSON.stringify(json.settings));
+        }
+      }
+    } catch {
+      const saved = localStorage.getItem('mzilab_settings');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed.notifyEmail) setNotifyEmail(parsed.notifyEmail);
+          if (parsed.web3formsKey) setWeb3formsKey(parsed.web3formsKey);
+        } catch {}
+      }
+    }
+  };
+
+  // Save email settings
+  const handleSaveSettings = async () => {
+    const newSettings = { notifyEmail, web3formsKey };
+    localStorage.setItem('mzilab_settings', JSON.stringify(newSettings));
+
+    if (bridgeConnected) {
+      try {
+        const res = await fetch('http://localhost:3001/api/settings/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newSettings),
+        });
+        const json = await res.json();
+        if (json.success) {
+          setStatusMessage(`Notification email updated to: ${notifyEmail}`);
+          return;
+        }
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err);
+        setStatusMessage(`Error saving settings to disk: ${message}`);
+      }
+    } else {
+      setStatusMessage(`Saved settings to browser storage: ${notifyEmail}`);
+    }
+  };
+
+  // Send Test Notification Email
+  const handleSendTestEmail = async () => {
+    setStatusMessage('Transmitting test notification email...');
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_key: web3formsKey || process.env.NEXT_PUBLIC_WEB3FORMS_KEY || 'YOUR_ACCESS_KEY',
+          subject: '[mzilab Test] Email Notification Setup Success',
+          from_name: 'mzilab Admin Studio',
+          to_email: notifyEmail,
+          message: `Hello Farid!\n\nThis is a test notification confirming that comments and reviews posted on your website will be forwarded directly to your personal email inbox: ${notifyEmail}.\n\nTimestamp: ${new Date().toLocaleString()}`,
+        }),
+      });
+      if (res.ok) {
+        setStatusMessage(`Test email sent successfully to ${notifyEmail}! Check your inbox.`);
+      } else {
+        setStatusMessage('Test email failed. Check your Web3Forms access key.');
+      }
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      setStatusMessage(`Error sending test email: ${message}`);
+    }
+  };
+
   // Sync selected item when tab or items change
   useEffect(() => {
+    if (activeTab === 'settings') return;
     const currentList = items[activeTab] || [];
     if (currentList.length > 0) {
       const validIndex = Math.min(selectedItemIndex, currentList.length - 1);
@@ -93,9 +178,9 @@ export default function LocalAdminPage() {
     }
   }, [activeTab, items, selectedItemIndex]);
 
-  // Handle saving current item
+  // Handle saving current content item
   const handleSave = async () => {
-    if (!editedItem) return;
+    if (!editedItem || activeTab === 'settings') return;
 
     if (bridgeConnected) {
       try {
@@ -143,7 +228,7 @@ export default function LocalAdminPage() {
 
   // Delete item
   const handleDelete = async () => {
-    if (!editedItem) return;
+    if (!editedItem || activeTab === 'settings') return;
     if (!confirm(`Are you sure you want to delete ${editedItem.fileName}?`)) return;
 
     if (bridgeConnected) {
@@ -171,7 +256,7 @@ export default function LocalAdminPage() {
 
   // Create new item
   const handleCreateNew = () => {
-    if (!newItemTitle || !newItemSlug) return;
+    if (!newItemTitle || !newItemSlug || activeTab === 'settings') return;
     const fileName = `${newItemSlug}.mdx`;
 
     let defaultFrontmatter: Record<string, unknown> = {};
@@ -269,7 +354,7 @@ export default function LocalAdminPage() {
               Local Admin & Content Studio
             </h1>
             <p className="text-xs text-text-secondary mt-1 font-mono">
-              Directly edit, upload, and create Apps, Projects, and Blog MDX files on your local disk.
+              Directly edit, upload, and configure Apps, Projects, Blogs, and Email Forwarding.
             </p>
           </div>
 
@@ -283,11 +368,14 @@ export default function LocalAdminPage() {
             ) : (
               <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-amber-500 font-bold">
                 <AlertCircle className="h-4 w-4" />
-                <span>STANDALONE MODE (Run: npm run admin)</span>
+                <span>STANDALONE MODE (Run: npm run studio)</span>
               </div>
             )}
             <button
-              onClick={fetchLocalContent}
+              onClick={() => {
+                fetchLocalContent();
+                fetchSettings();
+              }}
               className="inline-flex items-center gap-1 text-[11px] text-text-secondary hover:text-accent-primary transition-colors font-bold"
             >
               <RefreshCw className="h-3 w-3" />
@@ -351,261 +439,346 @@ export default function LocalAdminPage() {
             <BookOpen className="h-4 w-4" />
             <span>Blog Posts ({items.blogs.length})</span>
           </button>
+
+          <button
+            onClick={() => setActiveTab('settings')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-md font-mono text-xs font-bold transition-all ${
+              activeTab === 'settings'
+                ? 'bg-accent-primary text-white shadow-sm'
+                : 'bg-canvas text-text-secondary border border-divider hover:text-text-primary'
+            }`}
+          >
+            <Settings className="h-4 w-4" />
+            <span>Settings & Email Forwarding</span>
+          </button>
         </div>
       </section>
 
-      {/* Main Studio Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Left Sidebar: Item List */}
-        <div className="lg:col-span-1 rounded-xl border border-divider bg-surface p-4 space-y-3">
-          <div className="flex items-center justify-between pb-2 border-b border-divider font-mono text-xs">
-            <span className="font-bold text-text-primary capitalize">{activeTab} List</span>
-            <button
-              onClick={() => setIsCreatingNew(true)}
-              className="inline-flex items-center gap-1 rounded bg-accent-primary px-2 py-1 text-[11px] font-bold text-white hover:opacity-90 transition-opacity"
-            >
-              <Plus className="h-3.5 w-3.5" />
-              <span>New</span>
-            </button>
+      {/* Main Studio Area */}
+      {activeTab === 'settings' ? (
+        /* Settings & Email Forwarding View */
+        <div className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-6 font-mono text-xs shadow-sm">
+          <div className="border-b border-divider pb-4 flex items-center justify-between">
+            <div>
+              <h2 className="font-sans text-xl font-bold text-text-primary flex items-center gap-2">
+                <Mail className="h-5 w-5 text-accent-primary" />
+                <span>Comment Notification Email Settings</span>
+              </h2>
+              <p className="text-text-secondary text-xs mt-1">
+                All comments and reviews posted on your apps, projects, or blog pages will be automatically forwarded to this recipient address.
+              </p>
+            </div>
           </div>
 
-          <div className="space-y-2 max-h-[600px] overflow-y-auto pr-1">
-            {(items[activeTab] || []).length === 0 ? (
-              <div className="p-4 text-center font-mono text-xs text-text-secondary space-y-2">
-                <p>No items found.</p>
-                <p className="text-[11px]">Click <strong>+ New</strong> to create one, or click <strong>Connect / Refresh Bridge</strong>.</p>
-              </div>
-            ) : (
-              (items[activeTab] || []).map((item, idx) => (
-                <button
-                  key={item.fileName}
-                  onClick={() => {
-                    setSelectedItemIndex(idx);
-                    setEditedItem(JSON.parse(JSON.stringify(item)));
-                  }}
-                  className={`w-full text-left p-3 rounded-lg border font-mono text-xs transition-all ${
-                    selectedItemIndex === idx
-                      ? 'border-accent-primary bg-canvas shadow-sm'
-                      : 'border-divider bg-surface hover:bg-canvas'
-                  }`}
-                >
-                  <div className="font-bold text-text-primary truncate">
-                    {String(item.frontmatter.title || item.fileName)}
-                  </div>
-                  <div className="text-[11px] text-text-secondary truncate mt-0.5">{item.fileName}</div>
-                </button>
-              ))
-            )}
+          <div className="space-y-4 max-w-xl">
+            <div>
+              <label className="block text-text-primary mb-1 font-bold">
+                Personal Recipient Email Address <span className="text-accent-primary">*</span>
+              </label>
+              <input
+                type="email"
+                required
+                value={notifyEmail}
+                onChange={(e) => setNotifyEmail(e.target.value)}
+                placeholder="e.g. farid@mzilab.de or mzilab.dev@gmail.com"
+                className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
+              />
+              <p className="text-[11px] text-text-secondary mt-1">
+                New comments and answers will be delivered directly to this inbox.
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-text-primary mb-1 font-bold">
+                Web3Forms / API Access Key (Optional)
+              </label>
+              <input
+                type="text"
+                value={web3formsKey}
+                onChange={(e) => setWeb3formsKey(e.target.value)}
+                placeholder="e.g. 12345678-abcd-efgh-1234-567890123456"
+                className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
+              />
+              <p className="text-[11px] text-text-secondary mt-1">
+                Get a free key at <a href="https://web3forms.com" target="_blank" rel="noopener noreferrer" className="text-accent-primary underline">web3forms.com</a> or leave empty to use default.
+              </p>
+            </div>
+
+            <div className="pt-4 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={handleSaveSettings}
+                className="inline-flex items-center gap-2 rounded-md border border-accent-primary bg-accent-primary px-5 py-2 font-bold text-white hover:opacity-90 transition-all shadow-sm"
+              >
+                <Save className="h-4 w-4" />
+                <span>Save Email Settings</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleSendTestEmail}
+                className="inline-flex items-center gap-2 rounded-md border border-divider bg-canvas px-4 py-2 font-bold text-text-primary hover:border-accent-primary transition-all"
+              >
+                <Send className="h-4 w-4 text-accent-primary" />
+                <span>Send Test Notification</span>
+              </button>
+            </div>
           </div>
         </div>
+      ) : (
+        /* Content Management View (Apps, Projects, Blogs) */
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Left Sidebar: Item List */}
+          <div className="lg:col-span-1 rounded-xl border border-divider bg-surface p-4 space-y-3">
+            <div className="flex items-center justify-between pb-2 border-b border-divider font-mono text-xs">
+              <span className="font-bold text-text-primary capitalize">{activeTab} List</span>
+              <button
+                onClick={() => setIsCreatingNew(true)}
+                className="inline-flex items-center gap-1 rounded bg-accent-primary px-2 py-1 text-[11px] font-bold text-white hover:opacity-90 transition-opacity"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                <span>New</span>
+              </button>
+            </div>
 
-        {/* Right Studio Area: Content Editor */}
-        <div className="lg:col-span-3 rounded-xl border border-divider bg-surface p-6 space-y-6">
-          {editedItem ? (
-            <div className="space-y-6">
-              {/* Top Editor Toolbar */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-divider pb-4 font-mono text-xs">
-                <div>
-                  <span className="text-text-secondary">Editing File: </span>
-                  <span className="font-bold text-accent-primary">{editedItem.fileName}</span>
+            <div className="space-y-2 max-h-[600px] overflow-y-auto pr-1">
+              {(items[activeTab] || []).length === 0 ? (
+                <div className="p-4 text-center font-mono text-xs text-text-secondary space-y-2">
+                  <p>No items found.</p>
+                  <p className="text-[11px]">Click <strong>+ New</strong> to create one, or click <strong>Connect / Refresh Bridge</strong>.</p>
+                </div>
+              ) : (
+                (items[activeTab] || []).map((item, idx) => (
+                  <button
+                    key={item.fileName}
+                    onClick={() => {
+                      setSelectedItemIndex(idx);
+                      setEditedItem(JSON.parse(JSON.stringify(item)));
+                    }}
+                    className={`w-full text-left p-3 rounded-lg border font-mono text-xs transition-all ${
+                      selectedItemIndex === idx
+                        ? 'border-accent-primary bg-canvas shadow-sm'
+                        : 'border-divider bg-surface hover:bg-canvas'
+                    }`}
+                  >
+                    <div className="font-bold text-text-primary truncate">
+                      {String(item.frontmatter.title || item.fileName)}
+                    </div>
+                    <div className="text-[11px] text-text-secondary truncate mt-0.5">{item.fileName}</div>
+                  </button>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* Right Studio Area: Content Editor */}
+          <div className="lg:col-span-3 rounded-xl border border-divider bg-surface p-6 space-y-6">
+            {editedItem ? (
+              <div className="space-y-6">
+                {/* Top Editor Toolbar */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-divider pb-4 font-mono text-xs">
+                  <div>
+                    <span className="text-text-secondary">Editing File: </span>
+                    <span className="font-bold text-accent-primary">{editedItem.fileName}</span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setIsPreviewOpen(!isPreviewOpen)}
+                      className="inline-flex items-center gap-1.5 rounded border border-divider bg-canvas px-3 py-1.5 text-text-primary hover:border-accent-primary transition-colors"
+                    >
+                      {isPreviewOpen ? <Edit3 className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                      <span>{isPreviewOpen ? 'Editor' : 'Preview'}</span>
+                    </button>
+
+                    <button
+                      onClick={handleDelete}
+                      className="inline-flex items-center gap-1.5 rounded border border-red-500/30 bg-red-500/10 px-3 py-1.5 text-red-500 font-bold hover:bg-red-500 hover:text-white transition-all"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      <span>Delete</span>
+                    </button>
+
+                    <button
+                      onClick={handleSave}
+                      className="inline-flex items-center gap-1.5 rounded border border-accent-primary bg-accent-primary px-4 py-1.5 font-bold text-white hover:opacity-90 transition-all shadow-sm"
+                    >
+                      {bridgeConnected ? <Save className="h-3.5 w-3.5" /> : <Download className="h-3.5 w-3.5" />}
+                      <span>{bridgeConnected ? 'Save to Disk' : 'Export MDX'}</span>
+                    </button>
+                  </div>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setIsPreviewOpen(!isPreviewOpen)}
-                    className="inline-flex items-center gap-1.5 rounded border border-divider bg-canvas px-3 py-1.5 text-text-primary hover:border-accent-primary transition-colors"
-                  >
-                    {isPreviewOpen ? <Edit3 className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
-                    <span>{isPreviewOpen ? 'Editor' : 'Preview'}</span>
-                  </button>
+                {!isPreviewOpen ? (
+                  <div className="space-y-6">
+                    {/* Frontmatter Form Fields */}
+                    <div className="space-y-4">
+                      <h3 className="font-mono text-xs font-bold text-accent-primary uppercase tracking-wider">
+                        1. Frontmatter Metadata
+                      </h3>
 
-                  <button
-                    onClick={handleDelete}
-                    className="inline-flex items-center gap-1.5 rounded border border-red-500/30 bg-red-500/10 px-3 py-1.5 text-red-500 font-bold hover:bg-red-500 hover:text-white transition-all"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                    <span>Delete</span>
-                  </button>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono text-xs">
+                        <div>
+                          <label className="block text-text-primary mb-1">Title</label>
+                          <input
+                            type="text"
+                            value={String(editedItem.frontmatter.title || '')}
+                            onChange={(e) =>
+                              setEditedItem({
+                                ...editedItem,
+                                frontmatter: { ...editedItem.frontmatter, title: e.target.value },
+                              })
+                            }
+                            className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
+                          />
+                        </div>
 
-                  <button
-                    onClick={handleSave}
-                    className="inline-flex items-center gap-1.5 rounded border border-accent-primary bg-accent-primary px-4 py-1.5 font-bold text-white hover:opacity-90 transition-all shadow-sm"
-                  >
-                    {bridgeConnected ? <Save className="h-3.5 w-3.5" /> : <Download className="h-3.5 w-3.5" />}
-                    <span>{bridgeConnected ? 'Save to Disk' : 'Export MDX'}</span>
-                  </button>
-                </div>
-              </div>
+                        <div>
+                          <label className="block text-text-primary mb-1">Slug</label>
+                          <input
+                            type="text"
+                            value={String(editedItem.frontmatter.slug || '')}
+                            onChange={(e) =>
+                              setEditedItem({
+                                ...editedItem,
+                                frontmatter: { ...editedItem.frontmatter, slug: e.target.value },
+                              })
+                            }
+                            className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
+                          />
+                        </div>
 
-              {!isPreviewOpen ? (
-                <div className="space-y-6">
-                  {/* Frontmatter Form Fields */}
-                  <div className="space-y-4">
-                    <h3 className="font-mono text-xs font-bold text-accent-primary uppercase tracking-wider">
-                      1. Frontmatter Metadata
-                    </h3>
+                        {activeTab === 'apps' && (
+                          <>
+                            <div>
+                              <label className="block text-text-primary mb-1">Version</label>
+                              <input
+                                type="text"
+                                value={String(editedItem.frontmatter.version || '')}
+                                onChange={(e) =>
+                                  setEditedItem({
+                                    ...editedItem,
+                                    frontmatter: { ...editedItem.frontmatter, version: e.target.value },
+                                  })
+                                }
+                                className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
+                              />
+                            </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono text-xs">
-                      <div>
-                        <label className="block text-text-primary mb-1">Title</label>
-                        <input
-                          type="text"
-                          value={String(editedItem.frontmatter.title || '')}
-                          onChange={(e) =>
-                            setEditedItem({
-                              ...editedItem,
-                              frontmatter: { ...editedItem.frontmatter, title: e.target.value },
-                            })
-                          }
-                          className="w-full rounded border border-divider bg-[#0F172A] text-white dark:bg-[#0F172A] dark:text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
-                        />
+                            <div>
+                              <label className="block text-text-primary mb-1">Status</label>
+                              <select
+                                value={String(editedItem.frontmatter.status || 'In Development')}
+                                onChange={(e) =>
+                                  setEditedItem({
+                                    ...editedItem,
+                                    frontmatter: { ...editedItem.frontmatter, status: e.target.value },
+                                  })
+                                }
+                                className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
+                              >
+                                <option value="Available">Available</option>
+                                <option value="Testing">Testing</option>
+                                <option value="Coming Soon">Coming Soon</option>
+                                <option value="In Development">In Development</option>
+                                <option value="Paused">Paused</option>
+                              </select>
+                            </div>
+                          </>
+                        )}
+
+                        {activeTab === 'blogs' && (
+                          <>
+                            <div>
+                              <label className="block text-text-primary mb-1">Author</label>
+                              <input
+                                type="text"
+                                value={String(editedItem.frontmatter.author || '')}
+                                onChange={(e) =>
+                                  setEditedItem({
+                                    ...editedItem,
+                                    frontmatter: { ...editedItem.frontmatter, author: e.target.value },
+                                  })
+                                }
+                                className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-text-primary mb-1">Read Time</label>
+                              <input
+                                type="text"
+                                value={String(editedItem.frontmatter.readTime || '')}
+                                onChange={(e) =>
+                                  setEditedItem({
+                                    ...editedItem,
+                                    frontmatter: { ...editedItem.frontmatter, readTime: e.target.value },
+                                  })
+                                }
+                                className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
+                              />
+                            </div>
+                          </>
+                        )}
                       </div>
 
                       <div>
-                        <label className="block text-text-primary mb-1">Slug</label>
-                        <input
-                          type="text"
-                          value={String(editedItem.frontmatter.slug || '')}
-                          onChange={(e) =>
+                        <label className="block font-mono text-xs text-text-primary mb-1">
+                          Short Summary / Tagline
+                        </label>
+                        <textarea
+                          rows={2}
+                          value={String(editedItem.frontmatter.tagline || editedItem.frontmatter.excerpt || '')}
+                          onChange={(e) => {
+                            const key = activeTab === 'blogs' ? 'excerpt' : 'tagline';
                             setEditedItem({
                               ...editedItem,
-                              frontmatter: { ...editedItem.frontmatter, slug: e.target.value },
-                            })
-                          }
-                          className="w-full rounded border border-divider bg-[#0F172A] text-white dark:bg-[#0F172A] dark:text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
+                              frontmatter: { ...editedItem.frontmatter, [key]: e.target.value },
+                            });
+                          }}
+                          className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 font-mono text-xs focus:border-accent-primary focus:outline-none resize-none"
                         />
                       </div>
-
-                      {activeTab === 'apps' && (
-                        <>
-                          <div>
-                            <label className="block text-text-primary mb-1">Version</label>
-                            <input
-                              type="text"
-                              value={String(editedItem.frontmatter.version || '')}
-                              onChange={(e) =>
-                                setEditedItem({
-                                  ...editedItem,
-                                  frontmatter: { ...editedItem.frontmatter, version: e.target.value },
-                                })
-                              }
-                              className="w-full rounded border border-divider bg-[#0F172A] text-white dark:bg-[#0F172A] dark:text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-text-primary mb-1">Status</label>
-                            <select
-                              value={String(editedItem.frontmatter.status || 'In Development')}
-                              onChange={(e) =>
-                                setEditedItem({
-                                  ...editedItem,
-                                  frontmatter: { ...editedItem.frontmatter, status: e.target.value },
-                                })
-                              }
-                              className="w-full rounded border border-divider bg-[#0F172A] text-white dark:bg-[#0F172A] dark:text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
-                            >
-                              <option value="Available">Available</option>
-                              <option value="Testing">Testing</option>
-                              <option value="Coming Soon">Coming Soon</option>
-                              <option value="In Development">In Development</option>
-                              <option value="Paused">Paused</option>
-                            </select>
-                          </div>
-                        </>
-                      )}
-
-                      {activeTab === 'blogs' && (
-                        <>
-                          <div>
-                            <label className="block text-text-primary mb-1">Author</label>
-                            <input
-                              type="text"
-                              value={String(editedItem.frontmatter.author || '')}
-                              onChange={(e) =>
-                                setEditedItem({
-                                  ...editedItem,
-                                  frontmatter: { ...editedItem.frontmatter, author: e.target.value },
-                                })
-                              }
-                              className="w-full rounded border border-divider bg-[#0F172A] text-white dark:bg-[#0F172A] dark:text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-text-primary mb-1">Read Time</label>
-                            <input
-                              type="text"
-                              value={String(editedItem.frontmatter.readTime || '')}
-                              onChange={(e) =>
-                                setEditedItem({
-                                  ...editedItem,
-                                  frontmatter: { ...editedItem.frontmatter, readTime: e.target.value },
-                                })
-                              }
-                              className="w-full rounded border border-divider bg-[#0F172A] text-white dark:bg-[#0F172A] dark:text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
-                            />
-                          </div>
-                        </>
-                      )}
                     </div>
 
-                    <div>
-                      <label className="block font-mono text-xs text-text-primary mb-1">
-                        Short Summary / Tagline
-                      </label>
+                    {/* Body MDX Content Editor */}
+                    <div className="space-y-2">
+                      <h3 className="font-mono text-xs font-bold text-accent-primary uppercase tracking-wider">
+                        2. MDX Markdown Document Body
+                      </h3>
                       <textarea
-                        rows={2}
-                        value={String(editedItem.frontmatter.tagline || editedItem.frontmatter.excerpt || '')}
-                        onChange={(e) => {
-                          const key = activeTab === 'blogs' ? 'excerpt' : 'tagline';
-                          setEditedItem({
-                            ...editedItem,
-                            frontmatter: { ...editedItem.frontmatter, [key]: e.target.value },
-                          });
-                        }}
-                        className="w-full rounded border border-divider bg-[#0F172A] text-white dark:bg-[#0F172A] dark:text-white px-3 py-2 font-mono text-xs focus:border-accent-primary focus:outline-none resize-none"
+                        rows={14}
+                        value={editedItem.body}
+                        onChange={(e) => setEditedItem({ ...editedItem, body: e.target.value })}
+                        className="w-full rounded border border-divider bg-[#0F172A] text-white p-4 font-mono text-xs focus:border-accent-primary focus:outline-none leading-relaxed"
                       />
                     </div>
                   </div>
-
-                  {/* Body MDX Content Editor */}
-                  <div className="space-y-2">
-                    <h3 className="font-mono text-xs font-bold text-accent-primary uppercase tracking-wider">
-                      2. MDX Markdown Document Body
-                    </h3>
-                    <textarea
-                      rows={14}
-                      value={editedItem.body}
-                      onChange={(e) => setEditedItem({ ...editedItem, body: e.target.value })}
-                      className="w-full rounded border border-divider bg-[#0F172A] text-white dark:bg-[#0F172A] dark:text-white p-4 font-mono text-xs focus:border-accent-primary focus:outline-none leading-relaxed"
-                    />
+                ) : (
+                  /* Live Preview Panel */
+                  <div className="space-y-4 font-sans border border-divider bg-canvas p-6 rounded-lg">
+                    <div className="font-mono text-xs text-accent-primary font-bold border-b border-divider pb-2">
+                      --- LIVE PREVIEW ---
+                    </div>
+                    <h1 className="text-2xl font-extrabold text-text-primary">{String(editedItem.frontmatter.title)}</h1>
+                    <p className="text-sm text-text-secondary italic">
+                      {String(editedItem.frontmatter.tagline || editedItem.frontmatter.excerpt || '')}
+                    </p>
+                    <div className="prose dark:prose-invert text-xs font-mono text-text-primary whitespace-pre-wrap leading-relaxed pt-4 border-t border-divider">
+                      {editedItem.body}
+                    </div>
                   </div>
-                </div>
-              ) : (
-                /* Live Preview Panel */
-                <div className="space-y-4 font-sans border border-divider bg-canvas p-6 rounded-lg">
-                  <div className="font-mono text-xs text-accent-primary font-bold border-b border-divider pb-2">
-                    --- LIVE PREVIEW ---
-                  </div>
-                  <h1 className="text-2xl font-extrabold text-text-primary">{String(editedItem.frontmatter.title)}</h1>
-                  <p className="text-sm text-text-secondary italic">
-                    {String(editedItem.frontmatter.tagline || editedItem.frontmatter.excerpt || '')}
-                  </p>
-                  <div className="prose dark:prose-invert text-xs font-mono text-text-primary whitespace-pre-wrap leading-relaxed pt-4 border-t border-divider">
-                    {editedItem.body}
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="p-12 text-center font-mono text-xs text-text-secondary space-y-2">
-              <p className="font-bold text-text-primary text-sm">Welcome to Local Content Studio</p>
-              <p>Select an item from the sidebar list, or click <strong>+ New</strong> to start creating.</p>
-            </div>
-          )}
+                )}
+              </div>
+            ) : (
+              <div className="p-12 text-center font-mono text-xs text-text-secondary space-y-2">
+                <p className="font-bold text-text-primary text-sm">Welcome to Local Content Studio</p>
+                <p>Select an item from the sidebar list, or click <strong>+ New</strong> to start creating.</p>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* New Item Modal */}
       {isCreatingNew && (
@@ -623,7 +796,7 @@ export default function LocalAdminPage() {
                   setNewItemSlug(e.target.value.toLowerCase().replace(/[^a-z0-0]+/g, '-').replace(/(^-|-$)/g, ''));
                 }}
                 placeholder="My New Entry"
-                className="w-full rounded border border-divider bg-[#0F172A] text-white dark:bg-[#0F172A] dark:text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
+                className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
               />
             </div>
 
@@ -634,7 +807,7 @@ export default function LocalAdminPage() {
                 value={newItemSlug}
                 onChange={(e) => setNewItemSlug(e.target.value)}
                 placeholder="my-new-entry"
-                className="w-full rounded border border-divider bg-[#0F172A] text-white dark:bg-[#0F172A] dark:text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
+                className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
               />
             </div>
 

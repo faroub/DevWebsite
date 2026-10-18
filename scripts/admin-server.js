@@ -6,6 +6,7 @@ const matter = require('gray-matter');
 const PORT = 3001;
 const ROOT_DIR = path.join(__dirname, '..');
 const CONTENT_DIR = path.join(ROOT_DIR, 'content');
+const SETTINGS_FILE = path.join(CONTENT_DIR, 'settings.json');
 
 const server = http.createServer((req, res) => {
   // CORS Headers for local admin console
@@ -25,6 +26,47 @@ const server = http.createServer((req, res) => {
   if (url.pathname === '/' || url.pathname === '/admin') {
     res.writeHead(302, { Location: 'http://localhost:3000/admin' });
     res.end();
+    return;
+  }
+
+  // Get Admin Settings (email forwarding & API keys)
+  if (req.method === 'GET' && url.pathname === '/api/settings') {
+    try {
+      let settings = { notifyEmail: '', web3formsKey: '' };
+      if (fs.existsSync(SETTINGS_FILE)) {
+        settings = JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, settings }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // Save Admin Settings
+  if (req.method === 'POST' && url.pathname === '/api/settings/save') {
+    let body = '';
+    req.on('data', (chunk) => {
+      body += chunk.toString();
+    });
+    req.on('end', () => {
+      try {
+        const { notifyEmail, web3formsKey } = JSON.parse(body);
+        if (!fs.existsSync(CONTENT_DIR)) {
+          fs.mkdirSync(CONTENT_DIR, { recursive: true });
+        }
+        const settings = { notifyEmail: notifyEmail || '', web3formsKey: web3formsKey || '' };
+        fs.writeFileSync(SETTINGS_FILE, JSON.stringify(settings, null, 2), 'utf8');
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, message: 'Settings saved successfully', settings }));
+      } catch (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    });
     return;
   }
 

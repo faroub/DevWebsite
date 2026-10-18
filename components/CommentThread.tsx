@@ -107,6 +107,39 @@ export function CommentThread({
     }
   }, [storageKey]);
 
+  // Forward comment to configured email address via Web3Forms API
+  const sendEmailNotification = async (author: string, commentBody: string, starRating?: number) => {
+    try {
+      let notifyEmail = 'mzilab.dev@gmail.com';
+      let apiKey = process.env.NEXT_PUBLIC_WEB3FORMS_KEY || '';
+
+      const settingsRaw = localStorage.getItem('mzilab_settings');
+      if (settingsRaw) {
+        try {
+          const parsed = JSON.parse(settingsRaw);
+          if (parsed.notifyEmail) notifyEmail = parsed.notifyEmail;
+          if (parsed.web3formsKey) apiKey = parsed.web3formsKey;
+        } catch {
+          // Fallback
+        }
+      }
+
+      await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_key: apiKey || 'YOUR_WEB3FORMS_ACCESS_KEY',
+          subject: `[mzilab Comment] New comment on "${itemTitle}"`,
+          from_name: 'mzilab Website',
+          to_email: notifyEmail,
+          message: `New comment posted on ${itemTitle} (/apps/${itemSlug}):\n\nAuthor: ${author}\nRating: ${starRating ? starRating + ' / 5 Stars' : 'N/A'}\nDate: ${new Date().toISOString().split('T')[0]}\n\nComment:\n"${commentBody}"\n`,
+        }),
+      });
+    } catch {
+      // Non-blocking background notification
+    }
+  };
+
   // Persist to localStorage
   const saveComments = (newComments: CommentItem[]) => {
     setComments(newComments);
@@ -135,6 +168,9 @@ export function CommentThread({
 
     const updated = [newComment, ...comments];
     saveComments(updated);
+
+    // Forward notification to personal email
+    sendEmailNotification(name.trim(), body.trim(), rating);
 
     setName('');
     setBody('');
@@ -167,6 +203,10 @@ export function CommentThread({
     });
 
     saveComments(updated);
+
+    // Forward notification to personal email
+    sendEmailNotification(replyName.trim(), `Reply: ${replyBody.trim()}`);
+
     setReplyingToId(null);
     setReplyName('');
     setReplyBody('');
