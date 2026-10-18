@@ -43,35 +43,35 @@ export default function AboutPage() {
           The name mzilab is deeply tied to my roots. It is inspired by Oued M’Zi, a vital river valley located near my home city of Laghouat, Algeria. Originating in the breathtaking Saharan Atlas mountains, Oued M’Zi serves as a historic life source and a geographic gateway where rugged highlands transition into the expansive desert.
         </p>
 
-        {/* Representative Visual Cards */}
+        {/* Attached Photography Cards (ouad1.jpeg & ouad2.jpeg) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-          <div className="rounded-lg border border-divider bg-canvas overflow-hidden space-y-2 p-3 shadow-sm">
-            <div className="relative aspect-[16/9] w-full rounded border border-divider overflow-hidden bg-surface">
+          <div className="rounded-lg border border-divider bg-canvas overflow-hidden space-y-2 p-3 shadow-sm group">
+            <div className="relative aspect-[4/3] w-full rounded border border-divider overflow-hidden bg-surface">
               <Image
-                src="/images/oued-mzi-map.svg"
-                alt="Oued M'Zi River Valley and Laghouat, Algeria"
+                src="/images/ouad1.jpeg"
+                alt="Oued M'Zi natural stream and cascade in Saharan Atlas mountains"
                 fill
-                className="object-cover"
+                className="object-cover group-hover:scale-105 transition-transform duration-300"
               />
             </div>
             <div className="font-mono text-xs">
-              <div className="font-bold text-text-primary">Oued M&apos;Zi River Valley</div>
-              <div className="text-text-secondary text-[11px]">Laghouat, Algeria • 33.8000° N, 2.8833° E</div>
+              <div className="font-bold text-text-primary">Oued M&apos;Zi Natural Cascade</div>
+              <div className="text-text-secondary text-[11px]">Saharan Atlas Mountains • Laghouat, Algeria</div>
             </div>
           </div>
 
-          <div className="rounded-lg border border-divider bg-canvas overflow-hidden space-y-2 p-3 shadow-sm">
-            <div className="relative aspect-[16/9] w-full rounded border border-divider overflow-hidden bg-surface">
+          <div className="rounded-lg border border-divider bg-canvas overflow-hidden space-y-2 p-3 shadow-sm group">
+            <div className="relative aspect-[4/3] w-full rounded border border-divider overflow-hidden bg-surface">
               <Image
-                src="/images/saharan-atlas.svg"
-                alt="Saharan Atlas Mountains, Algeria"
+                src="/images/ouad2.jpeg"
+                alt="Grand bridge crossing Oued M'Zi river in Laghouat"
                 fill
-                className="object-cover"
+                className="object-cover group-hover:scale-105 transition-transform duration-300"
               />
             </div>
             <div className="font-mono text-xs">
-              <div className="font-bold text-text-primary">Saharan Atlas Mountains</div>
-              <div className="text-text-secondary text-[11px]">Historic Life Source &amp; Geographic Gateway</div>
+              <div className="font-bold text-text-primary">Grand Bridge over Oued M&apos;Zi</div>
+              <div className="text-text-secondary text-[11px]">Historic River Crossing • Laghouat, Algeria</div>
             </div>
           </div>
         </div>
