@@ -39,8 +39,8 @@ export default function LocalAdminPage() {
     blogs: [],
   });
 
-  // Settings State
-  const [notifyEmail, setNotifyEmail] = useState<string>('mzilab.dev@gmail.com');
+  // Settings State - Default to mzilab03dz@gmail.com
+  const [notifyEmail, setNotifyEmail] = useState<string>('mzilab03dz@gmail.com');
   const [web3formsKey, setWeb3formsKey] = useState<string>('');
 
   const [selectedItemIndex, setSelectedItemIndex] = useState<number>(0);
@@ -127,7 +127,7 @@ export default function LocalAdminPage() {
         });
         const json = await res.json();
         if (json.success) {
-          setStatusMessage(`Notification email updated to: ${notifyEmail}`);
+          setStatusMessage(`Notification email saved to disk: ${notifyEmail}`);
           return;
         }
       } catch (err: unknown) {
@@ -141,23 +141,32 @@ export default function LocalAdminPage() {
 
   // Send Test Notification Email
   const handleSendTestEmail = async () => {
-    setStatusMessage('Transmitting test notification email...');
+    const apiKey = web3formsKey.trim() || process.env.NEXT_PUBLIC_WEB3FORMS_KEY || '';
+
+    if (!apiKey || apiKey === 'YOUR_ACCESS_KEY' || apiKey.trim() === '') {
+      setStatusMessage('⚠️ Action Needed: Web3Forms Access Key is required! Get a free key at web3forms.com using mzilab03dz@gmail.com, then paste it below.');
+      return;
+    }
+
+    setStatusMessage('Transmitting test notification email via Web3Forms API...');
+
     try {
       const res = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          access_key: web3formsKey || process.env.NEXT_PUBLIC_WEB3FORMS_KEY || 'YOUR_ACCESS_KEY',
+          access_key: apiKey,
           subject: '[mzilab Test] Email Notification Setup Success',
           from_name: 'mzilab Admin Studio',
           to_email: notifyEmail,
           message: `Hello Farid!\n\nThis is a test notification confirming that comments and reviews posted on your website will be forwarded directly to your personal email inbox: ${notifyEmail}.\n\nTimestamp: ${new Date().toLocaleString()}`,
         }),
       });
-      if (res.ok) {
-        setStatusMessage(`Test email sent successfully to ${notifyEmail}! Check your inbox.`);
+      const json = await res.json();
+      if (res.ok && json.success) {
+        setStatusMessage(`✅ Success! Test email dispatched to ${notifyEmail}. Check your inbox!`);
       } else {
-        setStatusMessage('Test email failed. Check your Web3Forms access key.');
+        setStatusMessage(`❌ Error: ${json.message || 'Invalid Web3Forms Access Key'}. Please check your key at web3forms.com.`);
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
@@ -480,7 +489,7 @@ export default function LocalAdminPage() {
                 required
                 value={notifyEmail}
                 onChange={(e) => setNotifyEmail(e.target.value)}
-                placeholder="e.g. farid@mzilab.de or mzilab.dev@gmail.com"
+                placeholder="mzilab03dz@gmail.com"
                 className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
               />
               <p className="text-[11px] text-text-secondary mt-1">
@@ -490,18 +499,23 @@ export default function LocalAdminPage() {
 
             <div>
               <label className="block text-text-primary mb-1 font-bold">
-                Web3Forms / API Access Key (Optional)
+                Web3Forms Access Key <span className="text-accent-primary">*</span>
               </label>
               <input
                 type="text"
                 value={web3formsKey}
                 onChange={(e) => setWeb3formsKey(e.target.value)}
-                placeholder="e.g. 12345678-abcd-efgh-1234-567890123456"
+                placeholder="Paste your free Web3Forms access key here"
                 className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
               />
-              <p className="text-[11px] text-text-secondary mt-1">
-                Get a free key at <a href="https://web3forms.com" target="_blank" rel="noopener noreferrer" className="text-accent-primary underline">web3forms.com</a> or leave empty to use default.
-              </p>
+              <div className="rounded border border-accent-primary/30 bg-canvas p-3 text-[11px] text-text-secondary space-y-1 mt-2">
+                <p className="font-bold text-text-primary">💡 How to get your free key in 10 seconds:</p>
+                <ol className="list-decimal list-inside space-y-0.5">
+                  <li>Go to <a href="https://web3forms.com" target="_blank" rel="noopener noreferrer" className="text-accent-primary font-bold underline">web3forms.com</a></li>
+                  <li>Enter <strong>mzilab03dz@gmail.com</strong> and click "Create Access Key".</li>
+                  <li>Copy the key sent to your email and paste it above!</li>
+                </ol>
+              </div>
             </div>
 
             <div className="pt-4 flex flex-wrap items-center gap-3">
