@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" fill="none">
+  <rect width="800" height="450" fill="#0F172A"/>
+  <!-- Mountain Peaks -->
+  <path d="M0 380 L150 200 L300 350 L500 120 L700 320 L800 240 L800 450 L0 450 Z" fill="#1E293B"/>
+  <path d="M50 400 L200 240 L350 360 L580 180 L750 380 L800 320 L800 450 L0 450 Z" fill="#334155" opacity="0.8"/>
+  <!-- Oasis / River Valley -->
+  <ellipse cx="580" cy="380" rx="180" ry="40" fill="#10B981" opacity="0.25"/>
+  <path d="M300 450 Q 450 360 700 380" stroke="#06B6D4" stroke-width="6" stroke-linecap="round"/>
+  <text x="50" y="80" fill="#F8FAFC" font-family="sans-serif" font-size="22" font-weight="bold">Saharan Atlas Mountains</text>
+  <text x="50" y="110" fill="#06B6D4" font-family="monospace" font-size="14">Historic Life Source &amp; Geographic Gateway</text>
+</svg>
