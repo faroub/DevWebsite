@@ -1,14 +1,14 @@
-import { Terminal, Code, Cpu, Smartphone, ShieldCheck, Mail, Github } from 'lucide-react';
+import { Terminal, Code, Cpu, Smartphone, ShieldCheck, Mail, Github, Compass } from 'lucide-react';
 import { getAboutData } from '@/lib/about';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'About — mzilab',
-  description: 'Learn about mzilab, developer profile, mobile architecture, and portfolio.',
+  description: 'Learn about mzilab, developer profile, software and hardware development platform.',
 };
 
 export default function AboutPage() {
-  const { frontmatter, content } = getAboutData();
+  const { frontmatter } = getAboutData();
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 font-sans">
@@ -20,7 +20,7 @@ export default function AboutPage() {
         </div>
 
         <h1 className="text-2xl sm:text-4xl font-extrabold text-text-primary">
-          {frontmatter.title || 'About mzilab'}
+          About <span className="text-accent-primary">mzilab</span>
         </h1>
 
         <p className="text-sm sm:text-base text-text-secondary leading-relaxed font-sans">
@@ -54,20 +54,28 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Developer Profile & Markdown Body */}
-      <section className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-6 shadow-sm">
+      {/* Section 1: What is mzilab? */}
+      <section className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-3 shadow-sm">
         <h2 className="text-xl font-bold text-text-primary border-b border-divider pb-3 flex items-center gap-2">
           <Code className="h-5 w-5 text-accent-primary" />
-          <span>Developer Profile & Bio</span>
+          <span>What is mzilab?</span>
         </h2>
+        <p className="text-sm sm:text-base text-text-secondary leading-relaxed font-sans">
+          mzilab is a dedicated software and hardware development platform engineered and operated by a solo developer. The platform serves as an interactive hub to showcase, download, and test custom digital and physical solutions while actively gathering user feedback for continuous refinement and growth.
+        </p>
+      </section>
 
-        <div className="prose dark:prose-invert max-w-none text-sm text-text-secondary leading-relaxed font-sans space-y-4">
-          <div className="rounded-lg border border-divider bg-canvas p-5 font-mono text-xs text-text-primary whitespace-pre-wrap leading-relaxed">
-            {content}
-          </div>
-        </div>
+      {/* Section 2: Who am I? */}
+      <section className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-4 shadow-sm">
+        <h2 className="text-xl font-bold text-text-primary border-b border-divider pb-3 flex items-center gap-2">
+          <Terminal className="h-5 w-5 text-accent-primary" />
+          <span>Who am I?</span>
+        </h2>
+        <p className="text-sm sm:text-base text-text-secondary leading-relaxed font-sans">
+          I am an engineer with a deep passion for software development, hardware engineering, and emerging technologies. My focus is on transforming complex technical and operational challenges into seamless, high-performance web applications, mobile apps, and integrated hardware projects.
+        </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 font-mono text-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 font-mono text-xs">
           <div className="rounded-lg border border-divider bg-canvas p-4 space-y-1">
             <Smartphone className="h-5 w-5 text-accent-primary mb-2" />
             <div className="font-bold text-text-primary">Mobile Stacks</div>
@@ -84,6 +92,17 @@ export default function AboutPage() {
             <div className="text-text-secondary">{frontmatter.philosophy}</div>
           </div>
         </div>
+      </section>
+
+      {/* Section 3: The Origin of "mzi" */}
+      <section className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-3 shadow-sm">
+        <h2 className="text-xl font-bold text-text-primary border-b border-divider pb-3 flex items-center gap-2">
+          <Compass className="h-5 w-5 text-accent-primary" />
+          <span>The Origin of &ldquo;mzi&rdquo;</span>
+        </h2>
+        <p className="text-sm sm:text-base text-text-secondary leading-relaxed font-sans">
+          The name mzilab is deeply tied to my roots. It is inspired by Oued M’Zi, a vital river valley located near my home city of Laghouat, Algeria. Originating in the breathtaking Saharan Atlas mountains, Oued M’Zi serves as a historic life source and a geographic gateway where rugged highlands transition into the expansive desert.
+        </p>
       </section>
     </div>
   );
