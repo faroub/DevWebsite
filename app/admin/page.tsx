@@ -18,6 +18,7 @@ import {
   Settings,
   Mail,
   Send,
+  User,
 } from 'lucide-react';
 
 interface ContentItem {
@@ -27,7 +28,7 @@ interface ContentItem {
   body: string;
 }
 
-type CollectionType = 'apps' | 'projects' | 'blogs' | 'settings';
+type CollectionType = 'apps' | 'projects' | 'blogs' | 'about' | 'settings';
 
 export default function LocalAdminPage() {
   const [isLocalHost, setIsLocalHost] = useState<boolean>(true);
@@ -39,9 +40,24 @@ export default function LocalAdminPage() {
     blogs: [],
   });
 
-  // Settings State - Default to mzilab03dz@gmail.com
+  // Settings State
   const [notifyEmail, setNotifyEmail] = useState<string>('mzilab03dz@gmail.com');
   const [web3formsKey, setWeb3formsKey] = useState<string>('');
+
+  // About Page State
+  const [aboutFrontmatter, setAboutFrontmatter] = useState({
+    title: 'About mzilab',
+    author: 'Farid Oubbati',
+    role: 'Senior Mobile & Full-Stack Engineer',
+    location: 'Algeria',
+    tagline: 'Developer laboratory and portfolio showcasing native Android, iOS, and web software.',
+    email: 'mzilab03dz@gmail.com',
+    githubUrl: 'https://github.com/mzilab',
+    skillsMobile: 'Kotlin, Jetpack Compose, Swift, React Native',
+    skillsSystems: 'Rust, Perfetto SQL, Next.js, MDX',
+    philosophy: 'Zero-Server, Privacy-First, Static Generation',
+  });
+  const [aboutBody, setAboutBody] = useState<string>('');
 
   const [selectedItemIndex, setSelectedItemIndex] = useState<number>(0);
   const [editedItem, setEditedItem] = useState<ContentItem | null>(null);
@@ -66,6 +82,7 @@ export default function LocalAdminPage() {
       if (isLocal) {
         fetchLocalContent();
         fetchSettings();
+        fetchAboutData();
       }
     }
   }, []);
@@ -110,6 +127,51 @@ export default function LocalAdminPage() {
           if (parsed.web3formsKey) setWeb3formsKey(parsed.web3formsKey);
         } catch {}
       }
+    }
+  };
+
+  // Fetch About Page MDX Data
+  const fetchAboutData = async () => {
+    try {
+      const res = await fetch('http://localhost:3001/api/about');
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success) {
+          if (json.frontmatter) setAboutFrontmatter((prev) => ({ ...prev, ...json.frontmatter }));
+          if (json.body) setAboutBody(json.body);
+        }
+      }
+    } catch {}
+  };
+
+  // Save About Page Data
+  const handleSaveAbout = async () => {
+    if (bridgeConnected) {
+      try {
+        const res = await fetch('http://localhost:3001/api/about/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            frontmatter: aboutFrontmatter,
+            bodyText: aboutBody,
+          }),
+        });
+        const json = await res.json();
+        if (json.success) {
+          setStatusMessage('Successfully saved about.mdx to disk!');
+          return;
+        }
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err);
+        setStatusMessage(`Error saving about page: ${message}`);
+      }
+    } else {
+      downloadMdxFile({
+        fileName: 'about.mdx',
+        frontmatter: aboutFrontmatter,
+        body: aboutBody,
+      });
+      setStatusMessage('Exported about.mdx as download.');
     }
   };
 
@@ -176,7 +238,7 @@ export default function LocalAdminPage() {
 
   // Sync selected item when tab or items change
   useEffect(() => {
-    if (activeTab === 'settings') return;
+    if (activeTab === 'settings' || activeTab === 'about') return;
     const currentList = items[activeTab] || [];
     if (currentList.length > 0) {
       const validIndex = Math.min(selectedItemIndex, currentList.length - 1);
@@ -189,7 +251,7 @@ export default function LocalAdminPage() {
 
   // Handle saving current content item
   const handleSave = async () => {
-    if (!editedItem || activeTab === 'settings') return;
+    if (!editedItem || activeTab === 'settings' || activeTab === 'about') return;
 
     if (bridgeConnected) {
       try {
@@ -237,7 +299,7 @@ export default function LocalAdminPage() {
 
   // Delete item
   const handleDelete = async () => {
-    if (!editedItem || activeTab === 'settings') return;
+    if (!editedItem || activeTab === 'settings' || activeTab === 'about') return;
     if (!confirm(`Are you sure you want to delete ${editedItem.fileName}?`)) return;
 
     if (bridgeConnected) {
@@ -265,7 +327,7 @@ export default function LocalAdminPage() {
 
   // Create new item
   const handleCreateNew = () => {
-    if (!newItemTitle || !newItemSlug || activeTab === 'settings') return;
+    if (!newItemTitle || !newItemSlug || activeTab === 'settings' || activeTab === 'about') return;
     const fileName = `${newItemSlug}.mdx`;
 
     let defaultFrontmatter: Record<string, unknown> = {};
@@ -363,7 +425,7 @@ export default function LocalAdminPage() {
               Local Admin & Content Studio
             </h1>
             <p className="text-xs text-text-secondary mt-1 font-mono">
-              Directly edit, upload, and configure Apps, Projects, Blogs, and Email Forwarding.
+              Directly edit, upload, and configure Apps, Projects, Blogs, About Page, and Email Forwarding.
             </p>
           </div>
 
@@ -384,6 +446,7 @@ export default function LocalAdminPage() {
               onClick={() => {
                 fetchLocalContent();
                 fetchSettings();
+                fetchAboutData();
               }}
               className="inline-flex items-center gap-1 text-[11px] text-text-secondary hover:text-accent-primary transition-colors font-bold"
             >
@@ -450,6 +513,21 @@ export default function LocalAdminPage() {
           </button>
 
           <button
+            onClick={() => {
+              setActiveTab('about');
+              fetchAboutData();
+            }}
+            className={`flex items-center gap-2 px-4 py-2 rounded-md font-mono text-xs font-bold transition-all ${
+              activeTab === 'about'
+                ? 'bg-accent-primary text-white shadow-sm'
+                : 'bg-canvas text-text-secondary border border-divider hover:text-text-primary'
+            }`}
+          >
+            <User className="h-4 w-4" />
+            <span>About Page Editor</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab('settings')}
             className={`flex items-center gap-2 px-4 py-2 rounded-md font-mono text-xs font-bold transition-all ${
               activeTab === 'settings'
@@ -464,7 +542,154 @@ export default function LocalAdminPage() {
       </section>
 
       {/* Main Studio Area */}
-      {activeTab === 'settings' ? (
+      {activeTab === 'about' ? (
+        /* About Page Editor View */
+        <div className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-6 font-mono text-xs shadow-sm">
+          <div className="border-b border-divider pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h2 className="font-sans text-xl font-bold text-text-primary flex items-center gap-2">
+                <User className="h-5 w-5 text-accent-primary" />
+                <span>About Page Editor (`content/about.mdx`)</span>
+              </h2>
+              <p className="text-text-secondary text-xs mt-1">
+                Edit your developer bio, role, contact links, skills lists, and full markdown overview.
+              </p>
+            </div>
+
+            <button
+              onClick={handleSaveAbout}
+              className="inline-flex items-center gap-1.5 rounded-md border border-accent-primary bg-accent-primary px-5 py-2 font-bold text-white hover:opacity-90 transition-all shadow-sm shrink-0"
+            >
+              <Save className="h-4 w-4" />
+              <span>Save About Page</span>
+            </button>
+          </div>
+
+          <div className="space-y-6">
+            <div className="space-y-4">
+              <h3 className="font-mono text-xs font-bold text-accent-primary uppercase tracking-wider">
+                1. Header & Contact Information
+              </h3>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono text-xs">
+                <div>
+                  <label className="block text-text-primary mb-1 font-bold">Page Title</label>
+                  <input
+                    type="text"
+                    value={aboutFrontmatter.title}
+                    onChange={(e) => setAboutFrontmatter({ ...aboutFrontmatter, title: e.target.value })}
+                    className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-text-primary mb-1 font-bold">Author Name</label>
+                  <input
+                    type="text"
+                    value={aboutFrontmatter.author}
+                    onChange={(e) => setAboutFrontmatter({ ...aboutFrontmatter, author: e.target.value })}
+                    className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-text-primary mb-1 font-bold">Role / Title</label>
+                  <input
+                    type="text"
+                    value={aboutFrontmatter.role}
+                    onChange={(e) => setAboutFrontmatter({ ...aboutFrontmatter, role: e.target.value })}
+                    className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-text-primary mb-1 font-bold">Location</label>
+                  <input
+                    type="text"
+                    value={aboutFrontmatter.location}
+                    onChange={(e) => setAboutFrontmatter({ ...aboutFrontmatter, location: e.target.value })}
+                    className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-text-primary mb-1 font-bold">Contact Email</label>
+                  <input
+                    type="email"
+                    value={aboutFrontmatter.email}
+                    onChange={(e) => setAboutFrontmatter({ ...aboutFrontmatter, email: e.target.value })}
+                    className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-text-primary mb-1 font-bold">GitHub Profile URL</label>
+                  <input
+                    type="text"
+                    value={aboutFrontmatter.githubUrl || ''}
+                    onChange={(e) => setAboutFrontmatter({ ...aboutFrontmatter, githubUrl: e.target.value })}
+                    className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-text-primary mb-1 font-bold">Hero Tagline / Subtitle</label>
+                <textarea
+                  rows={2}
+                  value={aboutFrontmatter.tagline}
+                  onChange={(e) => setAboutFrontmatter({ ...aboutFrontmatter, tagline: e.target.value })}
+                  className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none resize-none font-sans text-xs"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-text-primary mb-1 font-bold">Mobile Stacks</label>
+                  <input
+                    type="text"
+                    value={aboutFrontmatter.skillsMobile}
+                    onChange={(e) => setAboutFrontmatter({ ...aboutFrontmatter, skillsMobile: e.target.value })}
+                    className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-text-primary mb-1 font-bold">Tooling & Systems</label>
+                  <input
+                    type="text"
+                    value={aboutFrontmatter.skillsSystems}
+                    onChange={(e) => setAboutFrontmatter({ ...aboutFrontmatter, skillsSystems: e.target.value })}
+                    className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-text-primary mb-1 font-bold">Philosophy</label>
+                  <input
+                    type="text"
+                    value={aboutFrontmatter.philosophy}
+                    onChange={(e) => setAboutFrontmatter({ ...aboutFrontmatter, philosophy: e.target.value })}
+                    className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2 pt-4 border-t border-divider">
+              <h3 className="font-mono text-xs font-bold text-accent-primary uppercase tracking-wider">
+                2. Markdown Overview & Developer Bio
+              </h3>
+              <textarea
+                rows={12}
+                value={aboutBody}
+                onChange={(e) => setAboutBody(e.target.value)}
+                className="w-full rounded border border-divider bg-[#0F172A] text-white p-4 font-mono text-xs focus:border-accent-primary focus:outline-none leading-relaxed"
+              />
+            </div>
+          </div>
+        </div>
+      ) : activeTab === 'settings' ? (
         /* Settings & Email Forwarding View */
         <div className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-6 font-mono text-xs shadow-sm">
           <div className="border-b border-divider pb-4 flex items-center justify-between">

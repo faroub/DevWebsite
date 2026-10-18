@@ -70,6 +70,50 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // Get About Page Content
+  if (req.method === 'GET' && url.pathname === '/api/about') {
+    try {
+      const aboutPath = path.join(CONTENT_DIR, 'about.mdx');
+      let parsed = { data: {}, content: '' };
+      if (fs.existsSync(aboutPath)) {
+        const fileContent = fs.readFileSync(aboutPath, 'utf8');
+        parsed = matter(fileContent);
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, frontmatter: parsed.data, body: parsed.content }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // Save About Page Content
+  if (req.method === 'POST' && url.pathname === '/api/about/save') {
+    let body = '';
+    req.on('data', (chunk) => {
+      body += chunk.toString();
+    });
+    req.on('end', () => {
+      try {
+        const { frontmatter, bodyText } = JSON.parse(body);
+        const aboutPath = path.join(CONTENT_DIR, 'about.mdx');
+        if (!fs.existsSync(CONTENT_DIR)) {
+          fs.mkdirSync(CONTENT_DIR, { recursive: true });
+        }
+        const fileContent = matter.stringify(bodyText || '', frontmatter || {});
+        fs.writeFileSync(aboutPath, fileContent, 'utf8');
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, message: 'Saved about.mdx to disk' }));
+      } catch (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    });
+    return;
+  }
+
   // List all content items
   if (req.method === 'GET' && url.pathname === '/api/content') {
     try {

@@ -1,12 +1,15 @@
-import { Terminal, Code, Cpu, Smartphone, ShieldCheck } from 'lucide-react';
+import { Terminal, Code, Cpu, Smartphone, ShieldCheck, Mail, Github } from 'lucide-react';
+import { getAboutData } from '@/lib/about';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'About — mzilab.de',
-  description: 'Learn about mzilab.de, the static mobile showcase, and developer profile.',
+  title: 'About — mzilab',
+  description: 'Learn about mzilab, developer profile, mobile architecture, and portfolio.',
 };
 
 export default function AboutPage() {
+  const { frontmatter, content } = getAboutData();
+
   return (
     <div className="max-w-4xl mx-auto space-y-8 font-sans">
       {/* Header Banner */}
@@ -17,64 +20,69 @@ export default function AboutPage() {
         </div>
 
         <h1 className="text-2xl sm:text-4xl font-extrabold text-text-primary">
-          About <span className="text-accent-primary">mzilab.de</span>
+          {frontmatter.title || 'About mzilab'}
         </h1>
 
         <p className="text-sm sm:text-base text-text-secondary leading-relaxed font-sans">
-          Welcome to <strong className="text-text-primary">mzilab.de</strong> — a dedicated mobile application laboratory and developer portfolio showcasing native Android, iOS, and web software built with modern AI-assisted engineering workflows.
+          {frontmatter.tagline}
         </p>
+
+        <div className="flex flex-wrap items-center gap-3 pt-2 font-mono text-xs text-text-secondary border-t border-divider">
+          <span className="font-bold text-text-primary">{frontmatter.author}</span>
+          <span className="text-divider">•</span>
+          <span>{frontmatter.role}</span>
+          <span className="text-divider">•</span>
+          <span>{frontmatter.location}</span>
+          {frontmatter.email && (
+            <>
+              <span className="text-divider">•</span>
+              <a href={`mailto:${frontmatter.email}`} className="text-accent-primary hover:underline flex items-center gap-1">
+                <Mail className="h-3 w-3" />
+                <span>{frontmatter.email}</span>
+              </a>
+            </>
+          )}
+          {frontmatter.githubUrl && (
+            <>
+              <span className="text-divider">•</span>
+              <a href={frontmatter.githubUrl} target="_blank" rel="noopener noreferrer" className="text-text-primary hover:text-accent-primary flex items-center gap-1">
+                <Github className="h-3 w-3" />
+                <span>GitHub</span>
+              </a>
+            </>
+          )}
+        </div>
       </section>
 
-      {/* Developer Profile Section */}
+      {/* Developer Profile & Markdown Body */}
       <section className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-6 shadow-sm">
         <h2 className="text-xl font-bold text-text-primary border-b border-divider pb-3 flex items-center gap-2">
           <Code className="h-5 w-5 text-accent-primary" />
-          <span>Developer Profile</span>
+          <span>Developer Profile & Bio</span>
         </h2>
 
-        <div className="space-y-4 text-sm text-text-secondary leading-relaxed font-sans">
-          <p>
-            I am a senior mobile software engineer specializing in high-performance Android applications (Kotlin, Jetpack Compose, Coroutines), iOS development (Swift, SwiftUI), and static web architecture (Next.js, React, TypeScript).
-          </p>
-          <p>
-            My work focuses on crafting minimalist, responsive, and privacy-conscious applications. By combining deep native mobile expertise with modern AI coding agent workflows, I ship production-grade mobile applications and open-source tooling with exceptional velocity.
-          </p>
+        <div className="prose dark:prose-invert max-w-none text-sm text-text-secondary leading-relaxed font-sans space-y-4">
+          <div className="rounded-lg border border-divider bg-canvas p-5 font-mono text-xs text-text-primary whitespace-pre-wrap leading-relaxed">
+            {content}
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 font-mono text-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 font-mono text-xs">
           <div className="rounded-lg border border-divider bg-canvas p-4 space-y-1">
             <Smartphone className="h-5 w-5 text-accent-primary mb-2" />
             <div className="font-bold text-text-primary">Mobile Stacks</div>
-            <div className="text-text-secondary">Kotlin, Jetpack Compose, Swift, React Native</div>
+            <div className="text-text-secondary">{frontmatter.skillsMobile}</div>
           </div>
           <div className="rounded-lg border border-divider bg-canvas p-4 space-y-1">
             <Cpu className="h-5 w-5 text-accent-success mb-2" />
             <div className="font-bold text-text-primary">Tooling & Systems</div>
-            <div className="text-text-secondary">Rust, Perfetto SQL, Next.js, MDX</div>
+            <div className="text-text-secondary">{frontmatter.skillsSystems}</div>
           </div>
           <div className="rounded-lg border border-divider bg-canvas p-4 space-y-1">
             <ShieldCheck className="h-5 w-5 text-accent-primary mb-2" />
             <div className="font-bold text-text-primary">Philosophy</div>
-            <div className="text-text-secondary">Zero-Server, Privacy-First, Static Generation</div>
+            <div className="text-text-secondary">{frontmatter.philosophy}</div>
           </div>
-        </div>
-      </section>
-
-      {/* About the Website Architecture */}
-      <section className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-4 shadow-sm">
-        <h2 className="text-xl font-bold text-text-primary border-b border-divider pb-3 flex items-center gap-2">
-          <Terminal className="h-5 w-5 text-accent-primary" />
-          <span>Website Architecture</span>
-        </h2>
-
-        <p className="text-sm text-text-secondary leading-relaxed font-sans">
-          This website is built completely static using <strong className="text-text-primary">Next.js 16 App Router</strong> and <strong className="text-text-primary">React 19</strong>. There is no database, no server API, and no authentication. Content lives directly in the repository as MDX files and is compiled at build time for maximum speed and security.
-        </p>
-
-        <div className="rounded-lg border border-divider bg-canvas p-4 font-mono text-xs text-text-secondary space-y-2">
-          <div><span className="text-accent-primary font-bold">Framework:</span> Next.js 16.3.8 (App Router) + React 19.2</div>
-          <div><span className="text-accent-primary font-bold">Styling:</span> Tailwind CSS v3 with GitDiagram/Shadcn Design Tokens</div>
-          <div><span className="text-accent-primary font-bold">Export:</span> 100% Static HTML (`output: 'export'`)</div>
         </div>
       </section>
     </div>
