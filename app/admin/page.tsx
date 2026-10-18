@@ -457,7 +457,7 @@ export default function LocalAdminPage() {
                               frontmatter: { ...editedItem.frontmatter, title: e.target.value },
                             })
                           }
-                          className="w-full rounded border border-divider bg-canvas px-3 py-2 text-text-primary focus:border-accent-primary focus:outline-none"
+                          className="w-full rounded border border-divider bg-[#0F172A] text-white dark:bg-[#0F172A] dark:text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
                         />
                       </div>
 
@@ -472,7 +472,7 @@ export default function LocalAdminPage() {
                               frontmatter: { ...editedItem.frontmatter, slug: e.target.value },
                             })
                           }
-                          className="w-full rounded border border-divider bg-canvas px-3 py-2 text-text-primary focus:border-accent-primary focus:outline-none"
+                          className="w-full rounded border border-divider bg-[#0F172A] text-white dark:bg-[#0F172A] dark:text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
                         />
                       </div>
 
@@ -489,7 +489,7 @@ export default function LocalAdminPage() {
                                   frontmatter: { ...editedItem.frontmatter, version: e.target.value },
                                 })
                               }
-                              className="w-full rounded border border-divider bg-canvas px-3 py-2 text-text-primary focus:border-accent-primary focus:outline-none"
+                              className="w-full rounded border border-divider bg-[#0F172A] text-white dark:bg-[#0F172A] dark:text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
                             />
                           </div>
 
@@ -503,7 +503,7 @@ export default function LocalAdminPage() {
                                   frontmatter: { ...editedItem.frontmatter, status: e.target.value },
                                 })
                               }
-                              className="w-full rounded border border-divider bg-canvas px-3 py-2 text-text-primary focus:border-accent-primary focus:outline-none"
+                              className="w-full rounded border border-divider bg-[#0F172A] text-white dark:bg-[#0F172A] dark:text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
                             >
                               <option value="Available">Available</option>
                               <option value="Testing">Testing</option>
@@ -528,7 +528,7 @@ export default function LocalAdminPage() {
                                   frontmatter: { ...editedItem.frontmatter, author: e.target.value },
                                 })
                               }
-                              className="w-full rounded border border-divider bg-canvas px-3 py-2 text-text-primary focus:border-accent-primary focus:outline-none"
+                              className="w-full rounded border border-divider bg-[#0F172A] text-white dark:bg-[#0F172A] dark:text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
                             />
                           </div>
 
@@ -543,7 +543,7 @@ export default function LocalAdminPage() {
                                   frontmatter: { ...editedItem.frontmatter, readTime: e.target.value },
                                 })
                               }
-                              className="w-full rounded border border-divider bg-canvas px-3 py-2 text-text-primary focus:border-accent-primary focus:outline-none"
+                              className="w-full rounded border border-divider bg-[#0F172A] text-white dark:bg-[#0F172A] dark:text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
                             />
                           </div>
                         </>
@@ -564,7 +564,7 @@ export default function LocalAdminPage() {
                             frontmatter: { ...editedItem.frontmatter, [key]: e.target.value },
                           });
                         }}
-                        className="w-full rounded border border-divider bg-canvas px-3 py-2 font-mono text-xs text-text-primary focus:border-accent-primary focus:outline-none resize-none"
+                        className="w-full rounded border border-divider bg-[#0F172A] text-white dark:bg-[#0F172A] dark:text-white px-3 py-2 font-mono text-xs focus:border-accent-primary focus:outline-none resize-none"
                       />
                     </div>
                   </div>
@@ -578,7 +578,7 @@ export default function LocalAdminPage() {
                       rows={14}
                       value={editedItem.body}
                       onChange={(e) => setEditedItem({ ...editedItem, body: e.target.value })}
-                      className="w-full rounded border border-divider bg-canvas p-4 font-mono text-xs text-text-primary focus:border-accent-primary focus:outline-none leading-relaxed"
+                      className="w-full rounded border border-divider bg-[#0F172A] text-white dark:bg-[#0F172A] dark:text-white p-4 font-mono text-xs focus:border-accent-primary focus:outline-none leading-relaxed"
                     />
                   </div>
                 </div>
@@ -623,7 +623,7 @@ export default function LocalAdminPage() {
                   setNewItemSlug(e.target.value.toLowerCase().replace(/[^a-z0-0]+/g, '-').replace(/(^-|-$)/g, ''));
                 }}
                 placeholder="My New Entry"
-                className="w-full rounded border border-divider bg-canvas px-3 py-2 text-text-primary focus:border-accent-primary focus:outline-none"
+                className="w-full rounded border border-divider bg-[#0F172A] text-white dark:bg-[#0F172A] dark:text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
               />
             </div>
 
@@ -634,7 +634,7 @@ export default function LocalAdminPage() {
                 value={newItemSlug}
                 onChange={(e) => setNewItemSlug(e.target.value)}
                 placeholder="my-new-entry"
-                className="w-full rounded border border-divider bg-canvas px-3 py-2 text-text-primary focus:border-accent-primary focus:outline-none"
+                className="w-full rounded border border-divider bg-[#0F172A] text-white dark:bg-[#0F172A] dark:text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
               />
             </div>
 

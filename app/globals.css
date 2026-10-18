@@ -7,6 +7,11 @@
 :root {
   --font-mono: 'JetBrains Mono', monospace;
   --font-sans: 'Inter', sans-serif;
+  color-scheme: dark;
+}
+
+.light {
+  color-scheme: light;
 }
 
 body {
@@ -20,6 +25,19 @@ body {
 .light body {
   background-color: #F8FAFC;
   color: #0F172A;
+}
+
+/* Fix for inputs, textareas, and selects across browsers */
+input, textarea, select {
+  background-color: #0F172A !important;
+  color: #F8FAFC !important;
+  border-color: #334155;
+}
+
+.light input, .light textarea, .light select {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  border-color: #E2E8F0;
 }
 
 /* Grid dot pattern for Deep Slate background */

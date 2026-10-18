@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "admin": "node scripts/admin-server.js",
+    "studio": "node scripts/admin-server.js & next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint ."
