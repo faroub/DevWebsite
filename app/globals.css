@@ -27,6 +27,11 @@ body {
   color: #0F172A;
 }
 
+/* BiDi text isolation for flawless Arabic word order & punctuation in LTR layout */
+[lang="ar"] {
+  unicode-bidi: plaintext;
+}
+
 /* Fix for inputs, textareas, and selects across browsers */
 input, textarea, select {
   background-color: #0F172A !important;
