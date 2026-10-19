@@ -7,6 +7,7 @@ interface LanguageContextType {
   locale: Locale;
   setLocale: (locale: Locale) => void;
   t: TranslationDictionary;
+  isRtl: boolean;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -19,7 +20,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     if (saved && (saved === 'en' || saved === 'fr' || saved === 'ar')) {
       setLocaleState(saved);
       document.documentElement.lang = saved;
-      document.documentElement.dir = 'ltr'; // Strictly LTR layout
+      document.documentElement.dir = saved === 'ar' ? 'rtl' : 'ltr';
     } else {
       document.documentElement.dir = 'ltr';
     }
@@ -29,13 +30,14 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     setLocaleState(newLocale);
     localStorage.setItem('mzilab_locale', newLocale);
     document.documentElement.lang = newLocale;
-    document.documentElement.dir = 'ltr'; // Strictly LTR layout
+    document.documentElement.dir = newLocale === 'ar' ? 'rtl' : 'ltr';
   };
 
   const t = translations[locale] || translations.en;
+  const isRtl = locale === 'ar';
 
   return (
-    <LanguageContext.Provider value={{ locale, setLocale, t }}>
+    <LanguageContext.Provider value={{ locale, setLocale, t, isRtl }}>
       {children}
     </LanguageContext.Provider>
   );
@@ -48,6 +50,7 @@ export function useLanguage() {
       locale: 'en' as Locale,
       setLocale: () => {},
       t: translations.en,
+      isRtl: false,
     };
   }
   return context;

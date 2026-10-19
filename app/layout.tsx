@@ -97,6 +97,30 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }}
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var storedTheme = localStorage.getItem('theme');
+                  if (storedTheme === 'light') {
+                    document.documentElement.classList.remove('dark');
+                  } else if (storedTheme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                  }
+
+                  var storedLocale = localStorage.getItem('mzilab_locale');
+                  if (storedLocale) {
+                    document.documentElement.lang = storedLocale;
+                    document.documentElement.dir = storedLocale === 'ar' ? 'rtl' : 'ltr';
+                  } else {
+                    document.documentElement.dir = 'ltr';
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-accent-primary focus:px-4 focus:py-2 focus:text-white focus:font-mono focus:text-xs shadow-md"
