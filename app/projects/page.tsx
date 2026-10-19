@@ -4,7 +4,7 @@ import { FolderGit2 } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'All Projects — mzilab.de',
+  title: 'Developer Projects',
   description: 'Explore open-source developer toolkits, CLI tools, libraries, and web infrastructure created by mzilab.',
 };
 

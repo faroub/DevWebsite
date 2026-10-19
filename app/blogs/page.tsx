@@ -4,7 +4,7 @@ import { BookOpen } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Blog & Technical Articles — mzilab.de',
+  title: 'Blog & Technical Articles',
   description: 'Technical writeups on Android engineering, Next.js static architecture, Jetpack Compose performance, and AI coding workflows.',
 };
 
