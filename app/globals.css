@@ -7,10 +7,26 @@
 :root {
   --font-mono: 'JetBrains Mono', monospace;
   --font-sans: 'Inter', sans-serif;
+
+  /* Semantic design tokens (dark default). Values are RGB channels so
+     Tailwind opacity modifiers (bg-accent-primary/10) work. */
+  --color-canvas: 15 23 42;        /* #0F172A Deep Slate */
+  --color-surface: 30 41 59;       /* #1E293B Dark Navy */
+  --color-divider: 51 65 85;       /* #334155 Slate */
+  --color-text-primary: 248 250 252;    /* #F8FAFC Ghost white */
+  --color-text-secondary: 203 213 225;  /* #CBD5E1 Light slate */
+  --color-accent-primary: 6 182 212;    /* #06B6D4 Electric teal */
+  --color-accent-success: 16 185 129;   /* #10B981 Green */
+  --color-accent-error: 239 68 68;      /* #EF4444 Red */
   color-scheme: dark;
 }
 
 .light {
+  --color-canvas: 248 250 252;     /* #F8FAFC */
+  --color-surface: 255 255 255;    /* #FFFFFF */
+  --color-divider: 226 232 240;    /* #E2E8F0 */
+  --color-text-primary: 15 23 42;  /* #0F172A */
+  --color-text-secondary: 51 65 85; /* #334155 */
   color-scheme: light;
 }
 
@@ -18,13 +34,8 @@ body {
   font-family: var(--font-sans);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  background-color: #0F172A;
-  color: #F8FAFC;
-}
-
-.light body {
-  background-color: #F8FAFC;
-  color: #0F172A;
+  background-color: rgb(var(--color-canvas));
+  color: rgb(var(--color-text-primary));
 }
 
 /* Full RTL typography and layout styling for Arabic mode */
@@ -34,19 +45,6 @@ body {
 
 [dir="rtl"] body {
   text-align: right;
-}
-
-/* Fix for inputs, textareas, and selects across browsers */
-input, textarea, select {
-  background-color: #0F172A !important;
-  color: #F8FAFC !important;
-  border-color: #334155;
-}
-
-.light input, .light textarea, .light select {
-  background-color: #FFFFFF !important;
-  color: #0F172A !important;
-  border-color: #E2E8F0;
 }
 
 /* Grid dot pattern for Deep Slate background */

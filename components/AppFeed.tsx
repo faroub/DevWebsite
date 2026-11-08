@@ -49,11 +49,11 @@ export function AppFeed({ initialApps }: AppFeedProps) {
   return (
     <section className="w-full space-y-6">
       {/* Control Bar: Terminal Search, Tag Pills, and View Switcher */}
-      <div className="rounded-lg border border-dev-border bg-dev-card p-4 space-y-4 shadow-sm transition-colors">
+      <div className="rounded-lg border border-divider bg-surface p-4 space-y-4 shadow-sm transition-colors">
         <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
           {/* Terminal Search Box */}
           <div className="relative flex-1">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 font-mono text-xs text-dev-accent">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 font-mono text-xs text-accent-primary">
               <Terminal className="h-4 w-4 mr-1.5" />
               <span className="font-bold">filter:</span>
             </div>
@@ -62,12 +62,12 @@ export function AppFeed({ initialApps }: AppFeedProps) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search apps by name, tech stack, or platform..."
-              className="w-full rounded-md border border-dev-border bg-dev-bg py-2 pl-20 pr-8 font-mono text-xs text-dev-bright placeholder-dev-muted focus:border-dev-accent focus:outline-none transition-colors"
+              className="w-full rounded-md border border-divider bg-canvas py-2 pl-20 pr-8 font-mono text-xs text-text-primary placeholder-text-secondary focus:border-accent-primary focus:outline-none transition-colors"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-dev-muted hover:text-dev-accent"
+                className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-text-secondary hover:text-accent-primary"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
@@ -76,16 +76,16 @@ export function AppFeed({ initialApps }: AppFeedProps) {
 
           {/* View Mode Switcher */}
           <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0">
-            <span className="font-mono text-xs text-dev-muted hidden sm:inline">
+            <span className="font-mono text-xs text-text-secondary hidden sm:inline">
               Mode:
             </span>
-            <div className="flex rounded-md border border-dev-border bg-dev-bg p-0.5 font-mono text-xs">
+            <div className="flex rounded-md border border-divider bg-canvas p-0.5 font-mono text-xs">
               <button
                 onClick={() => setViewMode('grid')}
                 className={`flex items-center gap-1.5 rounded px-2.5 py-1 transition-all ${
                   viewMode === 'grid'
-                    ? 'bg-dev-accent text-dev-bg font-bold shadow-sm'
-                    : 'text-dev-muted hover:text-dev-bright'
+                    ? 'bg-accent-primary text-canvas font-bold shadow-sm'
+                    : 'text-text-secondary hover:text-text-primary'
                 }`}
                 title="Grid View"
               >
@@ -96,8 +96,8 @@ export function AppFeed({ initialApps }: AppFeedProps) {
                 onClick={() => setViewMode('rows')}
                 className={`flex items-center gap-1.5 rounded px-2.5 py-1 transition-all ${
                   viewMode === 'rows'
-                    ? 'bg-dev-accent text-dev-bg font-bold shadow-sm'
-                    : 'text-dev-muted hover:text-dev-bright'
+                    ? 'bg-accent-primary text-canvas font-bold shadow-sm'
+                    : 'text-text-secondary hover:text-text-primary'
                 }`}
                 title="List View"
               >
@@ -109,8 +109,8 @@ export function AppFeed({ initialApps }: AppFeedProps) {
         </div>
 
         {/* Tag Pills Feed */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none pt-1 border-t border-dev-border/50">
-          <span className="font-mono text-xs text-dev-accent flex items-center gap-1 shrink-0 font-bold">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none pt-1 border-t border-divider/50">
+          <span className="font-mono text-xs text-accent-primary flex items-center gap-1 shrink-0 font-bold">
             <Filter className="h-3 w-3" />
             <span>Tags:</span>
           </span>
@@ -120,8 +120,8 @@ export function AppFeed({ initialApps }: AppFeedProps) {
               onClick={() => setSelectedTag(tag)}
               className={`shrink-0 font-mono text-xs px-2.5 py-1 rounded-full border transition-all ${
                 selectedTag === tag
-                  ? 'border-dev-accent bg-dev-accent text-dev-bg font-bold shadow-sm'
-                  : 'border-dev-border bg-dev-bg text-dev-muted hover:border-dev-accent hover:text-dev-accent'
+                  ? 'border-accent-primary bg-accent-primary text-canvas font-bold shadow-sm'
+                  : 'border-divider bg-canvas text-text-secondary hover:border-accent-primary hover:text-accent-primary'
               }`}
             >
               {tag === 'All' ? 'All Apps' : tag}
@@ -131,15 +131,15 @@ export function AppFeed({ initialApps }: AppFeedProps) {
       </div>
 
       {/* Results Header Status */}
-      <div className="flex items-center justify-between font-mono text-xs text-dev-muted px-1">
+      <div className="flex items-center justify-between font-mono text-xs text-text-secondary px-1">
         <div>
-          Showing <span className="text-dev-accent font-bold">{filteredApps.length}</span> of{' '}
-          <span className="text-dev-bright font-semibold">{initialApps.length}</span> repositories
+          Showing <span className="text-accent-primary font-bold">{filteredApps.length}</span> of{' '}
+          <span className="text-text-primary font-semibold">{initialApps.length}</span> repositories
         </div>
         {selectedTag !== 'All' && (
           <button
             onClick={() => setSelectedTag('All')}
-            className="text-dev-accent hover:underline flex items-center gap-1 font-bold"
+            className="text-accent-primary hover:underline flex items-center gap-1 font-bold"
           >
             Clear filter &times;
           </button>
@@ -148,16 +148,16 @@ export function AppFeed({ initialApps }: AppFeedProps) {
 
       {/* Apps Render Grid or Rows */}
       {filteredApps.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-dev-border bg-dev-card p-12 text-center font-mono">
-          <Terminal className="mx-auto h-8 w-8 text-dev-accent mb-3" />
-          <p className="text-sm text-dev-bright font-bold">No apps matching query</p>
-          <p className="text-xs text-dev-muted mt-1">Try adjusting your terminal filter or tag selection.</p>
+        <div className="rounded-lg border border-dashed border-divider bg-surface p-12 text-center font-mono">
+          <Terminal className="mx-auto h-8 w-8 text-accent-primary mb-3" />
+          <p className="text-sm text-text-primary font-bold">No apps matching query</p>
+          <p className="text-xs text-text-secondary mt-1">Try adjusting your terminal filter or tag selection.</p>
           <button
             onClick={() => {
               setSearchQuery('');
               setSelectedTag('All');
             }}
-            className="mt-4 inline-flex items-center rounded-md border border-dev-accent bg-dev-accent/10 px-3 py-1.5 text-xs text-dev-accent font-bold hover:bg-dev-accent hover:text-dev-bg transition-all"
+            className="mt-4 inline-flex items-center rounded-md border border-accent-primary bg-accent-primary/10 px-3 py-1.5 text-xs text-accent-primary font-bold hover:bg-accent-primary hover:text-canvas transition-all"
           >
             Reset Filters
           </button>

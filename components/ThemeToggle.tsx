@@ -36,7 +36,7 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <div className="h-8 w-8 rounded-md border border-dev-border bg-dev-card" />
+      <div className="h-8 w-8 rounded-md border border-divider bg-surface" />
     );
   }
 
@@ -44,13 +44,13 @@ export function ThemeToggle() {
     <button
       onClick={toggleTheme}
       aria-label="Toggle dark and light mode"
-      className="flex h-8 w-8 items-center justify-center rounded-md border border-dev-border bg-dev-card text-dev-accent hover:border-dev-accent hover:shadow-glow-teal transition-all shadow-sm"
+      className="flex h-8 w-8 items-center justify-center rounded-md border border-divider bg-surface text-accent-primary hover:border-accent-primary hover:shadow-glow-teal transition-all shadow-sm"
       title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode (Deep Slate)'}
     >
       {theme === 'dark' ? (
         <Sun className="h-4 w-4 text-amber-400" />
       ) : (
-        <Moon className="h-4 w-4 text-dev-accent" />
+        <Moon className="h-4 w-4 text-accent-primary" />
       )}
     </button>
   );

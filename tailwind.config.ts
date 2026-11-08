@@ -11,28 +11,17 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        dev: {
-          bg: '#0F172A',         // Deep Slate
-          card: '#1E293B',       // Dark Navy
-          subtle: '#334155',     // Slate hover/subtle
-          border: '#334155',     // Cool Gray border
-          'border-active': '#06B6D4',
-          muted: '#94A3B8',      // Cool Gray
-          text: '#CBD5E1',
-          bright: '#F8FAFC',     // Ghost White
-          accent: '#06B6D4',     // Electric Teal
-          'accent-hover': '#0891B2',
-          green: '#10B981',      // Vibrant Green for status
-        },
-        light: {
-          bg: '#F8FAFC',
-          card: '#FFFFFF',
-          subtle: '#F1F5F9',
-          border: '#E2E8F0',
-          muted: '#64748B',
-          text: '#334155',
-          bright: '#0F172A',
-        },
+        // Semantic tokens: values are defined as RGB channels in globals.css
+        // (:root = dark default, .light = light mode) so opacity modifiers
+        // like bg-accent-primary/10 work in both themes.
+        canvas: 'rgb(var(--color-canvas) / <alpha-value>)',
+        surface: 'rgb(var(--color-surface) / <alpha-value>)',
+        divider: 'rgb(var(--color-divider) / <alpha-value>)',
+        'text-primary': 'rgb(var(--color-text-primary) / <alpha-value>)',
+        'text-secondary': 'rgb(var(--color-text-secondary) / <alpha-value>)',
+        'accent-primary': 'rgb(var(--color-accent-primary) / <alpha-value>)',
+        'accent-success': 'rgb(var(--color-accent-success) / <alpha-value>)',
+        'accent-error': 'rgb(var(--color-accent-error) / <alpha-value>)',
       },
       fontFamily: {
         mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
@@ -40,6 +29,7 @@ const config: Config = {
       },
       boxShadow: {
         'glow-teal': '0 0 20px -5px rgba(6, 182, 212, 0.35)',
+        'git-glow': '0 0 20px -5px rgba(16, 185, 129, 0.35)',
         'glow-green': '0 0 20px -5px rgba(16, 185, 129, 0.35)',
       },
     },

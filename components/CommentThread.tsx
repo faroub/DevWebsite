@@ -408,7 +408,7 @@ export function CommentThread({
                         <div className="flex items-center gap-2">
                           <span className="font-bold text-xs text-text-primary">{reply.authorName}</span>
                           {reply.isMaintainer && (
-                            <span className="inline-flex items-center gap-1 rounded bg-accent-primary/10 border border-accent-primary/30 px-1.5 py-0.2 font-mono text-[9px] text-accent-primary font-bold">
+                            <span className="inline-flex items-center gap-1 rounded bg-accent-primary/10 border border-accent-primary/30 px-1.5 py-0.5 font-mono text-[9px] text-accent-primary font-bold">
                               <ShieldCheck className="h-2.5 w-2.5" />
                               <span>MAINTAINER</span>
                             </span>

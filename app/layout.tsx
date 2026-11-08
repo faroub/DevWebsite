@@ -103,18 +103,21 @@ export default function RootLayout({
               (function() {
                 try {
                   var storedTheme = localStorage.getItem('theme');
+                  var root = document.documentElement;
                   if (storedTheme === 'light') {
-                    document.documentElement.classList.remove('dark');
-                  } else if (storedTheme === 'dark') {
-                    document.documentElement.classList.add('dark');
+                    root.classList.remove('dark');
+                    root.classList.add('light');
+                  } else {
+                    root.classList.remove('light');
+                    root.classList.add('dark');
                   }
 
                   var storedLocale = localStorage.getItem('mzilab_locale');
                   if (storedLocale) {
-                    document.documentElement.lang = storedLocale;
-                    document.documentElement.dir = storedLocale === 'ar' ? 'rtl' : 'ltr';
+                    root.lang = storedLocale;
+                    root.dir = storedLocale === 'ar' ? 'rtl' : 'ltr';
                   } else {
-                    document.documentElement.dir = 'ltr';
+                    root.dir = 'ltr';
                   }
                 } catch (e) {}
               })();

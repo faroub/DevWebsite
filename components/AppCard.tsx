@@ -8,35 +8,35 @@ interface AppCardProps {
 
 export function AppCard({ app }: AppCardProps) {
   return (
-    <div className="group relative flex flex-col justify-between rounded-lg border border-dev-border bg-dev-card p-5 hover:border-dev-accent hover:shadow-glow-teal transition-all duration-200 shadow-sm">
+    <div className="group relative flex flex-col justify-between rounded-lg border border-divider bg-surface p-5 hover:border-accent-primary hover:shadow-glow-teal transition-all duration-200 shadow-sm">
       {/* Top Header */}
       <div>
         <div className="flex items-start justify-between gap-2 mb-3">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-10 w-10 items-center justify-center rounded-md border border-dev-border bg-dev-bg text-dev-accent group-hover:border-dev-accent transition-colors">
+            <div className="flex h-10 w-10 items-center justify-center rounded-md border border-divider bg-canvas text-accent-primary group-hover:border-accent-primary transition-colors">
               <Smartphone className="h-5 w-5" />
             </div>
             <div>
               <Link
                 href={`/apps/${app.slug}`}
-                className="font-sans text-base font-bold text-dev-bright group-hover:text-dev-accent transition-colors"
+                className="font-sans text-base font-bold text-text-primary group-hover:text-accent-primary transition-colors"
               >
                 {app.title}
               </Link>
               <div className="flex items-center gap-2 mt-0.5">
-                <span className="font-mono text-[11px] text-dev-accent bg-dev-accent/10 border border-dev-accent/30 px-1.5 py-0.5 rounded font-semibold">
+                <span className="font-mono text-[11px] text-accent-primary bg-accent-primary/10 border border-accent-primary/30 px-1.5 py-0.5 rounded font-semibold">
                   {app.version}
                 </span>
-                <span className="font-mono text-[11px] text-dev-muted">{app.category}</span>
+                <span className="font-mono text-[11px] text-text-secondary">{app.category}</span>
               </div>
             </div>
           </div>
 
           {/* Status Badge */}
-          <div className="flex items-center gap-1.5 rounded-full border border-dev-green/30 bg-dev-green/10 px-2.5 py-0.5 font-mono text-[11px] text-dev-green">
+          <div className="flex items-center gap-1.5 rounded-full border border-accent-success/30 bg-accent-success/10 px-2.5 py-0.5 font-mono text-[11px] text-accent-success">
             {app.status === 'Active' ? (
               <>
-                <span className="h-1.5 w-1.5 rounded-full bg-dev-green animate-pulse" />
+                <span className="h-1.5 w-1.5 rounded-full bg-accent-success animate-pulse" />
                 <span className="font-bold">{app.status}</span>
               </>
             ) : (
@@ -49,7 +49,7 @@ export function AppCard({ app }: AppCardProps) {
         </div>
 
         {/* Tagline / Description */}
-        <p className="text-xs text-dev-text line-clamp-2 mb-4 leading-relaxed font-sans">
+        <p className="text-xs text-text-secondary line-clamp-2 mb-4 leading-relaxed font-sans">
           {app.tagline || app.description}
         </p>
 
@@ -58,7 +58,7 @@ export function AppCard({ app }: AppCardProps) {
           {app.platforms.map((platform) => (
             <span
               key={platform}
-              className="inline-flex items-center rounded-md border border-dev-border bg-dev-subtle/80 px-2 py-0.5 font-mono text-[10px] text-dev-bright font-medium"
+              className="inline-flex items-center rounded-md border border-divider bg-divider/80 px-2 py-0.5 font-mono text-[10px] text-text-primary font-medium"
             >
               {platform}
             </span>
@@ -66,7 +66,7 @@ export function AppCard({ app }: AppCardProps) {
           {app.languages.map((lang) => (
             <span
               key={lang}
-              className="inline-flex items-center rounded-md border border-dev-accent/30 bg-dev-accent/10 px-2 py-0.5 font-mono text-[10px] text-dev-accent font-semibold"
+              className="inline-flex items-center rounded-md border border-accent-primary/30 bg-accent-primary/10 px-2 py-0.5 font-mono text-[10px] text-accent-primary font-semibold"
             >
               #{lang}
             </span>
@@ -75,14 +75,14 @@ export function AppCard({ app }: AppCardProps) {
       </div>
 
       {/* Footer Metrics & Links */}
-      <div className="pt-3 border-t border-dev-border/60 flex items-center justify-between text-xs font-mono text-dev-muted">
+      <div className="pt-3 border-t border-divider/60 flex items-center justify-between text-xs font-mono text-text-secondary">
         <div className="flex items-center gap-2">
           {app.downloadLinks?.github && (
             <a
               href={app.downloadLinks.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-dev-muted hover:text-dev-bright transition-colors"
+              className="text-text-secondary hover:text-text-primary transition-colors"
               title="GitHub Repository"
             >
               <ExternalLink className="h-3.5 w-3.5" />
@@ -90,7 +90,7 @@ export function AppCard({ app }: AppCardProps) {
           )}
           <Link
             href={`/apps/${app.slug}`}
-            className="inline-flex items-center gap-1 font-mono text-[11px] font-bold text-dev-accent hover:underline"
+            className="inline-flex items-center gap-1 font-mono text-[11px] font-bold text-accent-primary hover:underline"
           >
             Details &rarr;
           </Link>

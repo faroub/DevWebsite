@@ -8,10 +8,10 @@ interface AppListRowProps {
 
 export function AppListRow({ app }: AppListRowProps) {
   return (
-    <div className="group flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-md border border-dev-border bg-dev-card p-3.5 hover:border-dev-accent hover:bg-dev-subtle/50 transition-all shadow-sm">
+    <div className="group flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-md border border-divider bg-surface p-3.5 hover:border-accent-primary hover:bg-divider/50 transition-all shadow-sm">
       {/* Left side: Icon, Name, Version, Category */}
       <div className="flex items-center gap-3">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded border border-dev-border bg-dev-bg text-dev-accent group-hover:border-dev-accent transition-colors">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded border border-divider bg-canvas text-accent-primary group-hover:border-accent-primary transition-colors">
           <Smartphone className="h-4 w-4" />
         </div>
 
@@ -19,31 +19,31 @@ export function AppListRow({ app }: AppListRowProps) {
           <div className="flex items-center gap-2 flex-wrap">
             <Link
               href={`/apps/${app.slug}`}
-              className="font-sans text-sm font-bold text-dev-bright group-hover:text-dev-accent transition-colors"
+              className="font-sans text-sm font-bold text-text-primary group-hover:text-accent-primary transition-colors"
             >
               {app.title}
             </Link>
-            <span className="font-mono text-[10px] text-dev-accent bg-dev-accent/10 border border-dev-accent/30 px-1.5 py-0.5 rounded font-semibold">
+            <span className="font-mono text-[10px] text-accent-primary bg-accent-primary/10 border border-accent-primary/30 px-1.5 py-0.5 rounded font-semibold">
               {app.version}
             </span>
-            <span className="font-mono text-[10px] text-dev-muted border border-dev-border px-1.5 py-0.5 rounded bg-dev-bg">
+            <span className="font-mono text-[10px] text-text-secondary border border-divider px-1.5 py-0.5 rounded bg-canvas">
               {app.category}
             </span>
           </div>
 
-          <p className="text-xs text-dev-muted line-clamp-1 mt-0.5 font-sans max-w-xl">
+          <p className="text-xs text-text-secondary line-clamp-1 mt-0.5 font-sans max-w-xl">
             {app.tagline || app.description}
           </p>
         </div>
       </div>
 
       {/* Right side: Language tags, Link */}
-      <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0 font-mono text-xs text-dev-muted border-t sm:border-t-0 border-dev-border/40 pt-2 sm:pt-0">
+      <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0 font-mono text-xs text-text-secondary border-t sm:border-t-0 border-divider/40 pt-2 sm:pt-0">
         <div className="hidden md:flex items-center gap-1.5">
           {app.languages.slice(0, 3).map((lang) => (
             <span
               key={lang}
-              className="rounded bg-dev-bg border border-dev-accent/30 px-1.5 py-0.5 text-[10px] text-dev-accent font-semibold"
+              className="rounded bg-canvas border border-accent-primary/30 px-1.5 py-0.5 text-[10px] text-accent-primary font-semibold"
             >
               #{lang}
             </span>
@@ -52,7 +52,7 @@ export function AppListRow({ app }: AppListRowProps) {
 
         <Link
           href={`/apps/${app.slug}`}
-          className="rounded border border-dev-accent bg-dev-accent/10 px-2.5 py-1 text-[11px] font-bold text-dev-accent hover:bg-dev-accent hover:text-dev-bg transition-all"
+          className="rounded border border-accent-primary bg-accent-primary/10 px-2.5 py-1 text-[11px] font-bold text-accent-primary hover:bg-accent-primary hover:text-canvas transition-all"
         >
           View &rarr;
         </Link>
