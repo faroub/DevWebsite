@@ -19,7 +19,8 @@ const FILE_NAME_RE = /^[a-z0-9][a-z0-9-]*\.mdx$/;
 
 const ROOT_DIR = path.join(__dirname, '..');
 const CONTENT_DIR = path.join(ROOT_DIR, 'content');
-const SETTINGS_FILE = path.join(CONTENT_DIR, 'settings.json');
+// Local-only settings (git-ignored); never shipped with the site.
+const SETTINGS_FILE = path.join(ROOT_DIR, '.local', 'admin-settings.json');
 
 // Random per-startup token; printed once on boot and required on all /api routes.
 const ADMIN_TOKEN = crypto.randomBytes(24).toString('hex');
@@ -189,6 +190,7 @@ const server = http.createServer((req, res) => {
           keyToSave = existing.web3formsKey;
         }
         const settings = { notifyEmail: notifyEmail || '', web3formsKey: keyToSave };
+        fs.mkdirSync(path.dirname(SETTINGS_FILE), { recursive: true });
         fs.writeFileSync(SETTINGS_FILE, JSON.stringify(settings, null, 2), 'utf8');
 
         sendJson(res, 200, { success: true, message: 'Settings saved successfully', settings: { notifyEmail: settings.notifyEmail, web3formsKey: settings.web3formsKey ? `****${settings.web3formsKey.slice(-4)}` : '' } }, allowedOrigin);

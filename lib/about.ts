@@ -33,7 +33,7 @@ export function getAboutData(): AboutData {
         role: 'Senior Mobile & Full-Stack Engineer',
         location: 'Algeria',
         tagline: 'Developer laboratory and portfolio showcasing native Android, iOS, and web software.',
-        email: 'mzilab03dz@gmail.com',
+        email: '',
         githubUrl: 'https://github.com/mzilab',
         skillsMobile: 'Kotlin, Jetpack Compose, Swift, React Native',
         skillsSystems: 'Rust, Perfetto SQL, Next.js, MDX',
