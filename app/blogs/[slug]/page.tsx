@@ -2,7 +2,7 @@ import { getAllBlogs, getBlogBySlug } from '@/lib/blogs';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Calendar, Clock } from 'lucide-react';
-import { CommentThread } from '@/components/CommentThread';
+import { FeedbackForm } from '@/components/FeedbackForm';
 import { Markdown } from '@/components/Markdown';
 import { JsonLd } from '@/components/JsonLd';
 import type { Metadata } from 'next';
@@ -109,8 +109,8 @@ export default async function BlogDetailPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* Interactive Comment & Discussion Thread */}
-        <CommentThread itemSlug={frontmatter.slug} itemTitle={frontmatter.title} itemType="blog" />
+        {/* Private feedback form */}
+        <FeedbackForm itemTitle={frontmatter.title} />
       </article>
     </>
   );

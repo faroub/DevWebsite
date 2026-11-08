@@ -58,12 +58,20 @@ export interface TranslationDictionary {
     title: string;
     sub: string;
     nameLabel: string;
-    emailLabel: string;
-    topicLabel: string;
+    namePlaceholder: string;
+    nameError: string;
+    ratingLabel: string;
+    starAria: string;
     messageLabel: string;
+    messagePlaceholder: string;
+    messageError: string;
+    honeypotLabel: string;
     sendButton: string;
     sendingButton: string;
-    successTitle: string;
+    statusSuccess: string;
+    statusError: string;
+    notConfiguredTitle: string;
+    notConfiguredBody: string;
   };
   aboutPage: {
     whatIsTitle: string;
@@ -178,12 +186,21 @@ export const translations: Record<Locale, TranslationDictionary> = {
       title: 'Developer & Visitor Feedback',
       sub: 'Have a question, feature request, or bug report? Send a note straight to our inbox.',
       nameLabel: 'Name',
-      emailLabel: 'Email',
-      topicLabel: 'Topic / Reference',
+      namePlaceholder: 'e.g. Salim B. or Dev Visitor',
+      nameError: 'Please enter a name between 2 and 50 characters.',
+      ratingLabel: 'Rating (1 - 5 Stars)',
+      starAria: 'Rate {star} out of 5 stars',
       messageLabel: 'Feedback / Inquiry',
+      messagePlaceholder: 'Share your experience, feature request, or question about {title}...',
+      messageError: 'Please enter a message between 10 and 1000 characters.',
+      honeypotLabel: 'Leave this field empty',
       sendButton: 'Send Feedback',
       sendingButton: 'Transmitting...',
-      successTitle: 'Message sent successfully!',
+      statusSuccess: 'Message sent successfully!',
+      statusError: 'Something went wrong. Please try again later.',
+      notConfiguredTitle: 'Feedback is not configured',
+      notConfiguredBody:
+        'The site owner must set NEXT_PUBLIC_WEB3FORMS_KEY before messages can be sent.',
     },
     aboutPage: {
       whatIsTitle: 'What is mzilab?',
@@ -233,9 +250,9 @@ export const translations: Record<Locale, TranslationDictionary> = {
       asIsTitle: '2. Provided "As-Is" Without Warranty',
       asIsBody:
         'Software builds, demonstration applications, and code writeups are provided "As-Is" without express or implied warranties. Use and testing are at your own discretion.',
-      commentsTitle: '3. Respectful Community Conduct',
+      commentsTitle: '3. Respectful Conduct',
       commentsBody:
-        'Visitors posting comments, answers, or reviews in the discussion threads agree to maintain respectful, constructive, and relevant communication.',
+        'Visitors using the private feedback form agree to maintain respectful, constructive, and relevant communication. Submissions are transmitted to the maintainer and are not published on the site.',
       ipTitle: '4. Intellectual Property',
       ipBody:
         'The brand name mzilab, documentation, and original software design belong to Farid Oubbati / mzilab. Open-source projects remain licensed under their respective repository licenses.',
@@ -311,12 +328,21 @@ export const translations: Record<Locale, TranslationDictionary> = {
       title: 'Commentaires & Demandes',
       sub: 'Une question ou une suggestion ? Envoyez votre message directement au développeur.',
       nameLabel: 'Nom',
-      emailLabel: 'E-mail',
-      topicLabel: 'Sujet / Référence',
+      namePlaceholder: 'ex. Salim B. ou Visiteur',
+      nameError: 'Veuillez saisir un nom entre 2 et 50 caractères.',
+      ratingLabel: 'Note (1 à 5 étoiles)',
+      starAria: 'Noter {star} sur 5 étoiles',
       messageLabel: 'Message / Commentaire',
+      messagePlaceholder: 'Partagez votre expérience, votre demande ou votre question au sujet de {title}...',
+      messageError: 'Veuillez saisir un message entre 10 et 1000 caractères.',
+      honeypotLabel: 'Laissez ce champ vide',
       sendButton: 'Envoyer le message',
       sendingButton: 'Transmission...',
-      successTitle: 'Message envoyé avec succès !',
+      statusSuccess: 'Message envoyé avec succès !',
+      statusError: 'Une erreur est survenue. Veuillez réessayer plus tard.',
+      notConfiguredTitle: 'Les retours ne sont pas configurés',
+      notConfiguredBody:
+        "Le propriétaire du site doit configurer NEXT_PUBLIC_WEB3FORMS_KEY pour permettre l'envoi de messages.",
     },
     aboutPage: {
       whatIsTitle: 'Qu\'est-ce que mzilab ?',
@@ -368,7 +394,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
         'Les applications et codes de démonstration sont fournis « en l\'état », sans garantie expresse ou implicite. L\'utilisation se fait à votre entière discrétion.',
       commentsTitle: '3. Conduite Respectueuse',
       commentsBody:
-        'Les utilisateurs publiant des commentaires s\'engagent à maintenir des échanges respectueux, constructifs et pertinents.',
+        "Les utilisateurs du formulaire de retour privé s'engagent à maintenir une communication respectueuse, constructive et pertinente. Les envois sont transmis au responsable et ne sont pas publiés sur le site.",
       ipTitle: '4. Propriété Intellectuelle',
       ipBody:
         'La marque mzilab et la documentation originale restent la propriété de Farid Oubbati / mzilab.',
@@ -444,12 +470,21 @@ export const translations: Record<Locale, TranslationDictionary> = {
       title: 'ملاحظات المطورين والزوار',
       sub: 'هل لديك سؤال أو طلب ميزة أو بلاغ عن خلل؟ أرسل رسالتك مباشرة إلى المطور.',
       nameLabel: 'الاسم',
-      emailLabel: 'البريد الإلكتروني',
-      topicLabel: 'الموضوع / المرجع',
+      namePlaceholder: 'مثال: سليم ب. أو زائر',
+      nameError: 'يرجى إدخال اسم يتكون من حرفين إلى 50 حرفًا.',
+      ratingLabel: 'التقييم (1 - 5 نجوم)',
+      starAria: 'تقييم {star} من 5 نجوم',
       messageLabel: 'الملاحظات / الاستفسار',
+      messagePlaceholder: 'شارك تجربتك أو طلبك لميزة أو سؤالك حول {title}...',
+      messageError: 'يرجى إدخال رسالة تتكون من 10 إلى 1000 حرف.',
+      honeypotLabel: 'اترك هذا الحقل فارغًا',
       sendButton: 'إرسال الملاحظات',
       sendingButton: 'جارٍ الإرسال...',
-      successTitle: 'تم إرسال الرسالة بنجاح!',
+      statusSuccess: 'تم إرسال الرسالة بنجاح!',
+      statusError: 'حدث خطأ ما. يرجى المحاولة مرة أخرى لاحقًا.',
+      notConfiguredTitle: 'الملاحظات غير مُفعّلة',
+      notConfiguredBody:
+        'يجب على مالك الموقع ضبط NEXT_PUBLIC_WEB3FORMS_KEY قبل أن يصبح إرسال الرسائل ممكنًا.',
     },
     aboutPage: {
       whatIsTitle: 'ما هو موقع mzilab؟',
@@ -499,9 +534,9 @@ export const translations: Record<Locale, TranslationDictionary> = {
       asIsTitle: '2. تقديم البرمجيات «كما هي» دون ضمان',
       asIsBody:
         'تُقدّم إصدارات البرمجيات والتطبيقات التجريبية والشروحات البرمجية «كما هي»، دون أي ضمان صريح أو ضمني. ويكون استخدامها واختبارها على مسؤوليتك.',
-      commentsTitle: '3. سلوك محترم في النقاشات',
+      commentsTitle: '3. سلوك محترم',
       commentsBody:
-        'يلتزم الزوار الذين ينشرون تعليقات أو إجابات أو تقييمات في مساحات النقاش بأن تكون مشاركاتهم محترمة وبنّاءة وذات صلة.',
+        'يلتزم الزوار الذين يستخدمون نموذج الملاحظات الخاصة بأن تكون مساهماتهم محترمة وبنّاءة وذات صلة. تُرسل الرسائل إلى المسؤول ولا تُنشر على الموقع.',
       ipTitle: '4. الملكية الفكرية',
       ipBody:
         'علامة mzilab التجارية والوثائق والتصاميم البرمجية الأصلية مملوكة لفريد أوباتي / mzilab. وتظل المشاريع مفتوحة المصدر خاضعة للتراخيص المحددة في مستودعاتها.',

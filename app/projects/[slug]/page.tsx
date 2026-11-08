@@ -2,7 +2,7 @@ import { getAllProjects, getProjectBySlug } from '@/lib/projects';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, FolderGit2, ExternalLink } from 'lucide-react';
-import { CommentThread } from '@/components/CommentThread';
+import { FeedbackForm } from '@/components/FeedbackForm';
 import { Markdown } from '@/components/Markdown';
 import type { Metadata } from 'next';
 
@@ -108,12 +108,8 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         </div>
       </div>
 
-      {/* Interactive Comment & Discussion Thread */}
-      <CommentThread
-        itemSlug={frontmatter.slug}
-        itemTitle={frontmatter.title}
-        itemType="project"
-      />
+      {/* Private feedback form */}
+      <FeedbackForm itemTitle={frontmatter.title} />
     </article>
   );
 }
