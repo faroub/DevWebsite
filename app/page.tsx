@@ -24,7 +24,7 @@ export default function HomePage() {
         <div className="flex items-center justify-between border-b border-divider pb-3">
           <div className="flex items-center gap-2">
             <BookOpen className="h-5 w-5 text-accent-primary" />
-            <h1 className="font-heading text-xl sm:text-2xl font-extrabold text-text-primary">Latest Blog Articles</h1>
+            <h1 className="font-heading text-xl sm:text-2xl font-extrabold text-text-primary">Latest Articles</h1>
           </div>
           <Link
             href="/blogs"
@@ -47,7 +47,7 @@ export default function HomePage() {
         <div className="flex items-center justify-between border-b border-divider pb-3">
           <div className="flex items-center gap-2">
             <Smartphone className="h-5 w-5 text-accent-primary" />
-            <h2 className="font-heading text-xl font-bold text-text-primary">Latest Mobile Apps</h2>
+            <h2 className="font-heading text-xl font-bold text-text-primary">Latest Apps</h2>
           </div>
           <Link
             href="/apps"
@@ -70,7 +70,7 @@ export default function HomePage() {
         <div className="flex items-center justify-between border-b border-divider pb-3">
           <div className="flex items-center gap-2">
             <FolderGit2 className="h-5 w-5 text-accent-success" />
-            <h2 className="font-heading text-xl font-bold text-text-primary">Latest Developer Projects</h2>
+            <h2 className="font-heading text-xl font-bold text-text-primary">Latest Projects</h2>
           </div>
           <Link
             href="/projects"
