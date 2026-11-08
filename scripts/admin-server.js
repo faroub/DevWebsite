@@ -1,70 +1,199 @@
+// Local dev-only file bridge for the admin studio (npm run studio).
+// Security: binds to 127.0.0.1 only, allows just the Next.js dev origin,
+// requires a per-startup random token on all /api routes, validates every
+// content path against an allowlist, and caps request bodies at 256 KB.
+// Never expose this server to a network; it is not for production.
+
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const matter = require('gray-matter');
 
+const HOST = '127.0.0.1';
 const PORT = 3001;
+const ALLOWED_ORIGINS = new Set(['http://localhost:3000', 'http://127.0.0.1:3000']);
+const ALLOWED_TYPES = ['apps', 'projects', 'blogs'];
+const MAX_BODY_BYTES = 256 * 1024;
+const FILE_NAME_RE = /^[a-z0-9][a-z0-9-]*\.mdx$/;
+
 const ROOT_DIR = path.join(__dirname, '..');
 const CONTENT_DIR = path.join(ROOT_DIR, 'content');
 const SETTINGS_FILE = path.join(CONTENT_DIR, 'settings.json');
 
-const server = http.createServer((req, res) => {
-  // CORS Headers for local admin console
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+// Random per-startup token; printed once on boot and required on all /api routes.
+const ADMIN_TOKEN = crypto.randomBytes(24).toString('hex');
 
+function sendJson(res, statusCode, payload, origin) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (origin) {
+    headers['Access-Control-Allow-Origin'] = origin;
+    headers['Vary'] = 'Origin';
+  }
+  res.writeHead(statusCode, headers);
+  res.end(JSON.stringify(payload));
+}
+
+function readSettings() {
+  try {
+    if (fs.existsSync(SETTINGS_FILE)) {
+      const parsed = JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
+      return {
+        notifyEmail: typeof parsed.notifyEmail === 'string' ? parsed.notifyEmail : '',
+        web3formsKey: typeof parsed.web3formsKey === 'string' ? parsed.web3formsKey : '',
+      };
+    }
+  } catch {
+    // Corrupt settings file: fall back to empty settings.
+  }
+  return { notifyEmail: '', web3formsKey: '' };
+}
+
+// Reject any request whose Origin header is missing or not the local dev app.
+function requireAllowedOrigin(req, res) {
+  const origin = req.headers.origin;
+  if (!origin || !ALLOWED_ORIGINS.has(origin)) {
+    sendJson(res, 403, { success: false, error: 'Forbidden: origin not allowed' });
+    return null;
+  }
+  return origin;
+}
+
+// Require the per-startup admin token.
+function requireAdminToken(req, res, origin) {
+  const token = req.headers['x-admin-token'];
+  if (!token || token !== ADMIN_TOKEN) {
+    sendJson(res, 401, { success: false, error: 'Unauthorized: missing or wrong X-Admin-Token' }, origin);
+    return false;
+  }
+  return true;
+}
+
+// Read the body with a hard size cap; resolves null on abort/error.
+function readBody(req, res, origin) {
+  return new Promise((resolve) => {
+    const chunks = [];
+    let size = 0;
+    let aborted = false;
+    req.on('data', (chunk) => {
+      if (aborted) return;
+      size += chunk.length;
+      if (size > MAX_BODY_BYTES) {
+        aborted = true;
+        sendJson(res, 413, { success: false, error: 'Request body exceeds 256 KB limit' }, origin);
+        req.destroy();
+        resolve(null);
+        return;
+      }
+      chunks.push(chunk);
+    });
+    req.on('end', () => {
+      if (!aborted) resolve(Buffer.concat(chunks).toString('utf8'));
+    });
+    req.on('error', () => resolve(null));
+  });
+}
+
+// Validate a content file target: type allowlist, strict file name regex,
+// and the resolved path must stay inside the type directory.
+function resolveContentFile(type, fileName) {
+  if (!ALLOWED_TYPES.includes(type)) {
+    return { error: 'Invalid type: must be one of apps, projects, blogs' };
+  }
+  if (typeof fileName !== 'string' || !FILE_NAME_RE.test(fileName)) {
+    return { error: 'Invalid fileName: must match ^[a-z0-9][a-z0-9-]*\\.mdx$' };
+  }
+  const typeDir = path.resolve(CONTENT_DIR, type);
+  const filePath = path.resolve(typeDir, fileName);
+  if (!filePath.startsWith(typeDir + path.sep)) {
+    return { error: 'Invalid fileName: resolves outside the content directory' };
+  }
+  return { filePath };
+}
+
+const server = http.createServer((req, res) => {
+  const url = new URL(req.url, `http://${HOST}:${PORT}`);
+  const origin = req.headers.origin;
+
+  // CORS preflight: only the local dev origin may proceed.
   if (req.method === 'OPTIONS') {
-    res.writeHead(204);
-    res.end();
+    if (origin && ALLOWED_ORIGINS.has(origin)) {
+      res.writeHead(204, {
+        'Access-Control-Allow-Origin': origin,
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Token',
+        Vary: 'Origin',
+      });
+      res.end();
+    } else {
+      sendJson(res, 403, { success: false, error: 'Forbidden: origin not allowed' });
+    }
     return;
   }
 
-  const url = new URL(req.url, `http://localhost:${PORT}`);
-
-  // Auto-redirect browser visits from port 3001 to Next.js app on port 3000
+  // Browser visits to the bridge port get redirected to the studio
+  // (navigations carry no Origin header, so the API gate does not apply here).
   if (url.pathname === '/' || url.pathname === '/admin') {
     res.writeHead(302, { Location: 'http://localhost:3000/admin' });
     res.end();
     return;
   }
 
-  // Get Admin Settings (email forwarding & API keys)
+  // Everything under /api requires an allowed origin and the admin token.
+  if (!url.pathname.startsWith('/api/')) {
+    sendJson(res, 404, { success: false, error: 'Endpoint not found' });
+    return;
+  }
+
+  const allowedOrigin = requireAllowedOrigin(req, res);
+  if (!allowedOrigin) return;
+  if (!requireAdminToken(req, res, allowedOrigin)) return;
+
+  // POST routes must carry JSON.
+  if (req.method === 'POST') {
+    const contentType = req.headers['content-type'] || '';
+    if (!contentType.toLowerCase().includes('application/json')) {
+      sendJson(res, 415, { success: false, error: 'Unsupported Media Type: Content-Type must be application/json' }, allowedOrigin);
+      return;
+    }
+  }
+
+  // Get Admin Settings (web3formsKey is always returned masked)
   if (req.method === 'GET' && url.pathname === '/api/settings') {
     try {
-      let settings = { notifyEmail: '', web3formsKey: '' };
-      if (fs.existsSync(SETTINGS_FILE)) {
-        settings = JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
-      }
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: true, settings }));
+      const settings = readSettings();
+      sendJson(res, 200, {
+        success: true,
+        settings: {
+          notifyEmail: settings.notifyEmail,
+          web3formsKey: settings.web3formsKey ? `****${settings.web3formsKey.slice(-4)}` : '',
+          web3formsKeyConfigured: Boolean(settings.web3formsKey),
+        },
+      }, allowedOrigin);
     } catch (err) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: false, error: err.message }));
+      sendJson(res, 500, { success: false, error: err.message }, allowedOrigin);
     }
     return;
   }
 
   // Save Admin Settings
   if (req.method === 'POST' && url.pathname === '/api/settings/save') {
-    let body = '';
-    req.on('data', (chunk) => {
-      body += chunk.toString();
-    });
-    req.on('end', () => {
+    readBody(req, res, allowedOrigin).then((body) => {
+      if (body === null) return;
       try {
         const { notifyEmail, web3formsKey } = JSON.parse(body);
-        if (!fs.existsSync(CONTENT_DIR)) {
-          fs.mkdirSync(CONTENT_DIR, { recursive: true });
+        const existing = readSettings();
+        let keyToSave = typeof web3formsKey === 'string' ? web3formsKey.trim() : '';
+        // An empty or masked value means "keep the existing key".
+        if (keyToSave === '' || keyToSave.startsWith('****')) {
+          keyToSave = existing.web3formsKey;
         }
-        const settings = { notifyEmail: notifyEmail || '', web3formsKey: web3formsKey || '' };
+        const settings = { notifyEmail: notifyEmail || '', web3formsKey: keyToSave };
         fs.writeFileSync(SETTINGS_FILE, JSON.stringify(settings, null, 2), 'utf8');
 
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: true, message: 'Settings saved successfully', settings }));
+        sendJson(res, 200, { success: true, message: 'Settings saved successfully', settings: { notifyEmail: settings.notifyEmail, web3formsKey: settings.web3formsKey ? `****${settings.web3formsKey.slice(-4)}` : '' } }, allowedOrigin);
       } catch (err) {
-        res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, error: err.message }));
+        sendJson(res, 500, { success: false, error: err.message }, allowedOrigin);
       }
     });
     return;
@@ -79,22 +208,17 @@ const server = http.createServer((req, res) => {
         const fileContent = fs.readFileSync(aboutPath, 'utf8');
         parsed = matter(fileContent);
       }
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: true, frontmatter: parsed.data, body: parsed.content }));
+      sendJson(res, 200, { success: true, frontmatter: parsed.data, body: parsed.content }, allowedOrigin);
     } catch (err) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: false, error: err.message }));
+      sendJson(res, 500, { success: false, error: err.message }, allowedOrigin);
     }
     return;
   }
 
   // Save About Page Content
   if (req.method === 'POST' && url.pathname === '/api/about/save') {
-    let body = '';
-    req.on('data', (chunk) => {
-      body += chunk.toString();
-    });
-    req.on('end', () => {
+    readBody(req, res, allowedOrigin).then((body) => {
+      if (body === null) return;
       try {
         const { frontmatter, bodyText } = JSON.parse(body);
         const aboutPath = path.join(CONTENT_DIR, 'about.mdx');
@@ -104,11 +228,9 @@ const server = http.createServer((req, res) => {
         const fileContent = matter.stringify(bodyText || '', frontmatter || {});
         fs.writeFileSync(aboutPath, fileContent, 'utf8');
 
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: true, message: 'Saved about.mdx to disk' }));
+        sendJson(res, 200, { success: true, message: 'Saved about.mdx to disk' }, allowedOrigin);
       } catch (err) {
-        res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, error: err.message }));
+        sendJson(res, 500, { success: false, error: err.message }, allowedOrigin);
       }
     });
     return;
@@ -117,10 +239,8 @@ const server = http.createServer((req, res) => {
   // List all content items
   if (req.method === 'GET' && url.pathname === '/api/content') {
     try {
-      const types = ['apps', 'projects', 'blogs'];
       const result = {};
-
-      types.forEach((type) => {
+      ALLOWED_TYPES.forEach((type) => {
         const dir = path.join(CONTENT_DIR, type);
         result[type] = [];
         if (fs.existsSync(dir)) {
@@ -141,43 +261,38 @@ const server = http.createServer((req, res) => {
         }
       });
 
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: true, data: result }));
+      sendJson(res, 200, { success: true, data: result }, allowedOrigin);
     } catch (err) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: false, error: err.message }));
+      sendJson(res, 500, { success: false, error: err.message }, allowedOrigin);
     }
     return;
   }
 
   // Save content file
   if (req.method === 'POST' && url.pathname === '/api/content/save') {
-    let body = '';
-    req.on('data', (chunk) => {
-      body += chunk.toString();
-    });
-    req.on('end', () => {
+    readBody(req, res, allowedOrigin).then((body) => {
+      if (body === null) return;
       try {
         const { type, fileName, frontmatter, bodyText } = JSON.parse(body);
         if (!type || !fileName || !frontmatter) {
-          throw new Error('Missing type, fileName, or frontmatter');
+          sendJson(res, 400, { success: false, error: 'Missing type, fileName, or frontmatter' }, allowedOrigin);
+          return;
+        }
+        const target = resolveContentFile(type, fileName);
+        if (target.error) {
+          sendJson(res, 400, { success: false, error: target.error }, allowedOrigin);
+          return;
         }
 
-        const targetDir = path.join(CONTENT_DIR, type);
-        if (!fs.existsSync(targetDir)) {
-          fs.mkdirSync(targetDir, { recursive: true });
+        if (!fs.existsSync(CONTENT_DIR)) {
+          fs.mkdirSync(CONTENT_DIR, { recursive: true });
         }
-
-        const filePath = path.join(targetDir, fileName.endsWith('.mdx') ? fileName : `${fileName}.mdx`);
         const fileContent = matter.stringify(bodyText || '', frontmatter);
+        fs.writeFileSync(target.filePath, fileContent, 'utf8');
 
-        fs.writeFileSync(filePath, fileContent, 'utf8');
-
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: true, message: `Saved ${fileName} to ${type}` }));
+        sendJson(res, 200, { success: true, message: `Saved ${fileName} to ${type}` }, allowedOrigin);
       } catch (err) {
-        res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, error: err.message }));
+        sendJson(res, 500, { success: false, error: err.message }, allowedOrigin);
       }
     });
     return;
@@ -185,35 +300,35 @@ const server = http.createServer((req, res) => {
 
   // Delete content file
   if (req.method === 'POST' && url.pathname === '/api/content/delete') {
-    let body = '';
-    req.on('data', (chunk) => {
-      body += chunk.toString();
-    });
-    req.on('end', () => {
+    readBody(req, res, allowedOrigin).then((body) => {
+      if (body === null) return;
       try {
         const { type, fileName } = JSON.parse(body);
-        const filePath = path.join(CONTENT_DIR, type, fileName);
-        if (fs.existsSync(filePath)) {
-          fs.unlinkSync(filePath);
+        const target = resolveContentFile(type, fileName);
+        if (target.error) {
+          sendJson(res, 400, { success: false, error: target.error }, allowedOrigin);
+          return;
         }
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: true, message: `Deleted ${fileName}` }));
+        if (fs.existsSync(target.filePath)) {
+          fs.unlinkSync(target.filePath);
+        }
+        sendJson(res, 200, { success: true, message: `Deleted ${fileName}` }, allowedOrigin);
       } catch (err) {
-        res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, error: err.message }));
+        sendJson(res, 500, { success: false, error: err.message }, allowedOrigin);
       }
     });
     return;
   }
 
-  res.writeHead(404, { 'Content-Type': 'application/json' });
-  res.end(JSON.stringify({ error: 'Endpoint not found' }));
+  sendJson(res, 404, { success: false, error: 'Endpoint not found' }, allowedOrigin);
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, HOST, () => {
   console.log(`\n==================================================`);
-  console.log(`🚀 Local Admin File Bridge active on http://localhost:${PORT}`);
+  console.log(`🚀 Local Admin File Bridge active on http://${HOST}:${PORT}`);
   console.log(`💻 Open Web Admin Studio at: http://localhost:3000/admin`);
+  console.log(`🔑 Admin token for this session (paste into the studio header):`);
+  console.log(`   ${ADMIN_TOKEN}`);
   console.log(`📁 Managing files in: ${CONTENT_DIR}`);
   console.log(`==================================================\n`);
 });

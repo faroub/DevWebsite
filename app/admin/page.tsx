@@ -19,6 +19,7 @@ import {
   Mail,
   Send,
   User,
+  KeyRound,
 } from 'lucide-react';
 
 interface ContentItem {
@@ -34,6 +35,8 @@ export default function LocalAdminPage() {
   const [isLocalHost, setIsLocalHost] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<CollectionType>('apps');
   const [bridgeConnected, setBridgeConnected] = useState<boolean | null>(null);
+  // Bridge auth token: kept in sessionStorage only (tab lifetime, never disk)
+  const [adminToken, setAdminToken] = useState<string>('');
   const [items, setItems] = useState<Record<'apps' | 'projects' | 'blogs', ContentItem[]>>({
     apps: [],
     projects: [],
@@ -43,6 +46,7 @@ export default function LocalAdminPage() {
   // Settings State
   const [notifyEmail, setNotifyEmail] = useState<string>('mzilab03dz@gmail.com');
   const [web3formsKey, setWeb3formsKey] = useState<string>('');
+  const [savedKeyHint, setSavedKeyHint] = useState<string>('');
 
   // About Page State
   const [aboutFrontmatter, setAboutFrontmatter] = useState({
@@ -79,6 +83,8 @@ export default function LocalAdminPage() {
         hostname.startsWith('192.168.') ||
         hostname.endsWith('.local');
       setIsLocalHost(isLocal);
+      const storedToken = sessionStorage.getItem('mzilab_admin_token');
+      if (storedToken) setAdminToken(storedToken);
       if (isLocal) {
         fetchLocalContent();
         fetchSettings();
@@ -87,10 +93,36 @@ export default function LocalAdminPage() {
     }
   }, []);
 
+  // Bridge auth: attach the session token to every admin bridge request
+  const adminFetch = (path: string, options: RequestInit = {}) =>
+    fetch(`http://localhost:3001${path}`, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Token': adminToken,
+        ...(options.headers || {}),
+      },
+    });
+
+  // Report auth failures uniformly
+  const isBridgeAuthError = (res: Response) => {
+    if (res.status === 401 || res.status === 403) {
+      setBridgeConnected(false);
+      setStatusMessage(
+        res.status === 401
+          ? 'Bridge token rejected: paste the token printed by "npm run studio" into the token field above.'
+          : 'Bridge rejected the request: this origin is not allowed.'
+      );
+      return true;
+    }
+    return false;
+  };
+
   // Fetch content from local admin file bridge server
   const fetchLocalContent = async () => {
     try {
-      const res = await fetch('http://localhost:3001/api/content');
+      const res = await adminFetch('/api/content');
+      if (isBridgeAuthError(res)) return;
       if (res.ok) {
         const json = await res.json();
         if (json.success) {
@@ -109,13 +141,20 @@ export default function LocalAdminPage() {
   // Fetch email notification settings
   const fetchSettings = async () => {
     try {
-      const res = await fetch('http://localhost:3001/api/settings');
+      const res = await adminFetch('/api/settings');
+      if (isBridgeAuthError(res)) return;
       if (res.ok) {
         const json = await res.json();
         if (json.success && json.settings) {
           if (json.settings.notifyEmail) setNotifyEmail(json.settings.notifyEmail);
-          if (json.settings.web3formsKey) setWeb3formsKey(json.settings.web3formsKey);
-          localStorage.setItem('mzilab_settings', JSON.stringify(json.settings));
+          // The key is only returned masked; never load it into the field.
+          setSavedKeyHint(
+            json.settings.web3formsKeyConfigured ? `Saved key: ${json.settings.web3formsKey}` : ''
+          );
+          localStorage.setItem(
+            'mzilab_settings',
+            JSON.stringify({ notifyEmail: json.settings.notifyEmail })
+          );
         }
       }
     } catch {
@@ -124,7 +163,6 @@ export default function LocalAdminPage() {
         try {
           const parsed = JSON.parse(saved);
           if (parsed.notifyEmail) setNotifyEmail(parsed.notifyEmail);
-          if (parsed.web3formsKey) setWeb3formsKey(parsed.web3formsKey);
         } catch {}
       }
     }
@@ -133,7 +171,8 @@ export default function LocalAdminPage() {
   // Fetch About Page MDX Data
   const fetchAboutData = async () => {
     try {
-      const res = await fetch('http://localhost:3001/api/about');
+      const res = await adminFetch('/api/about');
+      if (isBridgeAuthError(res)) return;
       if (res.ok) {
         const json = await res.json();
         if (json.success) {
@@ -148,14 +187,14 @@ export default function LocalAdminPage() {
   const handleSaveAbout = async () => {
     if (bridgeConnected) {
       try {
-        const res = await fetch('http://localhost:3001/api/about/save', {
+        const res = await adminFetch('/api/about/save', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             frontmatter: aboutFrontmatter,
             bodyText: aboutBody,
           }),
         });
+        if (isBridgeAuthError(res)) return;
         const json = await res.json();
         if (json.success) {
           setStatusMessage('Successfully saved about.mdx to disk!');
@@ -182,11 +221,11 @@ export default function LocalAdminPage() {
 
     if (bridgeConnected) {
       try {
-        const res = await fetch('http://localhost:3001/api/settings/save', {
+        const res = await adminFetch('/api/settings/save', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newSettings),
         });
+        if (isBridgeAuthError(res)) return;
         const json = await res.json();
         if (json.success) {
           setStatusMessage(`Notification email saved to disk: ${notifyEmail}`);
@@ -255,9 +294,8 @@ export default function LocalAdminPage() {
 
     if (bridgeConnected) {
       try {
-        const res = await fetch('http://localhost:3001/api/content/save', {
+        const res = await adminFetch('/api/content/save', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             type: activeTab,
             fileName: editedItem.fileName,
@@ -265,6 +303,7 @@ export default function LocalAdminPage() {
             bodyText: editedItem.body,
           }),
         });
+        if (isBridgeAuthError(res)) return;
         const json = await res.json();
         if (json.success) {
           setStatusMessage(`Successfully saved ${editedItem.fileName} to disk!`);
@@ -304,14 +343,14 @@ export default function LocalAdminPage() {
 
     if (bridgeConnected) {
       try {
-        const res = await fetch('http://localhost:3001/api/content/delete', {
+        const res = await adminFetch('/api/content/delete', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             type: activeTab,
             fileName: editedItem.fileName,
           }),
         });
+        if (isBridgeAuthError(res)) return;
         const json = await res.json();
         if (json.success) {
           setStatusMessage(`Deleted ${editedItem.fileName}`);
@@ -437,6 +476,22 @@ export default function LocalAdminPage() {
                 <span>STANDALONE MODE (Run: npm run studio)</span>
               </div>
             )}
+            <div className="flex items-center gap-2 w-full sm:w-80">
+              <KeyRound className="h-3.5 w-3.5 shrink-0 text-text-secondary" />
+              <input
+                type="text"
+                value={adminToken}
+                onChange={(e) => {
+                  setAdminToken(e.target.value);
+                  sessionStorage.setItem('mzilab_admin_token', e.target.value);
+                }}
+                placeholder="Bridge token (printed by npm run studio)"
+                autoComplete="off"
+                spellCheck={false}
+                aria-label="Admin bridge token"
+                className="w-full rounded border border-divider bg-canvas px-3 py-1.5 text-xs text-text-primary placeholder-text-secondary focus:border-accent-primary focus:outline-none"
+              />
+            </div>
             <button
               onClick={() => {
                 fetchLocalContent();
@@ -732,7 +787,7 @@ export default function LocalAdminPage() {
                 type="text"
                 value={web3formsKey}
                 onChange={(e) => setWeb3formsKey(e.target.value)}
-                placeholder="Paste your free Web3Forms access key here"
+                placeholder={savedKeyHint || 'Paste your free Web3Forms access key here'}
                 className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
               />
               <div className="rounded border border-accent-primary/30 bg-canvas p-3 text-[11px] text-text-secondary space-y-1 mt-2">
