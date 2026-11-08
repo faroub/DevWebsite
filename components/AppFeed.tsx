@@ -67,6 +67,7 @@ export function AppFeed({ initialApps }: AppFeedProps) {
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
+                aria-label="Clear search"
                 className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-text-secondary hover:text-accent-primary"
               >
                 <X className="h-3.5 w-3.5" />
@@ -82,6 +83,7 @@ export function AppFeed({ initialApps }: AppFeedProps) {
             <div className="flex rounded-md border border-divider bg-canvas p-0.5 font-mono text-xs">
               <button
                 onClick={() => setViewMode('grid')}
+                aria-pressed={viewMode === 'grid'}
                 className={`flex items-center gap-1.5 rounded px-2.5 py-1 transition-all ${
                   viewMode === 'grid'
                     ? 'bg-accent-primary text-canvas font-bold shadow-sm'
@@ -94,6 +96,7 @@ export function AppFeed({ initialApps }: AppFeedProps) {
               </button>
               <button
                 onClick={() => setViewMode('rows')}
+                aria-pressed={viewMode === 'rows'}
                 className={`flex items-center gap-1.5 rounded px-2.5 py-1 transition-all ${
                   viewMode === 'rows'
                     ? 'bg-accent-primary text-canvas font-bold shadow-sm'
@@ -118,6 +121,7 @@ export function AppFeed({ initialApps }: AppFeedProps) {
             <button
               key={tag}
               onClick={() => setSelectedTag(tag)}
+              aria-pressed={selectedTag === tag}
               className={`shrink-0 font-mono text-xs px-2.5 py-1 rounded-full border transition-all ${
                 selectedTag === tag
                   ? 'border-accent-primary bg-accent-primary text-canvas font-bold shadow-sm'

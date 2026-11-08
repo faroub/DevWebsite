@@ -51,8 +51,23 @@ export interface TranslationDictionary {
     platformsAndTech: string;
     keyFeatures: string;
     changelog: string;
+    overviewTitle: string;
+    downloadAppStore: string;
+    downloadPlayStore: string;
+    downloadGithub: string;
     feedbackHeader: string;
     feedbackSub: string;
+  };
+  projectDetail: {
+    backToProjects: string;
+    status: string;
+    techStack: string;
+    overviewTitle: string;
+    githubRepo: string;
+  };
+  blogDetail: {
+    backToBlogs: string;
+    by: string;
   };
   feedback: {
     title: string;
@@ -179,8 +194,23 @@ export const translations: Record<Locale, TranslationDictionary> = {
       platformsAndTech: 'Platforms & Tech:',
       keyFeatures: 'Key Features',
       changelog: 'Release Changelog',
+      overviewTitle: 'Architecture & Overview',
+      downloadAppStore: 'App Store',
+      downloadPlayStore: 'Google Play',
+      downloadGithub: 'GitHub Repository',
       feedbackHeader: 'Inquiries & Feedback',
       feedbackSub: 'Have a question or feature request? Send a note directly.',
+    },
+    projectDetail: {
+      backToProjects: 'Back to all projects',
+      status: 'Status:',
+      techStack: 'Tech Stack:',
+      overviewTitle: 'Project Overview',
+      githubRepo: 'GitHub Repository',
+    },
+    blogDetail: {
+      backToBlogs: 'Back to all blogs',
+      by: 'By {author}',
     },
     feedback: {
       title: 'Developer & Visitor Feedback',
@@ -321,8 +351,23 @@ export const translations: Record<Locale, TranslationDictionary> = {
       platformsAndTech: 'Plateformes & Technologies :',
       keyFeatures: 'Fonctionnalités Clés',
       changelog: 'Historique des Versions',
+      overviewTitle: 'Architecture & Aperçu',
+      downloadAppStore: 'App Store',
+      downloadPlayStore: 'Google Play',
+      downloadGithub: 'Dépôt GitHub',
       feedbackHeader: 'Questions & Commentaires',
       feedbackSub: 'Une suggestion ou un problème ? Envoyez un message direct.',
+    },
+    projectDetail: {
+      backToProjects: 'Retour aux projets',
+      status: 'Statut :',
+      techStack: 'Pile technique :',
+      overviewTitle: 'Aperçu du projet',
+      githubRepo: 'Dépôt GitHub',
+    },
+    blogDetail: {
+      backToBlogs: 'Retour aux articles',
+      by: 'Par {author}',
     },
     feedback: {
       title: 'Commentaires & Demandes',
@@ -463,8 +508,23 @@ export const translations: Record<Locale, TranslationDictionary> = {
       platformsAndTech: 'المنصات والتقنيات:',
       keyFeatures: 'الميزات الأساسية',
       changelog: 'سجل الإصدارات',
+      overviewTitle: 'البنية والنظرة العامة',
+      downloadAppStore: 'App Store',
+      downloadPlayStore: 'Google Play',
+      downloadGithub: 'مستودع GitHub',
       feedbackHeader: 'الاستفسارات والملاحظات',
       feedbackSub: 'هل لديك سؤال أو اقتراح لميزة جديدة؟ أرسل رسالتك مباشرة.',
+    },
+    projectDetail: {
+      backToProjects: 'العودة إلى جميع المشاريع',
+      status: 'الحالة:',
+      techStack: 'التقنيات المستخدمة:',
+      overviewTitle: 'نظرة عامة على المشروع',
+      githubRepo: 'مستودع GitHub',
+    },
+    blogDetail: {
+      backToBlogs: 'العودة إلى جميع المقالات',
+      by: 'بقلم {author}',
     },
     feedback: {
       title: 'ملاحظات المطورين والزوار',

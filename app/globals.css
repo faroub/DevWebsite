@@ -33,8 +33,9 @@ body {
   color: rgb(var(--color-text-primary));
 }
 
-/* Full RTL typography and layout styling for Arabic mode */
-[dir="rtl"] {
+/* Full RTL typography and layout styling for Arabic mode.
+   Applied on body (not html) so it overrides the body font-family rule. */
+[dir="rtl"] body {
   font-family: var(--font-rtl), var(--font-sans), system-ui, sans-serif;
 }
 
@@ -87,4 +88,15 @@ body {
 *:focus-visible {
   outline: 2px solid #06B6D4;
   outline-offset: 2px;
+}
+
+/* Reduced motion: disable scale and transition animations for users who
+   prefer reduced motion. Interactive variants also use motion-safe:. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

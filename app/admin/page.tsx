@@ -452,9 +452,16 @@ export default function LocalAdminPage() {
         </div>
 
         {statusMessage && (
-          <div className="rounded-md border border-accent-primary/30 bg-canvas p-3 font-mono text-xs text-accent-primary flex items-center justify-between">
+          <div
+            aria-live="polite"
+            className="rounded-md border border-accent-primary/30 bg-canvas p-3 font-mono text-xs text-accent-primary flex items-center justify-between"
+          >
             <span>{statusMessage}</span>
-            <button onClick={() => setStatusMessage('')} className="text-text-secondary hover:text-text-primary">
+            <button
+              onClick={() => setStatusMessage('')}
+              aria-label="Dismiss status message"
+              className="text-text-secondary hover:text-text-primary"
+            >
               &times;
             </button>
           </div>

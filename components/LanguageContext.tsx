@@ -12,6 +12,12 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
+/**
+ * Locale switching is client-side only. Because the site is a static
+ * export, the server always renders English; after hydration the chosen
+ * locale (from localStorage) replaces the content and the <html>
+ * lang / dir attributes are synced here.
+ */
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>('en');
 
