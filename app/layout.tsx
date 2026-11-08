@@ -42,7 +42,6 @@ export const metadata: Metadata = {
     'Kotlin',
     'iOS Swift',
     'Next.js Showcase',
-    'Oued Mzi Laghouat',
   ],
   authors: [{ name: 'Farid Oubbati', url: 'https://mzilab.de' }],
   creator: 'Farid Oubbati / mzilab',
@@ -101,7 +100,7 @@ export default function RootLayout({
       '@type': 'Person',
       name: 'Farid Oubbati',
       url: 'https://mzilab.de/about',
-      jobTitle: 'Senior Mobile & Hardware Engineer',
+      jobTitle: 'Senior Engineer & Solo Creator',
       address: {
         '@type': 'PostalAddress',
         addressLocality: 'Laghouat',

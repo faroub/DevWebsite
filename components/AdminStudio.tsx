@@ -52,7 +52,7 @@ export function AdminStudio() {
   const [aboutFrontmatter, setAboutFrontmatter] = useState({
     title: 'About mzilab',
     author: 'Farid Oubbati',
-    role: 'Senior Mobile & Full-Stack Engineer',
+    role: 'Senior Engineer & Solo Creator',
     location: 'Algeria',
     tagline: 'Developer laboratory and portfolio showcasing native Android, iOS, and web software.',
     email: '',

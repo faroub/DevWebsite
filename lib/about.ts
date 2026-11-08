@@ -30,7 +30,7 @@ export function getAboutData(): AboutData {
       frontmatter: {
         title: 'About mzilab',
         author: 'Farid Oubbati',
-        role: 'Senior Mobile & Full-Stack Engineer',
+        role: 'Senior Engineer & Solo Creator',
         location: 'Algeria',
         tagline: 'Developer laboratory and portfolio showcasing native Android, iOS, and web software.',
         email: '',
