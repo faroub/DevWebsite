@@ -1,6 +1,5 @@
-import fs from 'fs';
 import path from 'path';
-import matter from 'gray-matter';
+import { loadContentDirectory } from './content';
 
 export interface AppFrontmatter {
   title: string;
@@ -13,8 +12,6 @@ export interface AppFrontmatter {
   platforms: string[];
   category: string;
   languages: string[];
-  stars: number;
-  forks: number;
   updatedAt: string;
   downloadLinks?: {
     appStore?: string;
@@ -32,46 +29,23 @@ export interface AppData {
 const APPS_DIRECTORY = path.join(process.cwd(), 'content/apps');
 
 export function getAllApps(): AppFrontmatter[] {
-  if (!fs.existsSync(APPS_DIRECTORY)) {
-    return [];
-  }
-
-  const fileNames = fs.readdirSync(APPS_DIRECTORY);
-
-  const apps = fileNames
-    .filter((fileName) => fileName.endsWith('.mdx') || fileName.endsWith('.md'))
-    .map((fileName) => {
-      const fullPath = path.join(APPS_DIRECTORY, fileName);
-      const fileContents = fs.readFileSync(fullPath, 'utf8');
-      const { data } = matter(fileContents);
-      return data as AppFrontmatter;
-    })
-    .sort((a, b) => (new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()));
-
-  return apps;
+  return loadContentDirectory<AppFrontmatter>(APPS_DIRECTORY)
+    .sort(
+      (a, b) =>
+        new Date(b.frontmatter.updatedAt).getTime() -
+        new Date(a.frontmatter.updatedAt).getTime()
+    )
+    .map((entry) => entry.frontmatter);
 }
 
 export function getAppBySlug(slug: string): AppData | null {
-  if (!fs.existsSync(APPS_DIRECTORY)) {
+  const entry = loadContentDirectory<AppFrontmatter>(APPS_DIRECTORY).find(
+    (item) => item.slug === slug
+  );
+
+  if (!entry) {
     return null;
   }
 
-  const fileNames = fs.readdirSync(APPS_DIRECTORY);
-  const targetFile = fileNames.find((fileName) => {
-    const slugName = fileName.replace(/\.mdx?$/, '');
-    return slugName === slug;
-  });
-
-  if (!targetFile) {
-    return null;
-  }
-
-  const fullPath = path.join(APPS_DIRECTORY, targetFile);
-  const fileContents = fs.readFileSync(fullPath, 'utf8');
-  const { data, content } = matter(fileContents);
-
-  return {
-    frontmatter: data as AppFrontmatter,
-    content,
-  };
+  return { frontmatter: entry.frontmatter, content: entry.content };
 }

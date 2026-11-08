@@ -1,6 +1,5 @@
-import fs from 'fs';
 import path from 'path';
-import matter from 'gray-matter';
+import { loadContentDirectory } from './content';
 
 export interface BlogFrontmatter {
   title: string;
@@ -21,46 +20,23 @@ export interface BlogData {
 const BLOGS_DIRECTORY = path.join(process.cwd(), 'content/blogs');
 
 export function getAllBlogs(): BlogFrontmatter[] {
-  if (!fs.existsSync(BLOGS_DIRECTORY)) {
-    return [];
-  }
-
-  const fileNames = fs.readdirSync(BLOGS_DIRECTORY);
-
-  const blogs = fileNames
-    .filter((fileName) => fileName.endsWith('.mdx') || fileName.endsWith('.md'))
-    .map((fileName) => {
-      const fullPath = path.join(BLOGS_DIRECTORY, fileName);
-      const fileContents = fs.readFileSync(fullPath, 'utf8');
-      const { data } = matter(fileContents);
-      return data as BlogFrontmatter;
-    })
-    .sort((a, b) => (new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()));
-
-  return blogs;
+  return loadContentDirectory<BlogFrontmatter>(BLOGS_DIRECTORY)
+    .sort(
+      (a, b) =>
+        new Date(b.frontmatter.publishedAt).getTime() -
+        new Date(a.frontmatter.publishedAt).getTime()
+    )
+    .map((entry) => entry.frontmatter);
 }
 
 export function getBlogBySlug(slug: string): BlogData | null {
-  if (!fs.existsSync(BLOGS_DIRECTORY)) {
+  const entry = loadContentDirectory<BlogFrontmatter>(BLOGS_DIRECTORY).find(
+    (item) => item.slug === slug
+  );
+
+  if (!entry) {
     return null;
   }
 
-  const fileNames = fs.readdirSync(BLOGS_DIRECTORY);
-  const targetFile = fileNames.find((fileName) => {
-    const slugName = fileName.replace(/\.mdx?$/, '');
-    return slugName === slug;
-  });
-
-  if (!targetFile) {
-    return null;
-  }
-
-  const fullPath = path.join(BLOGS_DIRECTORY, targetFile);
-  const fileContents = fs.readFileSync(fullPath, 'utf8');
-  const { data, content } = matter(fileContents);
-
-  return {
-    frontmatter: data as BlogFrontmatter,
-    content,
-  };
+  return { frontmatter: entry.frontmatter, content: entry.content };
 }
