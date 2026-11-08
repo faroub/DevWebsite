@@ -22,7 +22,6 @@ export interface AppFrontmatter {
     github?: string;
     web?: string;
   };
-  screenshots?: string[];
 }
 
 export interface AppData {

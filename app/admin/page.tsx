@@ -343,11 +343,8 @@ export default function LocalAdminPage() {
         platforms: ['Android', 'iOS'],
         category: 'Mobile Application',
         languages: ['Kotlin', 'Swift'],
-        stars: 0,
-        forks: 0,
         updatedAt: new Date().toISOString().split('T')[0],
         downloadLinks: { github: 'https://github.com/mzilab' },
-        screenshots: [],
       };
     } else if (activeTab === 'projects') {
       defaultFrontmatter = {
@@ -359,8 +356,6 @@ export default function LocalAdminPage() {
         featured: true,
         category: 'Developer Tools',
         techStack: ['TypeScript', 'Next.js'],
-        stars: 0,
-        forks: 0,
         updatedAt: new Date().toISOString().split('T')[0],
         githubUrl: 'https://github.com/mzilab',
       };

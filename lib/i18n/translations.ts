@@ -50,7 +50,6 @@ export interface TranslationDictionary {
     problemSolved: string;
     platformsAndTech: string;
     keyFeatures: string;
-    screenshots: string;
     changelog: string;
     feedbackHeader: string;
     feedbackSub: string;
@@ -171,7 +170,6 @@ export const translations: Record<Locale, TranslationDictionary> = {
       problemSolved: 'Real Problem Solved',
       platformsAndTech: 'Platforms & Tech:',
       keyFeatures: 'Key Features',
-      screenshots: 'Device Screenshots',
       changelog: 'Release Changelog',
       feedbackHeader: 'Inquiries & Feedback',
       feedbackSub: 'Have a question or feature request? Send a note directly.',
@@ -305,7 +303,6 @@ export const translations: Record<Locale, TranslationDictionary> = {
       problemSolved: 'Problème Concret Résolu',
       platformsAndTech: 'Plateformes & Technologies :',
       keyFeatures: 'Fonctionnalités Clés',
-      screenshots: 'Captures d\'Écran',
       changelog: 'Historique des Versions',
       feedbackHeader: 'Questions & Commentaires',
       feedbackSub: 'Une suggestion ou un problème ? Envoyez un message direct.',
@@ -439,7 +436,6 @@ export const translations: Record<Locale, TranslationDictionary> = {
       problemSolved: 'المشكلة التي يحلها التطبيق',
       platformsAndTech: 'المنصات والتقنيات:',
       keyFeatures: 'الميزات الأساسية',
-      screenshots: 'لقطات الشاشة',
       changelog: 'سجل الإصدارات',
       feedbackHeader: 'الاستفسارات والملاحظات',
       feedbackSub: 'هل لديك سؤال أو اقتراح لميزة جديدة؟ أرسل رسالتك مباشرة.',

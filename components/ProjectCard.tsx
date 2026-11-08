@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Star, GitFork, FolderGit2, ExternalLink } from 'lucide-react';
+import { FolderGit2, ExternalLink } from 'lucide-react';
 import { ProjectFrontmatter } from '@/lib/projects';
 
 interface ProjectCardProps {
@@ -49,17 +49,6 @@ export function ProjectCard({ project }: ProjectCardProps) {
       </div>
 
       <div className="pt-3 border-t border-divider flex items-center justify-between text-xs font-mono text-text-secondary">
-        <div className="flex items-center gap-3">
-          <span className="flex items-center gap-1 text-text-primary font-semibold">
-            <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500" />
-            <span>{project.stars}</span>
-          </span>
-          <span className="flex items-center gap-1 hover:text-text-primary">
-            <GitFork className="h-3.5 w-3.5 text-accent-success" />
-            <span>{project.forks}</span>
-          </span>
-        </div>
-
         <div className="flex items-center gap-2">
           {project.githubUrl && (
             <a

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Star, GitFork, Smartphone } from 'lucide-react';
+import { Smartphone } from 'lucide-react';
 import { AppFrontmatter } from '@/lib/apps';
 
 interface AppListRowProps {
@@ -37,7 +37,7 @@ export function AppListRow({ app }: AppListRowProps) {
         </div>
       </div>
 
-      {/* Right side: Language tags, Stars, Link */}
+      {/* Right side: Language tags, Link */}
       <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0 font-mono text-xs text-dev-muted border-t sm:border-t-0 border-dev-border/40 pt-2 sm:pt-0">
         <div className="hidden md:flex items-center gap-1.5">
           {app.languages.slice(0, 3).map((lang) => (
@@ -48,17 +48,6 @@ export function AppListRow({ app }: AppListRowProps) {
               #{lang}
             </span>
           ))}
-        </div>
-
-        <div className="flex items-center gap-3">
-          <span className="flex items-center gap-1 text-dev-bright font-medium">
-            <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
-            <span>{app.stars}</span>
-          </span>
-          <span className="flex items-center gap-1">
-            <GitFork className="h-3.5 w-3.5 text-dev-green" />
-            <span>{app.forks}</span>
-          </span>
         </div>
 
         <Link

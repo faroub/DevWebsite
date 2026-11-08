@@ -47,11 +47,6 @@ export default async function AppDetailPage({ params }: PageProps) {
     applicationCategory: frontmatter.category,
     softwareVersion: frontmatter.version,
     description: frontmatter.description || frontmatter.tagline,
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
-    },
   };
 
   return (

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Star, GitFork, Smartphone, ExternalLink } from 'lucide-react';
+import { Smartphone, ExternalLink } from 'lucide-react';
 import { AppFrontmatter } from '@/lib/apps';
 
 interface AppCardProps {
@@ -76,17 +76,6 @@ export function AppCard({ app }: AppCardProps) {
 
       {/* Footer Metrics & Links */}
       <div className="pt-3 border-t border-dev-border/60 flex items-center justify-between text-xs font-mono text-dev-muted">
-        <div className="flex items-center gap-3">
-          <span className="flex items-center gap-1 text-dev-bright font-semibold">
-            <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
-            <span>{app.stars}</span>
-          </span>
-          <span className="flex items-center gap-1 hover:text-dev-bright">
-            <GitFork className="h-3.5 w-3.5 text-dev-green" />
-            <span>{app.forks}</span>
-          </span>
-        </div>
-
         <div className="flex items-center gap-2">
           {app.downloadLinks?.github && (
             <a
