@@ -3,8 +3,8 @@
 ## Product
 This website showcases mobile apps built and managed by the owner with AI-assisted coding.
 Public visitors can browse apps, features, screenshots, download links, and changelogs.
-Visitor feedback is collected via an external form service (Web3Forms, Formspree, or similar).
-The site is fully static — no database, no server, no authentication.
+Visitor feedback is sent through a private Web3Forms form that emails the maintainer.
+The site is fully static — no database, no server, no visitor authentication.
 
 ## Stack
 - Next.js 16.4.x (use the latest stable App Router version at implementation time; verify with `npm show next version`; current verified line is 16.4.x / 16.4.5 as of November 2026, which patches the RCE/DoS advisories affecting 16.0.0–16.4.0)
@@ -21,8 +21,15 @@ The site is fully static — no database, no server, no authentication.
 - Content lives in `content/apps/` as Markdown/MDX files — one file per app.
 - App metadata (name, slug, version, status, platforms, languages, download links) is stored as frontmatter at the top of each MDX file.
 - The build reads these files at compile time and generates static pages.
-- No database. No Supabase. No authentication. No admin panel.
-- Feedback forms POST to an external service (Web3Forms, Formspree, or Resend).
+- No database. No Supabase. No visitor authentication.
+- There is no admin panel in the deployed site. Content is edited by a local dev-only
+  Content Studio: `npm run studio` starts `next dev` plus `scripts/admin-server.js`, a
+  127.0.0.1-only file bridge secured with a per-startup token (printed once in the
+  console, required as `X-Admin-Token`). `scripts/build.mjs` stashes `app/admin` out of
+  the production build, so no admin route or studio code ever lands in `out/`.
+- The feedback form on detail pages posts to Web3Forms (validated with Zod on the client,
+  plus a honeypot); the submission is emailed to the maintainer and is never published
+  or stored on the site.
 - Updating content = editing a Markdown file and pushing to Git.
 
 ## Coding Rules
