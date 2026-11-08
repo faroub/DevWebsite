@@ -72,6 +72,26 @@ export function AdminStudio() {
   // New Item Template State
   const [newItemTitle, setNewItemTitle] = useState('');
   const [newItemSlug, setNewItemSlug] = useState('');
+  // Once the slug field is edited by hand, stop deriving it from the title
+  const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
+
+  // True when the editor holds edits not yet written back to the bridge
+  const hasUnsavedChanges = () => {
+    if (activeTab === 'settings' || activeTab === 'about') return false;
+    const current = (items[activeTab] || [])[selectedItemIndex];
+    if (!current || !editedItem) return false;
+    return JSON.stringify(current) !== JSON.stringify(editedItem);
+  };
+
+  // Ask before switching away from unsaved edits
+  const confirmDiscard = () => {
+    if (hasUnsavedChanges()) {
+      return window.confirm(
+        'You have unsaved changes to the current item. Switch and discard them?'
+      );
+    }
+    return true;
+  };
 
   // Localhost Verification Check & Fetch
   useEffect(() => {
@@ -260,7 +280,7 @@ export function AdminStudio() {
           subject: '[mzilab Test] Email Notification Setup Success',
           from_name: 'mzilab Admin Studio',
           to_email: notifyEmail,
-          message: `Hello Farid!\n\nThis is a test notification confirming that comments and reviews posted on your website will be forwarded directly to your personal email inbox: ${notifyEmail}.\n\nTimestamp: ${new Date().toLocaleString()}`,
+          message: `Test notification from the mzilab admin studio.\n\nThis confirms that feedback submitted on your website will be forwarded directly to this inbox: ${notifyEmail}.\n\nTimestamp: ${new Date().toLocaleString()}`,
         }),
       });
       const json = await res.json();
@@ -341,8 +361,7 @@ export function AdminStudio() {
     if (!editedItem || activeTab === 'settings' || activeTab === 'about') return;
     if (!confirm(`Are you sure you want to delete ${editedItem.fileName}?`)) return;
 
-    if (bridgeConnected) {
-      try {
+    if (bridgeConnected) {      try {
         const res = await adminFetch('/api/content/delete', {
           method: 'POST',
           body: JSON.stringify({
@@ -361,6 +380,10 @@ export function AdminStudio() {
         const message = err instanceof Error ? err.message : String(err);
         setStatusMessage(`Error deleting: ${message}`);
       }
+    } else {
+      setStatusMessage(
+        `Cannot delete ${editedItem.fileName}: the admin bridge is not connected. Run "npm run studio", paste the bridge token, and try again.`
+      );
     }
   };
 
@@ -368,7 +391,6 @@ export function AdminStudio() {
   const handleCreateNew = () => {
     if (!newItemTitle || !newItemSlug || activeTab === 'settings' || activeTab === 'about') return;
     const fileName = `${newItemSlug}.mdx`;
-
     let defaultFrontmatter: Record<string, unknown> = {};
     if (activeTab === 'apps') {
       defaultFrontmatter = {
@@ -421,6 +443,15 @@ export function AdminStudio() {
     setIsCreatingNew(false);
     setNewItemTitle('');
     setNewItemSlug('');
+    setSlugManuallyEdited(false);
+  };
+
+  // Open the create dialog with a fresh template
+  const openCreateDialog = () => {
+    setNewItemTitle('');
+    setNewItemSlug('');
+    setSlugManuallyEdited(false);
+    setIsCreatingNew(true);
   };
 
   // If accessed on a deployed non-local production domain, render 404
@@ -526,8 +557,10 @@ export function AdminStudio() {
         <div className="flex items-center gap-2 border-b border-divider pb-2 overflow-x-auto">
           <button
             onClick={() => {
-              setActiveTab('apps');
-              setSelectedItemIndex(0);
+              if (confirmDiscard()) {
+                setActiveTab('apps');
+                setSelectedItemIndex(0);
+              }
             }}
             className={`flex items-center gap-2 px-4 py-2 rounded-md font-mono text-xs font-bold transition-all ${
               activeTab === 'apps'
@@ -541,8 +574,10 @@ export function AdminStudio() {
 
           <button
             onClick={() => {
-              setActiveTab('projects');
-              setSelectedItemIndex(0);
+              if (confirmDiscard()) {
+                setActiveTab('projects');
+                setSelectedItemIndex(0);
+              }
             }}
             className={`flex items-center gap-2 px-4 py-2 rounded-md font-mono text-xs font-bold transition-all ${
               activeTab === 'projects'
@@ -556,8 +591,10 @@ export function AdminStudio() {
 
           <button
             onClick={() => {
-              setActiveTab('blogs');
-              setSelectedItemIndex(0);
+              if (confirmDiscard()) {
+                setActiveTab('blogs');
+                setSelectedItemIndex(0);
+              }
             }}
             className={`flex items-center gap-2 px-4 py-2 rounded-md font-mono text-xs font-bold transition-all ${
               activeTab === 'blogs'
@@ -829,7 +866,7 @@ export function AdminStudio() {
             <div className="flex items-center justify-between pb-2 border-b border-divider font-mono text-xs">
               <span className="font-bold text-text-primary capitalize">{activeTab} List</span>
               <button
-                onClick={() => setIsCreatingNew(true)}
+                onClick={openCreateDialog}
                 className="inline-flex items-center gap-1 rounded bg-accent-primary px-2 py-1 text-[11px] font-bold text-white hover:opacity-90 transition-opacity"
               >
                 <Plus className="h-3.5 w-3.5" />
@@ -848,8 +885,10 @@ export function AdminStudio() {
                   <button
                     key={item.fileName}
                     onClick={() => {
-                      setSelectedItemIndex(idx);
-                      setEditedItem(JSON.parse(JSON.stringify(item)));
+                      if (confirmDiscard()) {
+                        setSelectedItemIndex(idx);
+                        setEditedItem(JSON.parse(JSON.stringify(item)));
+                      }
                     }}
                     className={`w-full text-left p-3 rounded-lg border font-mono text-xs transition-all ${
                       selectedItemIndex === idx
@@ -1089,7 +1128,14 @@ export function AdminStudio() {
                 value={newItemTitle}
                 onChange={(e) => {
                   setNewItemTitle(e.target.value);
-                  setNewItemSlug(e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''));
+                  if (!slugManuallyEdited) {
+                    setNewItemSlug(
+                      e.target.value
+                        .toLowerCase()
+                        .replace(/[^a-z0-9]+/g, '-')
+                        .replace(/(^-|-$)/g, '')
+                    );
+                  }
                 }}
                 placeholder="My New Entry"
                 className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
@@ -1101,7 +1147,10 @@ export function AdminStudio() {
               <input
                 type="text"
                 value={newItemSlug}
-                onChange={(e) => setNewItemSlug(e.target.value)}
+                onChange={(e) => {
+                  setNewItemSlug(e.target.value);
+                  setSlugManuallyEdited(true);
+                }}
                 placeholder="my-new-entry"
                 className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
               />
