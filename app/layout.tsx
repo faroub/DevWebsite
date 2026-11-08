@@ -1,9 +1,29 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
+import { Inter, JetBrains_Mono, Tajawal } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { LanguageProvider } from '@/components/LanguageContext';
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+  display: 'swap',
+});
+
+const tajawal = Tajawal({
+  subsets: ['arabic'],
+  weight: ['400', '500', '700', '800'],
+  variable: '--font-rtl',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://mzilab.de'),
@@ -90,7 +110,12 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" dir="ltr" className="dark scroll-smooth" suppressHydrationWarning>
+    <html
+      lang="en"
+      dir="ltr"
+      className={`${inter.variable} ${jetbrainsMono.variable} ${tajawal.variable} dark scroll-smooth`}
+      suppressHydrationWarning
+    >
       <body className="min-h-screen bg-canvas text-text-primary flex flex-col bg-grid-dots selection:bg-accent-primary/20 selection:text-accent-primary" suppressHydrationWarning>
         <Script
           id="site-schema-jsonld"

@@ -24,8 +24,8 @@ const config: Config = {
         'accent-error': 'rgb(var(--color-accent-error) / <alpha-value>)',
       },
       fontFamily: {
-        mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
       },
       boxShadow: {
         'glow-teal': '0 0 20px -5px rgba(6, 182, 212, 0.35)',

@@ -208,13 +208,13 @@ export const translations: Record<Locale, TranslationDictionary> = {
         'At mzilab, privacy is a core principle. This platform is built as a zero-server, static website that respects your digital privacy.',
       zeroServerTitle: '1. Zero Tracking & No Server Logging',
       zeroServerBody:
-        'We do not run tracking cookies, third-party analytics scripts, or backend user logging. Pages are compiled statically and served directly via CDN.',
+        'We do not run tracking cookies, third-party analytics scripts, or backend user logging. Pages are compiled statically and served directly via CDN, and the fonts are served from this site itself.',
       localStorageTitle: '2. Local Storage on Your Device',
       localStorageBody:
-        'Your interface choices (theme mode, language selection, and on-page discussion comments) are saved locally in your browser storage (localStorage) and never sold or uploaded to third parties.',
-      feedbackTitle: '3. Reviews & Feedback Notifications',
+        'Your interface choices (theme mode and language selection) are saved locally in your browser storage (localStorage) and never sold or uploaded to third parties.',
+      feedbackTitle: '3. Feedback & Private Messages',
       feedbackBody:
-        'When you submit a review or comment on an app, project, or blog post, the feedback is transmitted to our notification endpoint (Web3Forms API) to alert the maintainer (mzilab03dz@gmail.com).',
+        'App, project, and blog pages include a private feedback form. When you submit it, your name, rating, and message are transmitted via the Web3Forms service to alert the maintainer (mzilab03dz@gmail.com). Nothing is published publicly on the site.',
       mobileAppsTitle: '4. Mobile Applications',
       mobileAppsBody:
         'Our native mobile applications (Android & iOS) operate under a privacy-first model. Any local storage or permissions (such as offline data caching) remain strictly on your device.',
@@ -341,13 +341,13 @@ export const translations: Record<Locale, TranslationDictionary> = {
         'Chez mzilab, la confidentialité est un principe fondamental. Cette plateforme est conçue comme un site statique sans serveur qui respecte votre vie privée numérique.',
       zeroServerTitle: '1. Aucun Suivi & Aucun Journal Serveur',
       zeroServerBody:
-        'Nous n\'utilisons aucun cookie de suivi ni outil d\'analyse tiers. Les pages sont compilées de manière statique et servies via CDN.',
+        'Nous n\'utilisons aucun cookie de suivi ni outil d\'analyse tiers. Les pages sont compilées de manière statique et servies via CDN, et les polices sont servies depuis ce site lui-même.',
       localStorageTitle: '2. Stockage Local sur Votre Appareil',
       localStorageBody:
-        'Vos préférences (thème, langue et commentaires) sont enregistrées localement dans votre navigateur (localStorage) et ne sont jamais vendues ni transmises à des tiers.',
-      feedbackTitle: '3. Avis & Notifications',
+        'Vos préférences d\'interface (mode d\'affichage et langue) sont enregistrées localement dans votre navigateur (localStorage) et ne sont jamais vendues ni transmises à des tiers.',
+      feedbackTitle: '3. Retours & Messages Privés',
       feedbackBody:
-        'Lorsque vous soumettez un avis ou un commentaire, les données sont transmises via l\'API Web3Forms pour alerter le développeur (mzilab03dz@gmail.com).',
+        'Les pages des applications, projets et articles comportent un formulaire de retour privé. Lorsque vous l\'envoyez, votre nom, votre note et votre message sont transmis via le service Web3Forms pour alerter le responsable (mzilab03dz@gmail.com). Rien n\'est publié publiquement sur le site.',
       mobileAppsTitle: '4. Applications Mobiles',
       mobileAppsBody:
         'Nos applications mobiles (Android & iOS) fonctionnent selon un modèle axé sur la confidentialité. Toutes les données locales restent sur votre appareil.',
@@ -474,13 +474,13 @@ export const translations: Record<Locale, TranslationDictionary> = {
         'في mzilab، الخصوصية مبدأ أساسي. صُممت هذه المنصة كموقع ثابت لا يعتمد على خادم، احتراماً لخصوصيتك الرقمية.',
       zeroServerTitle: '1. لا تتبع ولا تسجيل للبيانات على الخادم',
       zeroServerBody:
-        'لا نستخدم ملفات تعريف ارتباط للتتبع أو نصوص تحليلات تابعة لجهات خارجية، ولا نسجل بيانات المستخدمين على خادم. تُنشأ الصفحات مسبقاً وتُقدّم مباشرة عبر شبكة توصيل المحتوى (CDN).',
+        'لا نستخدم ملفات تعريف ارتباط للتتبع أو نصوص تحليلات تابعة لجهات خارجية، ولا نسجل بيانات المستخدمين على خادم. تُنشأ الصفحات مسبقاً وتُقدّم مباشرة عبر شبكة توصيل المحتوى (CDN)، وتُقدَّم الخطوط من هذا الموقع نفسه.',
       localStorageTitle: '2. التخزين المحلي على جهازك',
       localStorageBody:
-        'تُحفظ تفضيلات واجهة الموقع (المظهر واللغة وتعليقات النقاش على الصفحة) محلياً في متصفحك (localStorage)، ولا تُباع أو تُرفع إلى جهات خارجية.',
-      feedbackTitle: '3. إرسال التقييمات والملاحظات',
+        'تُحفظ تفضيلات واجهة الموقع (المظهر واللغة) محلياً في متصفحك (localStorage)، ولا تُباع أو تُرفع إلى جهات خارجية.',
+      feedbackTitle: '3. الملاحظات والرسائل الخاصة',
       feedbackBody:
-        'عند إرسال تقييم أو تعليق على تطبيق أو مشروع أو تدوينة، تُرسل البيانات إلى خدمة الإشعارات Web3Forms لإخطار المسؤول عن الموقع (mzilab03dz@gmail.com).',
+        'تحتوي صفحات التطبيقات والمشاريع والمقالات على نموذج ملاحظات خاص. عند إرساله، يُنقل اسمك وتقييمك ورسالتك عبر خدمة Web3Forms لإخطار المسؤول (mzilab03dz@gmail.com)، ولا يُنشَر أي شيء علناً على الموقع.',
       mobileAppsTitle: '4. تطبيقات الجوال',
       mobileAppsBody:
         'تعمل تطبيقاتنا الأصلية للهواتف (Android وiOS) وفق نهج يضع الخصوصية أولاً. وتبقى أي بيانات مخزنة محلياً أو أذونات مستخدمة، مثل التخزين المؤقت للبيانات دون اتصال، ضمن نطاق جهازك.',
