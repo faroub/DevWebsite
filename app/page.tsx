@@ -6,6 +6,11 @@ import { AppCard } from '@/components/AppCard';
 import { ProjectCard } from '@/components/ProjectCard';
 import { BlogCard } from '@/components/BlogCard';
 import { Smartphone, FolderGit2, BookOpen, ArrowRight } from 'lucide-react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+};
 
 export default function HomePage() {
   const apps = getAllApps().slice(0, 3);

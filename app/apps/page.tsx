@@ -6,6 +6,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Mobile Applications',
   description: 'Explore native and cross-platform mobile apps for iOS, Android, macOS, and wearable devices built by mzilab.',
+  alternates: { canonical: '/apps' },
 };
 
 export default function AppsPage() {

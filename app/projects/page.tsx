@@ -6,6 +6,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Developer Projects',
   description: 'Explore open-source developer toolkits, CLI tools, libraries, and web infrastructure created by mzilab.',
+  alternates: { canonical: '/projects' },
 };
 
 export default function ProjectsPage() {

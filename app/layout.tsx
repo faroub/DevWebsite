@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
-import Script from 'next/script';
 import { Inter, JetBrains_Mono, Tajawal } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { LanguageProvider } from '@/components/LanguageContext';
+import { JsonLd } from '@/components/JsonLd';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -59,8 +59,9 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: './',
+    canonical: '/',
   },
+  manifest: '/manifest.json',
   openGraph: {
     title: 'mzilab — Mobile Software & Hardware Engineering Platform',
     description:
@@ -117,11 +118,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-canvas text-text-primary flex flex-col bg-grid-dots selection:bg-accent-primary/20 selection:text-accent-primary" suppressHydrationWarning>
-        <Script
-          id="site-schema-jsonld"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }}
-        />
+        <JsonLd id="site-schema-jsonld" data={siteJsonLd} />
         <script
           dangerouslySetInnerHTML={{
             __html: `

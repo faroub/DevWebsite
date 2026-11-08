@@ -1,10 +1,10 @@
 import { getAllBlogs, getBlogBySlug } from '@/lib/blogs';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import Script from 'next/script';
 import { ArrowLeft, Calendar, Clock } from 'lucide-react';
 import { CommentThread } from '@/components/CommentThread';
 import { Markdown } from '@/components/Markdown';
+import { JsonLd } from '@/components/JsonLd';
 import type { Metadata } from 'next';
 
 interface PageProps {
@@ -20,6 +20,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${blogData.frontmatter.title} — mzilab.de`,
     description: blogData.frontmatter.excerpt,
+    alternates: { canonical: `/blogs/${slug}` },
   };
 }
 
@@ -59,11 +60,7 @@ export default async function BlogDetailPage({ params }: PageProps) {
 
   return (
     <>
-      <Script
-        id={`jsonld-blog-${slug}`}
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd id={`jsonld-blog-${slug}`} data={jsonLd} />
       <article className="max-w-4xl mx-auto space-y-8 font-sans">
         <Link
           href="/blogs"

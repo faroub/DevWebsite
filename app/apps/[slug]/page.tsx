@@ -1,10 +1,10 @@
 import { getAllApps, getAppBySlug } from '@/lib/apps';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import Script from 'next/script';
 import { ArrowLeft, Smartphone, ExternalLink, Download } from 'lucide-react';
 import { CommentThread } from '@/components/CommentThread';
 import { Markdown } from '@/components/Markdown';
+import { JsonLd } from '@/components/JsonLd';
 import type { Metadata } from 'next';
 
 interface PageProps {
@@ -20,6 +20,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${appData.frontmatter.title} — mzilab.de`,
     description: appData.frontmatter.tagline || appData.frontmatter.description,
+    alternates: { canonical: `/apps/${slug}` },
   };
 }
 
@@ -52,11 +53,7 @@ export default async function AppDetailPage({ params }: PageProps) {
 
   return (
     <>
-      <Script
-        id={`jsonld-app-${slug}`}
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd id={`jsonld-app-${slug}`} data={jsonLd} />
       <article className="max-w-4xl mx-auto space-y-8 font-sans">
         {/* Back link */}
         <Link

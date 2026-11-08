@@ -6,6 +6,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Blog & Technical Articles',
   description: 'Technical writeups on Android engineering, Next.js static architecture, Jetpack Compose performance, and AI coding workflows.',
+  alternates: { canonical: '/blogs' },
 };
 
 export default function BlogsPage() {

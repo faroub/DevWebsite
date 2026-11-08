@@ -19,6 +19,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${projectData.frontmatter.title} — mzilab.de`,
     description: projectData.frontmatter.tagline || projectData.frontmatter.description,
+    alternates: { canonical: `/projects/${slug}` },
   };
 }
 
