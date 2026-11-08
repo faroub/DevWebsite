@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Script from 'next/script';
 import { ArrowLeft, Calendar, Clock } from 'lucide-react';
 import { CommentThread } from '@/components/CommentThread';
+import { Markdown } from '@/components/Markdown';
 import type { Metadata } from 'next';
 
 interface PageProps {
@@ -106,10 +107,8 @@ export default async function BlogDetailPage({ params }: PageProps) {
         </div>
 
         <div className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-4 shadow-sm">
-          <div className="prose dark:prose-invert max-w-none text-sm text-text-secondary space-y-4 font-sans leading-relaxed">
-            <div className="rounded-lg border border-divider bg-canvas p-5 font-mono text-xs text-text-primary whitespace-pre-wrap leading-relaxed">
-              {content}
-            </div>
+          <div className="max-w-none space-y-4">
+            <Markdown>{content}</Markdown>
           </div>
         </div>
 

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Script from 'next/script';
 import { ArrowLeft, Smartphone, ExternalLink, Download } from 'lucide-react';
 import { CommentThread } from '@/components/CommentThread';
+import { Markdown } from '@/components/Markdown';
 import type { Metadata } from 'next';
 
 interface PageProps {
@@ -157,11 +158,9 @@ export default async function AppDetailPage({ params }: PageProps) {
           <h2 className="font-sans text-xl font-bold text-text-primary border-b border-divider pb-3">
             Architecture & Overview
           </h2>
-          <div className="prose dark:prose-invert max-w-none text-sm text-text-secondary space-y-4 font-sans leading-relaxed">
-            <p>{frontmatter.tagline}</p>
-            <div className="rounded-lg border border-divider bg-canvas p-4 font-mono text-xs text-text-secondary whitespace-pre-wrap">
-              {content}
-            </div>
+          <div className="max-w-none space-y-4">
+            <p className="text-sm text-text-secondary leading-relaxed">{frontmatter.tagline}</p>
+            <Markdown>{content}</Markdown>
           </div>
         </div>
 

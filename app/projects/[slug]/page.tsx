@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, FolderGit2, ExternalLink } from 'lucide-react';
 import { CommentThread } from '@/components/CommentThread';
+import { Markdown } from '@/components/Markdown';
 import type { Metadata } from 'next';
 
 interface PageProps {
@@ -100,11 +101,9 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         <h2 className="font-sans text-xl font-bold text-text-primary border-b border-divider pb-3">
           Project Overview
         </h2>
-        <div className="prose dark:prose-invert max-w-none text-sm text-text-secondary space-y-4 font-sans leading-relaxed">
-          <p>{frontmatter.tagline}</p>
-          <div className="rounded-lg border border-divider bg-canvas p-4 font-mono text-xs text-text-secondary whitespace-pre-wrap">
-            {content}
-          </div>
+        <div className="max-w-none space-y-4">
+          <p className="text-sm text-text-secondary leading-relaxed">{frontmatter.tagline}</p>
+          <Markdown>{content}</Markdown>
         </div>
       </div>
 
