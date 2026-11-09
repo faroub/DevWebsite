@@ -23,7 +23,9 @@ export interface ProjectData {
 const PROJECTS_DIRECTORY = path.join(process.cwd(), 'content/projects');
 
 export function getAllProjects(): ProjectFrontmatter[] {
-  return loadContentDirectory<ProjectFrontmatter>(PROJECTS_DIRECTORY)
+  return loadContentDirectory<ProjectFrontmatter>(PROJECTS_DIRECTORY, {
+    techStack: [],
+  })
     .sort(
       (a, b) =>
         new Date(b.frontmatter.updatedAt).getTime() -
@@ -33,9 +35,9 @@ export function getAllProjects(): ProjectFrontmatter[] {
 }
 
 export function getProjectBySlug(slug: string): ProjectData | null {
-  const entry = loadContentDirectory<ProjectFrontmatter>(PROJECTS_DIRECTORY).find(
-    (item) => item.slug === slug
-  );
+  const entry = loadContentDirectory<ProjectFrontmatter>(PROJECTS_DIRECTORY, {
+    techStack: [],
+  }).find((item) => item.slug === slug);
 
   if (!entry) {
     return null;

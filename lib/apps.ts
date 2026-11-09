@@ -29,7 +29,10 @@ export interface AppData {
 const APPS_DIRECTORY = path.join(process.cwd(), 'content/apps');
 
 export function getAllApps(): AppFrontmatter[] {
-  return loadContentDirectory<AppFrontmatter>(APPS_DIRECTORY)
+  return loadContentDirectory<AppFrontmatter>(APPS_DIRECTORY, {
+    platforms: [],
+    languages: [],
+  })
     .sort(
       (a, b) =>
         new Date(b.frontmatter.updatedAt).getTime() -
@@ -39,9 +42,10 @@ export function getAllApps(): AppFrontmatter[] {
 }
 
 export function getAppBySlug(slug: string): AppData | null {
-  const entry = loadContentDirectory<AppFrontmatter>(APPS_DIRECTORY).find(
-    (item) => item.slug === slug
-  );
+  const entry = loadContentDirectory<AppFrontmatter>(APPS_DIRECTORY, {
+    platforms: [],
+    languages: [],
+  }).find((item) => item.slug === slug);
 
   if (!entry) {
     return null;
