@@ -27,12 +27,22 @@ const CONTENT_TYPES = {
 const server = http.createServer((req, res) => {
   try {
     let urlPath = decodeURIComponent(new URL(req.url, `http://localhost:${PORT}`).pathname);
-    if (urlPath.endsWith('/')) urlPath += 'index.html';
-    let filePath = path.join(ROOT, urlPath);
-    if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
-      filePath = path.join(filePath, 'index.html');
-    }
-    if (!fs.existsSync(filePath) || !filePath.startsWith(ROOT)) {
+    if (urlPath.endsWith('/')) urlPath = urlPath.slice(0, -1);
+    // Next static export layout: <route>.html at the root of out/, plus
+    // index.html for nested directories. Try exact, <path>.html, then index.
+    const candidates = [
+      path.join(ROOT, urlPath),
+      urlPath ? path.join(ROOT, `${urlPath}.html`) : path.join(ROOT, 'index.html'),
+      path.join(ROOT, urlPath, 'index.html'),
+    ];
+    const filePath = candidates.find((candidate) => {
+      try {
+        return fs.existsSync(candidate) && fs.statSync(candidate).isFile();
+      } catch {
+        return false;
+      }
+    });
+    if (!filePath || !filePath.startsWith(ROOT)) {
       res.writeHead(404, { 'Content-Type': 'text/plain' });
       res.end('Not found');
       return;
