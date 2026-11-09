@@ -13,6 +13,9 @@ const matter = require('gray-matter');
 const HOST = '127.0.0.1';
 const PORT = 3001;
 const ALLOWED_ORIGINS = new Set(['http://localhost:3000', 'http://127.0.0.1:3000']);
+// The Host header must also resolve to the loopback bridge so a public DNS
+// name cannot be pointed at this port (DNS rebinding).
+const ALLOWED_HOSTS = new Set([`localhost:${PORT}`, `127.0.0.1:${PORT}`]);
 const ALLOWED_TYPES = ['apps', 'projects', 'blogs'];
 const MAX_BODY_BYTES = 256 * 1024;
 const FILE_NAME_RE = /^[a-z0-9][a-z0-9-]*\.mdx$/;
@@ -48,6 +51,16 @@ function readSettings() {
     // Corrupt settings file: fall back to empty settings.
   }
   return { notifyEmail: '', web3formsKey: '' };
+}
+
+// Reject any request whose Host header is not the loopback bridge (DNS rebinding).
+function requireAllowedHost(req, res) {
+  const host = (req.headers.host || '').toLowerCase();
+  if (!ALLOWED_HOSTS.has(host)) {
+    sendJson(res, 403, { success: false, error: 'Forbidden: host not allowed' });
+    return false;
+  }
+  return true;
 }
 
 // Reject any request whose Origin header is missing or not the local dev app.
@@ -115,6 +128,9 @@ function resolveContentFile(type, fileName) {
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, `http://${HOST}:${PORT}`);
   const origin = req.headers.origin;
+
+  // Every request must target the loopback bridge directly.
+  if (!requireAllowedHost(req, res)) return;
 
   // CORS preflight: only the local dev origin may proceed.
   if (req.method === 'OPTIONS') {
