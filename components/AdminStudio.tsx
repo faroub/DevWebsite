@@ -72,8 +72,6 @@ export function AdminStudio() {
   // New Item Template State
   const [newItemTitle, setNewItemTitle] = useState('');
   const [newItemSlug, setNewItemSlug] = useState('');
-  // Once the slug field is edited by hand, stop deriving it from the title
-  const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
 
   // True when the editor holds edits not yet written back to the bridge
   const hasUnsavedChanges = () => {
@@ -274,7 +272,7 @@ export function AdminStudio() {
     setStatusMessage('Transmitting test notification email via Web3Forms API...');
 
     try {
-      const res = await fetch('https://api.web3forms.com/submit', {
+      const res = await fetch(WEB3FORMS_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -303,11 +301,19 @@ export function AdminStudio() {
     const currentList = items[activeTab] || [];
     if (currentList.length > 0) {
       const validIndex = Math.min(selectedItemIndex, currentList.length - 1);
+      const next = currentList[validIndex];
+      // Warn before a selection change discards unsaved edits.
+      if (editedItem && hasUnsavedChanges() && JSON.stringify(next) !== JSON.stringify(editedItem)) {
+        if (!confirm('You have unsaved changes. Discard them and switch items?')) {
+          return;
+        }
+      }
       setSelectedItemIndex(validIndex);
-      setEditedItem(JSON.parse(JSON.stringify(currentList[validIndex])));
+      setEditedItem(JSON.parse(JSON.stringify(next)));
     } else {
       setEditedItem(null);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, items, selectedItemIndex]);
 
   // Handle saving current content item
@@ -393,6 +399,13 @@ export function AdminStudio() {
   const handleCreateNew = () => {
     if (!newItemTitle || !newItemSlug || activeTab === 'settings' || activeTab === 'about') return;
     const fileName = `${newItemSlug}.mdx`;
+    // Warn when the file name already exists: saving the new entry overwrites it.
+    const existing = (items[activeTab] || []).some((item) => item.fileName === fileName);
+    if (existing) {
+      if (!confirm(`A file named ${fileName} already exists in ${activeTab}. Saving this entry will overwrite it. Continue?`)) {
+        return;
+      }
+    }
     let defaultFrontmatter: Record<string, unknown> = {};
     if (activeTab === 'apps') {
       defaultFrontmatter = {
@@ -445,14 +458,12 @@ export function AdminStudio() {
     setIsCreatingNew(false);
     setNewItemTitle('');
     setNewItemSlug('');
-    setSlugManuallyEdited(false);
   };
 
   // Open the create dialog with a fresh template
   const openCreateDialog = () => {
     setNewItemTitle('');
     setNewItemSlug('');
-    setSlugManuallyEdited(false);
     setIsCreatingNew(true);
   };
 
@@ -1130,14 +1141,14 @@ export function AdminStudio() {
                 value={newItemTitle}
                 onChange={(e) => {
                   setNewItemTitle(e.target.value);
-                  if (!slugManuallyEdited) {
-                    setNewItemSlug(
-                      e.target.value
-                        .toLowerCase()
-                        .replace(/[^a-z0-9]+/g, '-')
-                        .replace(/(^-|-$)/g, '')
-                    );
-                  }
+                  // The slug is derived from the title and must equal the file
+                  // name (lib/content.ts enforces this at build time).
+                  setNewItemSlug(
+                    e.target.value
+                      .toLowerCase()
+                      .replace(/[^a-z0-9]+/g, '-')
+                      .replace(/(^-|-$)/g, '')
+                  );
                 }}
                 placeholder="My New Entry"
                 className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
@@ -1145,16 +1156,16 @@ export function AdminStudio() {
             </div>
 
             <div>
-              <label className="block text-text-secondary mb-1">Slug</label>
+              <label className="block text-text-secondary mb-1">
+                Slug <span className="text-accent-primary">(derived from the title; equals the file name)</span>
+              </label>
               <input
                 type="text"
                 value={newItemSlug}
-                onChange={(e) => {
-                  setNewItemSlug(e.target.value);
-                  setSlugManuallyEdited(true);
-                }}
+                readOnly
+                aria-readonly
                 placeholder="my-new-entry"
-                className="w-full rounded border border-divider bg-[#0F172A] text-white px-3 py-2 focus:border-accent-primary focus:outline-none"
+                className="w-full rounded border border-divider bg-[#0F172A] text-text-secondary px-3 py-2 cursor-not-allowed"
               />
             </div>
 

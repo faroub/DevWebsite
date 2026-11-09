@@ -11,7 +11,11 @@ export type Theme = 'light' | 'dark';
 
 export const THEME_STORAGE_KEY = 'theme';
 
-export const DEFAULT_THEME: Theme = 'dark';
+/** System preference is used only when the visitor has not chosen a theme. */
+function systemPrefersLight(): boolean {
+  if (typeof window === 'undefined') return false;
+  return window.matchMedia('(prefers-color-scheme: light)').matches;
+}
 
 /** Applies the theme classes to the document root. */
 export function applyTheme(theme: Theme): void {
@@ -31,6 +35,12 @@ export function storeTheme(theme: Theme): void {
   window.localStorage.setItem(THEME_STORAGE_KEY, theme);
 }
 
+/**
+ * Resolves the initial theme: the visitor's stored choice wins, otherwise
+ * the system preference (light or dark), defaulting to dark.
+ */
 export function resolveInitialTheme(): Theme {
-  return getStoredTheme() ?? DEFAULT_THEME;
+  const stored = getStoredTheme();
+  if (stored) return stored;
+  return systemPrefersLight() ? 'light' : 'dark';
 }

@@ -23,6 +23,19 @@ const SITE_ORIGIN = 'https://mzilab.de';
 // URL fields (scalar or array) that must point somewhere specific.
 const URL_FIELDS = ['appStore', 'playStore', 'github', 'githubUrl', 'demoUrl', 'web'];
 
+// Required non-slug fields per collection, mirroring the Zod schemas in lib/*.
+const REQUIRED_FIELDS = {
+  apps: ['title', 'tagline', 'description', 'version', 'status', 'platforms', 'category', 'languages', 'updatedAt'],
+  projects: ['title', 'tagline', 'description', 'status', 'category', 'techStack', 'updatedAt'],
+  blogs: ['title', 'excerpt', 'publishedAt', 'readTime', 'author', 'tags'],
+  about: ['title', 'author', 'role', 'location', 'tagline', 'skillsMobile', 'skillsSystems', 'philosophy'],
+};
+
+// Date fields that must be valid YYYY-MM-DD.
+const DATE_FIELDS = { apps: ['updatedAt'], projects: ['updatedAt'], blogs: ['publishedAt'] };
+
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
 const failures = [];
 const ok = (name) => console.log(`  ✓ ${name}`);
 const fail = (name, detail) => {
@@ -63,7 +76,31 @@ function collectScreenshots(frontmatter) {
   return [];
 }
 
-function checkFrontmatterFile(file) {
+function isValidDate(value) {
+  return typeof value === 'string' && DATE_RE.test(value) && !Number.isNaN(Date.parse(value));
+}
+
+function checkRequiredFields(type, rel, data) {
+  const required = REQUIRED_FIELDS[type] || [];
+  const missing = required.filter((key) => {
+    const value = data[key];
+    return value === undefined || value === null || value === '';
+  });
+  if (missing.length === 0) {
+    ok(`${rel}: required fields present`);
+  } else {
+    fail(`${rel}: missing required field(s)`, missing.join(', '));
+  }
+  const dateFields = DATE_FIELDS[type] || [];
+  const badDates = dateFields.filter((key) => data[key] !== undefined && !isValidDate(data[key]));
+  if (badDates.length === 0) {
+    ok(`${rel}: dates valid`);
+  } else {
+    for (const key of badDates) fail(`${rel}: invalid date for "${key}"`, String(data[key]));
+  }
+}
+
+function checkFrontmatterFile(file, type) {
   const rel = path.relative(ROOT, file);
   let parsed;
   try {
@@ -73,6 +110,17 @@ function checkFrontmatterFile(file) {
     return;
   }
   const data = parsed.data || {};
+
+  // The slug must be present and equal the filename (lib/content.ts rule).
+  const fileSlug = path.basename(file).replace(/\.mdx?$/, '');
+  const fmSlug = data.slug;
+  if (type && fmSlug !== fileSlug) {
+    fail(`${rel}: slug mismatch`, `frontmatter "${String(fmSlug)}" must equal filename slug "${fileSlug}"`);
+  } else {
+    ok(`${rel}: slug matches filename`);
+  }
+
+  if (type) checkRequiredFields(type, rel, data);
 
   const urlErrors = collectUrls(data).filter((u) => isBareDomain(u.value));
   if (urlErrors.length === 0) {
@@ -104,11 +152,11 @@ for (const type of CONTENT_TYPES) {
   if (!fs.existsSync(dir)) continue;
   const files = fs.readdirSync(dir).filter((f) => f.endsWith('.md') || f.endsWith('.mdx'));
   if (files.length === 0) continue;
-  for (const file of files) checkFrontmatterFile(path.join(dir, file));
+  for (const file of files) checkFrontmatterFile(path.join(dir, file), type);
 }
 
 const aboutFile = path.join(ROOT, 'content', 'about.mdx');
-if (fs.existsSync(aboutFile)) checkFrontmatterFile(aboutFile);
+if (fs.existsSync(aboutFile)) checkFrontmatterFile(aboutFile, 'about');
 
 console.log('');
 if (failures.length === 0) {

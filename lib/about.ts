@@ -1,21 +1,23 @@
-import fs from 'fs';
 import path from 'path';
-import matter from 'gray-matter';
+import { z } from 'zod';
+import { loadContentFile } from './content';
 
-export interface AboutFrontmatter {
-  title: string;
-  author: string;
-  role: string;
-  location: string;
-  tagline: string;
-  email: string;
-  githubUrl?: string;
-  linkedinUrl?: string;
-  twitterUrl?: string;
-  skillsMobile: string;
-  skillsSystems: string;
-  philosophy: string;
-}
+const aboutSchema = z.object({
+  title: z.string(),
+  author: z.string(),
+  role: z.string(),
+  location: z.string(),
+  tagline: z.string(),
+  email: z.string().optional(),
+  githubUrl: z.string().optional(),
+  linkedinUrl: z.string().optional(),
+  twitterUrl: z.string().optional(),
+  skillsMobile: z.string(),
+  skillsSystems: z.string(),
+  philosophy: z.string(),
+});
+
+export type AboutFrontmatter = z.infer<typeof aboutSchema>;
 
 export interface AboutData {
   frontmatter: AboutFrontmatter;
@@ -25,29 +27,6 @@ export interface AboutData {
 const ABOUT_FILE = path.join(process.cwd(), 'content/about.mdx');
 
 export function getAboutData(): AboutData {
-  if (!fs.existsSync(ABOUT_FILE)) {
-    return {
-      frontmatter: {
-        title: 'About mzilab',
-        author: 'Farid Oubbati',
-        role: 'Senior Engineer & Solo Creator',
-        location: 'Algeria',
-        tagline: 'Developer laboratory and portfolio showcasing native Android, iOS, and web software.',
-        email: '',
-        githubUrl: 'https://github.com/mzilab',
-        skillsMobile: 'Kotlin, Jetpack Compose, Swift, React Native',
-        skillsSystems: 'Rust, Perfetto SQL, Next.js, MDX',
-        philosophy: 'Zero-Server, Privacy-First, Static Generation',
-      },
-      content: 'Senior mobile software engineer specializing in Android, iOS, and static web architecture.',
-    };
-  }
-
-  const fileContents = fs.readFileSync(ABOUT_FILE, 'utf8');
-  const { data, content } = matter(fileContents);
-
-  return {
-    frontmatter: data as AboutFrontmatter,
-    content,
-  };
+  const entry = loadContentFile(ABOUT_FILE, aboutSchema);
+  return { frontmatter: entry.frontmatter, content: entry.content };
 }

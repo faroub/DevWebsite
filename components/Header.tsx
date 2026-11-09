@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { GitBranch, Menu, X } from 'lucide-react';
@@ -12,11 +12,31 @@ export function Header() {
   const { t } = useLanguage();
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const menuId = 'mobile-navigation';
 
   const isActive = (path: string) => {
     if (path === '/') return pathname === '/';
     return pathname === path || pathname.startsWith(`${path}/`);
   };
+
+  // Close the mobile menu on Escape and return focus to the hamburger.
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsMobileMenuOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [isMobileMenuOpen]);
+
+  // Close the menu when the route changes.
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
 
   const linkClass = (path: string) =>
     `rounded-md px-2.5 py-1.5 text-xs font-mono transition-all border ${
@@ -54,16 +74,16 @@ export function Header() {
         <div className="flex items-center gap-2">
           {/* Desktop Nav: blog - apps - projects - about */}
           <nav className="hidden md:flex items-center gap-1 sm:gap-2">
-            <Link href="/blogs" className={linkClass('/blogs')}>
+            <Link href="/blogs" className={linkClass('/blogs')} aria-current={isActive('/blogs') ? 'page' : undefined}>
               {t.nav.blogs}
             </Link>
-            <Link href="/apps" className={linkClass('/apps')}>
+            <Link href="/apps" className={linkClass('/apps')} aria-current={isActive('/apps') ? 'page' : undefined}>
               {t.nav.apps}
             </Link>
-            <Link href="/projects" className={linkClass('/projects')}>
+            <Link href="/projects" className={linkClass('/projects')} aria-current={isActive('/projects') ? 'page' : undefined}>
               {t.nav.projects}
             </Link>
-            <Link href="/about" className={linkClass('/about')}>
+            <Link href="/about" className={linkClass('/about')} aria-current={isActive('/about') ? 'page' : undefined}>
               {t.nav.about}
             </Link>
           </nav>
@@ -78,8 +98,11 @@ export function Header() {
 
           {/* Mobile Hamburger Menu Toggle */}
           <button
+            ref={menuButtonRef}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle mobile menu"
+            aria-expanded={isMobileMenuOpen}
+            aria-controls={menuId}
             className="md:hidden flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md border border-divider bg-canvas text-text-primary hover:border-accent-primary transition-colors"
           >
             {isMobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
@@ -89,11 +112,15 @@ export function Header() {
 
       {/* Responsive Mobile Dropdown Navigation: blog - apps - projects - about */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-t border-divider bg-surface px-4 py-3 font-mono text-xs space-y-2 animate-in fade-in slide-in-from-top-2">
+        <nav
+          id={menuId}
+          className="md:hidden border-t border-divider bg-surface px-4 py-3 font-mono text-xs space-y-2 animate-in fade-in slide-in-from-top-2"
+        >
           <Link
             href="/blogs"
             onClick={() => setIsMobileMenuOpen(false)}
             className={mobileLinkClass('/blogs')}
+            aria-current={isActive('/blogs') ? 'page' : undefined}
           >
             {t.nav.blogs}
           </Link>
@@ -101,6 +128,7 @@ export function Header() {
             href="/apps"
             onClick={() => setIsMobileMenuOpen(false)}
             className={mobileLinkClass('/apps')}
+            aria-current={isActive('/apps') ? 'page' : undefined}
           >
             {t.nav.apps}
           </Link>
@@ -108,6 +136,7 @@ export function Header() {
             href="/projects"
             onClick={() => setIsMobileMenuOpen(false)}
             className={mobileLinkClass('/projects')}
+            aria-current={isActive('/projects') ? 'page' : undefined}
           >
             {t.nav.projects}
           </Link>
@@ -115,10 +144,11 @@ export function Header() {
             href="/about"
             onClick={() => setIsMobileMenuOpen(false)}
             className={mobileLinkClass('/about')}
+            aria-current={isActive('/about') ? 'page' : undefined}
           >
             {t.nav.about}
           </Link>
-        </div>
+        </nav>
       )}
     </header>
   );

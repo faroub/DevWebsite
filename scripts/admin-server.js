@@ -39,6 +39,7 @@ function sendJson(res, statusCode, payload, origin) {
 }
 
 function readSettings() {
+  const fallback = { notifyEmail: '', web3formsKey: '' };
   try {
     if (fs.existsSync(SETTINGS_FILE)) {
       const parsed = JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
@@ -47,10 +48,14 @@ function readSettings() {
         web3formsKey: typeof parsed.web3formsKey === 'string' ? parsed.web3formsKey : '',
       };
     }
+    // First run: create the local settings file with empty defaults so the
+    // studio has a stable file to read and write.
+    fs.mkdirSync(path.dirname(SETTINGS_FILE), { recursive: true });
+    fs.writeFileSync(SETTINGS_FILE, JSON.stringify(fallback, null, 2), 'utf8');
   } catch {
-    // Corrupt settings file: fall back to empty settings.
+    // Corrupt or unwritable settings file: fall back to empty settings.
   }
-  return { notifyEmail: '', web3formsKey: '' };
+  return fallback;
 }
 
 // Reject any request whose Host header is not the loopback bridge (DNS rebinding).
@@ -73,11 +78,17 @@ function requireAllowedOrigin(req, res) {
   return origin;
 }
 
-// Require the per-startup admin token.
+// Require the per-startup admin token. Accepts either the X-Admin-Token
+// header or an Authorization: Bearer <token> header.
 function requireAdminToken(req, res, origin) {
-  const token = req.headers['x-admin-token'];
+  const headerToken = req.headers['x-admin-token'];
+  const authHeader = req.headers['authorization'];
+  const bearerToken = authHeader && authHeader.startsWith('Bearer ')
+    ? authHeader.slice('Bearer '.length).trim()
+    : null;
+  const token = headerToken || bearerToken;
   if (!token || token !== ADMIN_TOKEN) {
-    sendJson(res, 401, { success: false, error: 'Unauthorized: missing or wrong X-Admin-Token' }, origin);
+    sendJson(res, 401, { success: false, error: 'Unauthorized: missing or wrong admin token' }, origin);
     return false;
   }
   return true;
@@ -138,7 +149,7 @@ const server = http.createServer((req, res) => {
       res.writeHead(204, {
         'Access-Control-Allow-Origin': origin,
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Token',
+        'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Token, Authorization',
         Vary: 'Origin',
       });
       res.end();

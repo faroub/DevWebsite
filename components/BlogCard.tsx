@@ -1,12 +1,17 @@
+'use client';
+
 import Link from 'next/link';
 import { BookOpen, Calendar, Clock, ArrowRight } from 'lucide-react';
 import { BlogFrontmatter } from '@/lib/blogs';
+import { useLanguage } from './LanguageContext';
 
 interface BlogCardProps {
   blog: BlogFrontmatter;
 }
 
 export function BlogCard({ blog }: BlogCardProps) {
+  const { t } = useLanguage();
+
   return (
     <div className="group relative flex flex-col justify-between rounded-lg border border-divider bg-surface p-5 hover:border-accent-primary hover:shadow-glow-teal transition-all duration-200 shadow-sm">
       {/* Top Header */}
@@ -38,7 +43,7 @@ export function BlogCard({ blog }: BlogCardProps) {
 
           {/* Status Badge */}
           <div className="flex items-center gap-1.5 rounded-full border border-accent-primary/30 bg-accent-primary/10 px-2.5 py-0.5 font-mono text-[11px] text-accent-primary font-bold shrink-0">
-            <span>Article</span>
+            <span>{t.cards.article}</span>
           </div>
         </div>
 
@@ -62,12 +67,14 @@ export function BlogCard({ blog }: BlogCardProps) {
 
       {/* Footer Meta & Action Link */}
       <div className="pt-3 border-t border-divider/60 flex items-center justify-between text-xs font-mono text-text-secondary">
-        <span className="text-text-primary font-medium truncate">By {blog.author}</span>
+        <span className="text-text-primary font-medium truncate">
+          {t.cards.by} {blog.author}
+        </span>
         <Link
           href={`/blogs/${blog.slug}`}
           className="inline-flex items-center gap-1 font-mono text-[11px] font-bold text-accent-primary hover:underline shrink-0"
         >
-          <span>Read Article</span>
+          <span>{t.cards.readArticle}</span>
           <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </div>

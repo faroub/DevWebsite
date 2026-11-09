@@ -58,18 +58,15 @@ function listFiles(dir, ext, acc = []) {
 }
 
 function readRoutesFromContent() {
-  // Mirrors lib/content.ts: the frontmatter slug wins, the filename is the fallback.
+  // Mirrors lib/content.ts: the filename is the canonical slug.
   const routes = [];
   for (const type of CONTENT_DIRS) {
     const dir = path.join(ROOT, 'content', type);
     if (fs.existsSync(dir)) {
       for (const file of fs.readdirSync(dir)) {
-        if (!file.endsWith('.mdx') && !file.endsWith('.md')) continue;
-        const parsed = matter(fs.readFileSync(path.join(dir, file), 'utf8'));
-        const fmSlug = parsed.data?.slug;
-        const slug =
-          typeof fmSlug === 'string' && fmSlug.trim() ? fmSlug.trim() : file.replace(/\.mdx?$/, '');
-        routes.push(`/${type}/${slug}`);
+        if (file.endsWith('.mdx') || file.endsWith('.md')) {
+          routes.push(`/${type}/${file.replace(/\.mdx?$/, '')}`);
+        }
       }
     }
   }

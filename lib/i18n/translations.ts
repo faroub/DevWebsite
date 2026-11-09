@@ -9,39 +9,51 @@ export interface TranslationDictionary {
     about: string;
     staticExport: string;
   };
-  hero: {
-    station: string;
-    titleStart: string;
-    titleHighlight: string;
-    subtitle: string;
-    description: string;
-    exploreApps: string;
-    requestApp: string;
-    featuredAppsTitle: string;
-    featuredAppsSub: string;
-    allAppsDirectory: string;
-    recentUpdatesTitle: string;
-    recentUpdatesSub: string;
+  home: {
+    latestArticles: string;
+    viewAllArticles: string;
+    latestApps: string;
+    viewAllApps: string;
+    latestProjects: string;
+    viewAllProjects: string;
+  };
+  collections: {
+    apps: { catalogHeader: string; title: string; subtitle: string };
+    projects: { catalogHeader: string; title: string; subtitle: string };
+    blogs: { catalogHeader: string; title: string; subtitle: string };
+  };
+  cards: {
+    details: string;
+    githubTitle: string;
+    article: string;
+    by: string;
+    readArticle: string;
   };
   apps: {
     catalogHeader: string;
     title: string;
     subtitle: string;
     searchPlaceholder: string;
-    statusLabel: string;
-    platformLabel: string;
-    allStatuses: string;
-    allPlatforms: string;
+    modeLabel: string;
     modeGrid: string;
     modeRows: string;
+    gridViewTitle: string;
+    rowsViewTitle: string;
     tagsLabel: string;
     showingResults: string;
     ofRepositories: string;
     resetFilters: string;
+    clearFilter: string;
     noMatchingApps: string;
     noMatchingSub: string;
     viewApp: string;
     download: string;
+    platformLabel: string;
+    statusLabel: string;
+    categoryLabel: string;
+    allPlatforms: string;
+    allStatuses: string;
+    allCategories: string;
   };
   appDetail: {
     backToApps: string;
@@ -150,41 +162,67 @@ export const translations: Record<Locale, TranslationDictionary> = {
       about: 'about',
       staticExport: 'static_export',
     },
-    hero: {
-      station: 'mzilab@developer-station:~$ ./welcome.sh',
-      titleStart: 'Mobile Engineering & ',
-      titleHighlight: 'App Showcase',
-      subtitle: 'Designed and managed by Farid Oubbati.',
-      description:
-        'Explore production mobile apps, open-source projects, and technical writeups on Jetpack Compose, Next.js, Rust, and AI-assisted software engineering.',
-      exploreApps: 'Explore Apps',
-      requestApp: 'Request an App',
-      featuredAppsTitle: 'Featured Mobile Apps',
-      featuredAppsSub: 'Highlighted applications in active development or beta testing.',
-      allAppsDirectory: 'All Apps Directory',
-      recentUpdatesTitle: 'Recent Release Notes',
-      recentUpdatesSub: 'Latest changelog releases and feature commits.',
+    home: {
+      latestArticles: 'Latest Articles',
+      viewAllArticles: 'View all articles',
+      latestApps: 'Latest Apps',
+      viewAllApps: 'View all apps',
+      latestProjects: 'Latest Projects',
+      viewAllProjects: 'View all projects',
+    },
+    collections: {
+      apps: {
+        catalogHeader: 'mzilab@developer-station:~$ ./list-apps --all',
+        title: 'Mobile Applications',
+        subtitle:
+          'Browse production builds, beta releases, and mobile apps built for iOS, Android, and macOS. Filter by platform or search by tech stack.',
+      },
+      projects: {
+        catalogHeader: 'mzilab@developer-station:~$ ./list-projects --all',
+        title: 'Software & Developer Projects',
+        subtitle:
+          'A collection of open-source libraries, CLI diagnostic tools, web applications, and developer utilities.',
+      },
+      blogs: {
+        catalogHeader: 'mzilab@developer-station:~$ ./list-blogs --all',
+        title: 'Blog & Technical Writeups',
+        subtitle:
+          'Deep dives into mobile performance profiling, Jetpack Compose internals, static web architecture, and AI-assisted software engineering.',
+      },
+    },
+    cards: {
+      details: 'Details',
+      githubTitle: 'GitHub Repository',
+      article: 'Article',
+      by: 'By',
+      readArticle: 'Read Article',
     },
     apps: {
-      catalogHeader: 'AppForge Catalog',
-      title: 'Mobile Applications Directory',
+      catalogHeader: 'App Catalog',
+      title: 'Mobile Applications',
       subtitle:
-        'Browse localized apps developed for Algerian merchants, travellers, and everyday users. Filter by platform or release status.',
-      searchPlaceholder: 'Search apps by name, description, or keyword...',
-      statusLabel: 'Status:',
-      platformLabel: 'Platform:',
-      allStatuses: 'All Statuses',
-      allPlatforms: 'All Platforms',
+        'Browse production builds, beta releases, and mobile apps built for iOS, Android, and macOS. Filter by platform or search by tech stack.',
+      searchPlaceholder: 'Search apps by name, tech stack, or platform...',
+      modeLabel: 'Mode:',
       modeGrid: 'Grid',
       modeRows: 'Rows',
+      gridViewTitle: 'Grid view',
+      rowsViewTitle: 'Rows view',
       tagsLabel: 'Tags:',
       showingResults: 'Showing',
       ofRepositories: 'repositories',
       resetFilters: 'Reset Filters',
+      clearFilter: 'Clear filter',
       noMatchingApps: 'No apps match the selected filters',
       noMatchingSub: 'Try adjusting your search query or filter selection.',
       viewApp: 'View App',
       download: 'Download',
+      platformLabel: 'Platform:',
+      statusLabel: 'Status:',
+      categoryLabel: 'Category:',
+      allPlatforms: 'All Platforms',
+      allStatuses: 'All Statuses',
+      allCategories: 'All Categories',
     },
     appDetail: {
       backToApps: 'Back to all apps',
@@ -307,41 +345,67 @@ export const translations: Record<Locale, TranslationDictionary> = {
       about: 'a-propos',
       staticExport: 'exportation_statique',
     },
-    hero: {
-      station: 'mzilab@station-developpeur:~$ ./bienvenue.sh',
-      titleStart: 'Ingénierie Mobile & ',
-      titleHighlight: 'Vitrine d\'Applications',
-      subtitle: 'Conçu et géré par Farid Oubbati.',
-      description:
-        'Découvrez des applications mobiles, des projets open-source et des articles techniques sur Jetpack Compose, Next.js, Rust et l\'ingénierie assistée par IA.',
-      exploreApps: 'Explorer les Apps',
-      requestApp: 'Demander une App',
-      featuredAppsTitle: 'Applications Mobiles en Vedette',
-      featuredAppsSub: 'Applications phares en cours de développement ou en phase de test bêta.',
-      allAppsDirectory: 'Toutes les Applications',
-      recentUpdatesTitle: 'Notes de Mise à Jour',
-      recentUpdatesSub: 'Dernières notes de version et fonctionnalités publiées.',
+    home: {
+      latestArticles: 'Derniers Articles',
+      viewAllArticles: 'Voir tous les articles',
+      latestApps: 'Dernières Applications',
+      viewAllApps: 'Voir toutes les applications',
+      latestProjects: 'Derniers Projets',
+      viewAllProjects: 'Voir tous les projets',
+    },
+    collections: {
+      apps: {
+        catalogHeader: 'mzilab@developer-station:~$ ./list-apps --all',
+        title: 'Applications Mobiles',
+        subtitle:
+          'Parcourez les versions de production, les bêtas et les applications mobiles pour iOS, Android et macOS. Filtrez par plateforme ou recherchez par technologie.',
+      },
+      projects: {
+        catalogHeader: 'mzilab@developer-station:~$ ./list-projects --all',
+        title: 'Projets Logiciels & Outils',
+        subtitle:
+          'Une collection de bibliothèques open source, d\'outils CLI de diagnostic, d\'applications web et d\'utilitaires développeur.',
+      },
+      blogs: {
+        catalogHeader: 'mzilab@developer-station:~$ ./list-blogs --all',
+        title: 'Blog & Articles Techniques',
+        subtitle:
+          'Plongées dans le profilage des performances mobiles, les rouages de Jetpack Compose, l\'architecture web statique et l\'ingénierie logicielle assistée par IA.',
+      },
+    },
+    cards: {
+      details: 'Détails',
+      githubTitle: 'Dépôt GitHub',
+      article: 'Article',
+      by: 'Par',
+      readArticle: 'Lire l\'article',
     },
     apps: {
-      catalogHeader: 'Catalogue AppForge',
-      title: 'Répertoire des Applications Mobiles',
+      catalogHeader: 'Catalogue d\'Applications',
+      title: 'Applications Mobiles',
       subtitle:
-        'Consultez des applications conçues pour les commerçants, voyageurs et utilisateurs en Algérie. Filtrez par plateforme ou statut.',
-      searchPlaceholder: 'Rechercher une application par nom, description...',
-      statusLabel: 'Statut :',
-      platformLabel: 'Plateforme :',
-      allStatuses: 'Tous les statuts',
-      allPlatforms: 'Toutes les plateformes',
+        'Parcourez les versions de production, les bêtas et les applications mobiles pour iOS, Android et macOS. Filtrez par plateforme ou recherchez par technologie.',
+      searchPlaceholder: 'Rechercher une application par nom, technologie ou plateforme...',
+      modeLabel: 'Mode :',
       modeGrid: 'Grille',
       modeRows: 'Liste',
+      gridViewTitle: 'Affichage grille',
+      rowsViewTitle: 'Affichage liste',
       tagsLabel: 'Mots-clés :',
       showingResults: 'Affichage de',
       ofRepositories: 'applications',
       resetFilters: 'Réinitialiser',
+      clearFilter: 'Effacer le filtre',
       noMatchingApps: 'Aucune application ne correspond à votre recherche',
       noMatchingSub: 'Essayez de modifier votre terme de recherche ou vos filtres.',
-      viewApp: 'Voir l\'App',
+      viewApp: 'Voir l\'application',
       download: 'Télécharger',
+      platformLabel: 'Plateforme :',
+      statusLabel: 'Statut :',
+      categoryLabel: 'Catégorie :',
+      allPlatforms: 'Toutes les plateformes',
+      allStatuses: 'Tous les statuts',
+      allCategories: 'Toutes les catégories',
     },
     appDetail: {
       backToApps: 'Retour aux applications',
@@ -464,41 +528,67 @@ export const translations: Record<Locale, TranslationDictionary> = {
       about: 'نبذة عني',
       staticExport: 'تصدير_ثابت',
     },
-    hero: {
-      station: 'mzilab@محطة-المطور:~$ ./مرحبا.sh',
-      titleStart: 'هندسة تطبيقات الجوال و',
-      titleHighlight: 'معرض التطبيقات',
-      subtitle: 'من تصميم فريد أوباتي وإدارته.',
-      description:
-        'استكشف تطبيقات جوال جاهزة للاستخدام، ومشاريع مفتوحة المصدر، ومقالات تقنية عن Jetpack Compose وNext.js وRust وهندسة البرمجيات بمساعدة الذكاء الاصطناعي.',
-      exploreApps: 'تصفح التطبيقات',
-      requestApp: 'اطلب تطبيقاً',
-      featuredAppsTitle: 'تطبيقات مختارة',
-      featuredAppsSub: 'تطبيقات مميزة قيد التطوير أو الاختبار التجريبي.',
-      allAppsDirectory: 'دليل جميع التطبيقات',
-      recentUpdatesTitle: 'أحدث إصدارات التطبيقات',
-      recentUpdatesSub: 'أحدث ملاحظات الإصدارات والميزات المنشورة.',
+    home: {
+      latestArticles: 'أحدث المقالات',
+      viewAllArticles: 'عرض كل المقالات',
+      latestApps: 'أحدث التطبيقات',
+      viewAllApps: 'عرض كل التطبيقات',
+      latestProjects: 'أحدث المشاريع',
+      viewAllProjects: 'عرض كل المشاريع',
+    },
+    collections: {
+      apps: {
+        catalogHeader: 'mzilab@developer-station:~$ ./list-apps --all',
+        title: 'تطبيقات الجوال',
+        subtitle:
+          'تصفح إصدارات الإنتاج والإصدارات التجريبية لتطبيقات الجوال على iOS وAndroid وmacOS. اعثر حسب المنصة أو ابحث حسب التقنية.',
+      },
+      projects: {
+        catalogHeader: 'mzilab@developer-station:~$ ./list-projects --all',
+        title: 'مشاريع وأدوات البرمجيات',
+        subtitle:
+          'مجموعة من المكتبات مفتوحة المصدر وأدوات سطر الأوامر للتشخيص وتطبيقات الويب والأدوات المساعدة للمطورين.',
+      },
+      blogs: {
+        catalogHeader: 'mzilab@developer-station:~$ ./list-blogs --all',
+        title: 'المدونة والمقالات التقنية',
+        subtitle:
+          'تحليلات معمقة في قياس أداء الأجهزة المحمولة وآليات Jetpack Compose ومعمارية الويب الثابتة وهندسة البرمجيات بمساعدة الذكاء الاصطناعي.',
+      },
+    },
+    cards: {
+      details: 'التفاصيل',
+      githubTitle: 'مستودع GitHub',
+      article: 'مقال',
+      by: 'بقلم',
+      readArticle: 'قراءة المقال',
     },
     apps: {
-      catalogHeader: 'كتالوج AppForge',
-      title: 'دليل تطبيقات الجوال',
+      catalogHeader: 'كتالوج التطبيقات',
+      title: 'تطبيقات الجوال',
       subtitle:
-        'تصفح تطبيقات مصممة للتجار والمسافرين ومختلف المستخدمين في الجزائر. صفِّ النتائج حسب المنصة أو حالة الإصدار.',
-      searchPlaceholder: 'ابحث عن التطبيقات بالاسم أو الوصف أو الكلمات المفتاحية...',
-      statusLabel: 'الحالة:',
-      platformLabel: 'المنصة:',
-      allStatuses: 'جميع الحالات',
-      allPlatforms: 'جميع المنصات',
-      modeGrid: 'عرض شبكي',
+        'تصفح إصدارات الإنتاج والإصدارات التجريبية لتطبيقات الجوال على iOS وAndroid وmacOS. اعثر حسب المنصة أو ابحث حسب التقنية.',
+      searchPlaceholder: 'ابحث عن التطبيقات بالاسم أو التقنية أو المنصة...',
+      modeLabel: 'الوضع:',
+      modeGrid: 'شبكي',
       modeRows: 'قائمة',
+      gridViewTitle: 'عرض شبكي',
+      rowsViewTitle: 'عرض صفوف',
       tagsLabel: 'الوسوم:',
       showingResults: 'عدد التطبيقات المعروضة:',
       ofRepositories: 'إجمالي التطبيقات:',
       resetFilters: 'إعادة ضبط التصفية',
+      clearFilter: 'مسح التصفية',
       noMatchingApps: 'لا توجد تطبيقات تطابق خيارات التصفية',
       noMatchingSub: 'جرّب تعديل عبارة البحث أو خيارات التصفية.',
       viewApp: 'عرض التطبيق',
       download: 'تنزيل',
+      platformLabel: 'المنصة:',
+      statusLabel: 'الحالة:',
+      categoryLabel: 'الفئة:',
+      allPlatforms: 'جميع المنصات',
+      allStatuses: 'جميع الحالات',
+      allCategories: 'كل الفئات',
     },
     appDetail: {
       backToApps: 'العودة إلى جميع التطبيقات',

@@ -1,54 +1,89 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { LayoutGrid, List, Filter, Terminal, X } from 'lucide-react';
+import { LayoutGrid, List, Terminal, X } from 'lucide-react';
 import { AppFrontmatter } from '@/lib/apps';
 import { AppCard } from './AppCard';
 import { AppListRow } from './AppListRow';
+import { useLanguage } from './LanguageContext';
+
+const ALL = 'All';
 
 interface AppFeedProps {
   initialApps: AppFrontmatter[];
 }
 
 export function AppFeed({ initialApps }: AppFeedProps) {
+  const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTag, setSelectedTag] = useState<string>('All');
+  const [selectedPlatform, setSelectedPlatform] = useState<string>(ALL);
+  const [selectedStatus, setSelectedStatus] = useState<string>(ALL);
+  const [selectedCategory, setSelectedCategory] = useState<string>(ALL);
   const [viewMode, setViewMode] = useState<'grid' | 'rows'>('grid');
 
-  // Extract unique platforms & categories for filter pills
-  const availableTags = useMemo(() => {
-    const tagsSet = new Set<string>(['All']);
+  // Unique values per filter group
+  const { platforms, statuses, categories } = useMemo(() => {
+    const platformSet = new Set<string>();
+    const statusSet = new Set<string>();
+    const categorySet = new Set<string>();
     initialApps.forEach((app) => {
-      app.platforms.forEach((p) => tagsSet.add(p));
-      if (app.status) tagsSet.add(app.status);
+      app.platforms.forEach((p) => platformSet.add(p));
+      if (app.status) statusSet.add(app.status);
+      if (app.category) categorySet.add(app.category);
     });
-    return Array.from(tagsSet);
+    return {
+      platforms: Array.from(platformSet).sort(),
+      statuses: Array.from(statusSet).sort(),
+      categories: Array.from(categorySet).sort(),
+    };
   }, [initialApps]);
 
-  // Filter apps by search query and tag selection
+  const activeFilters = selectedPlatform !== ALL || selectedStatus !== ALL || selectedCategory !== ALL;
+
+  // Filter apps by search query and the three filter groups
   const filteredApps = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
     return initialApps.filter((app) => {
       const matchesSearch =
-        searchQuery === '' ||
-        app.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        app.tagline.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        app.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        app.languages.some((l) => l.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        app.platforms.some((p) => p.toLowerCase().includes(searchQuery.toLowerCase()));
+        query === '' ||
+        app.title.toLowerCase().includes(query) ||
+        app.tagline.toLowerCase().includes(query) ||
+        app.description.toLowerCase().includes(query) ||
+        app.category.toLowerCase().includes(query) ||
+        app.languages.some((l) => l.toLowerCase().includes(query)) ||
+        app.platforms.some((p) => p.toLowerCase().includes(query));
 
-      const matchesTag =
-        selectedTag === 'All' ||
-        app.platforms.includes(selectedTag) ||
-        app.status === selectedTag ||
-        app.category === selectedTag;
+      const matchesPlatform = selectedPlatform === ALL || app.platforms.includes(selectedPlatform);
+      const matchesStatus = selectedStatus === ALL || app.status === selectedStatus;
+      const matchesCategory = selectedCategory === ALL || app.category === selectedCategory;
 
-      return matchesSearch && matchesTag;
+      return matchesSearch && matchesPlatform && matchesStatus && matchesCategory;
     });
-  }, [initialApps, searchQuery, selectedTag]);
+  }, [initialApps, searchQuery, selectedPlatform, selectedStatus, selectedCategory]);
+
+  const resetFilters = () => {
+    setSearchQuery('');
+    setSelectedPlatform(ALL);
+    setSelectedStatus(ALL);
+    setSelectedCategory(ALL);
+  };
+
+  const pillClasses = (active: boolean) =>
+    `shrink-0 font-mono text-xs px-2.5 py-1 rounded-full border transition-all ${
+      active
+        ? 'border-accent-primary bg-accent-primary text-canvas font-bold shadow-sm'
+        : 'border-divider bg-canvas text-text-secondary hover:border-accent-primary hover:text-accent-primary'
+    }`;
+
+  const groupLabel = (label: string) => (
+    <span className="font-mono text-xs text-accent-primary flex items-center gap-1 shrink-0 font-bold">
+      <span>{label}</span>
+    </span>
+  );
 
   return (
     <section className="w-full space-y-6">
-      {/* Control Bar: Terminal Search, Tag Pills, and View Switcher */}
+      {/* Control Bar: Terminal Search, Filters, and View Switcher */}
       <div className="rounded-lg border border-divider bg-surface p-4 space-y-4 shadow-sm transition-colors">
         <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
           {/* Terminal Search Box */}
@@ -61,14 +96,14 @@ export function AppFeed({ initialApps }: AppFeedProps) {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search apps by name, tech stack, or platform..."
+              placeholder={t.apps.searchPlaceholder}
               className="w-full rounded-md border border-divider bg-canvas py-2 pl-20 pr-8 font-mono text-xs text-text-primary placeholder-text-secondary focus:border-accent-primary focus:outline-none transition-colors"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                aria-label="Clear search"
-                className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-text-secondary hover:text-accent-primary"
+                aria-label={t.apps.clearFilter}
+                className="absolute inset-y-0 right-0 flex min-h-[44px] min-w-[44px] items-center justify-center pr-2.5 text-text-secondary hover:text-accent-primary"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
@@ -78,74 +113,118 @@ export function AppFeed({ initialApps }: AppFeedProps) {
           {/* View Mode Switcher */}
           <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0">
             <span className="font-mono text-xs text-text-secondary hidden sm:inline">
-              Mode:
+              {t.apps.modeLabel}
             </span>
             <div className="flex rounded-md border border-divider bg-canvas p-0.5 font-mono text-xs">
               <button
                 onClick={() => setViewMode('grid')}
                 aria-pressed={viewMode === 'grid'}
-                className={`flex items-center gap-1.5 rounded px-2.5 py-1 transition-all ${
+                title={t.apps.gridViewTitle}
+                className={`flex min-h-[44px] items-center gap-1.5 rounded px-2.5 py-1 transition-all ${
                   viewMode === 'grid'
                     ? 'bg-accent-primary text-canvas font-bold shadow-sm'
                     : 'text-text-secondary hover:text-text-primary'
                 }`}
-                title="Grid View"
               >
                 <LayoutGrid className="h-3.5 w-3.5" />
-                <span>Grid</span>
+                <span>{t.apps.modeGrid}</span>
               </button>
               <button
                 onClick={() => setViewMode('rows')}
                 aria-pressed={viewMode === 'rows'}
-                className={`flex items-center gap-1.5 rounded px-2.5 py-1 transition-all ${
+                title={t.apps.rowsViewTitle}
+                className={`flex min-h-[44px] items-center gap-1.5 rounded px-2.5 py-1 transition-all ${
                   viewMode === 'rows'
                     ? 'bg-accent-primary text-canvas font-bold shadow-sm'
                     : 'text-text-secondary hover:text-text-primary'
                 }`}
-                title="List View"
               >
                 <List className="h-3.5 w-3.5" />
-                <span>Rows</span>
+                <span>{t.apps.modeRows}</span>
               </button>
             </div>
           </div>
         </div>
 
-        {/* Tag Pills Feed */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none pt-1 border-t border-divider/50">
-          <span className="font-mono text-xs text-accent-primary flex items-center gap-1 shrink-0 font-bold">
-            <Filter className="h-3 w-3" />
-            <span>Tags:</span>
-          </span>
-          {availableTags.map((tag) => (
+        {/* Filter Groups */}
+        <div className="flex flex-col gap-2 pt-1 border-t border-divider/50">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+            {groupLabel(t.apps.platformLabel)}
             <button
-              key={tag}
-              onClick={() => setSelectedTag(tag)}
-              aria-pressed={selectedTag === tag}
-              className={`shrink-0 font-mono text-xs px-2.5 py-1 rounded-full border transition-all ${
-                selectedTag === tag
-                  ? 'border-accent-primary bg-accent-primary text-canvas font-bold shadow-sm'
-                  : 'border-divider bg-canvas text-text-secondary hover:border-accent-primary hover:text-accent-primary'
-              }`}
+              onClick={() => setSelectedPlatform(ALL)}
+              aria-pressed={selectedPlatform === ALL}
+              className={pillClasses(selectedPlatform === ALL)}
             >
-              {tag === 'All' ? 'All Apps' : tag}
+              {t.apps.allPlatforms}
             </button>
-          ))}
+            {platforms.map((platform) => (
+              <button
+                key={platform}
+                onClick={() => setSelectedPlatform(platform)}
+                aria-pressed={selectedPlatform === platform}
+                className={pillClasses(selectedPlatform === platform)}
+              >
+                {platform}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+            {groupLabel(t.apps.statusLabel)}
+            <button
+              onClick={() => setSelectedStatus(ALL)}
+              aria-pressed={selectedStatus === ALL}
+              className={pillClasses(selectedStatus === ALL)}
+            >
+              {t.apps.allStatuses}
+            </button>
+            {statuses.map((status) => (
+              <button
+                key={status}
+                onClick={() => setSelectedStatus(status)}
+                aria-pressed={selectedStatus === status}
+                className={pillClasses(selectedStatus === status)}
+              >
+                {status}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+            {groupLabel(t.apps.categoryLabel)}
+            <button
+              onClick={() => setSelectedCategory(ALL)}
+              aria-pressed={selectedCategory === ALL}
+              className={pillClasses(selectedCategory === ALL)}
+            >
+              {t.apps.allCategories}
+            </button>
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                aria-pressed={selectedCategory === category}
+                className={pillClasses(selectedCategory === category)}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Results Header Status */}
       <div className="flex items-center justify-between font-mono text-xs text-text-secondary px-1">
         <div>
-          Showing <span className="text-accent-primary font-bold">{filteredApps.length}</span> of{' '}
-          <span className="text-text-primary font-semibold">{initialApps.length}</span> repositories
+          {t.apps.showingResults} <span className="text-accent-primary font-bold">{filteredApps.length}</span>{' '}
+          {t.apps.ofRepositories} <span className="text-text-primary font-semibold">{initialApps.length}</span>
         </div>
-        {selectedTag !== 'All' && (
+        {activeFilters && (
           <button
-            onClick={() => setSelectedTag('All')}
+            onClick={resetFilters}
             className="text-accent-primary hover:underline flex items-center gap-1 font-bold"
           >
-            Clear filter &times;
+            {t.apps.clearFilter} &times;
           </button>
         )}
       </div>
@@ -154,16 +233,13 @@ export function AppFeed({ initialApps }: AppFeedProps) {
       {filteredApps.length === 0 ? (
         <div className="rounded-lg border border-dashed border-divider bg-surface p-12 text-center font-mono">
           <Terminal className="mx-auto h-8 w-8 text-accent-primary mb-3" />
-          <p className="text-sm text-text-primary font-bold">No apps matching query</p>
-          <p className="text-xs text-text-secondary mt-1">Try adjusting your terminal filter or tag selection.</p>
+          <p className="text-sm text-text-primary font-bold">{t.apps.noMatchingApps}</p>
+          <p className="text-xs text-text-secondary mt-1">{t.apps.noMatchingSub}</p>
           <button
-            onClick={() => {
-              setSearchQuery('');
-              setSelectedTag('All');
-            }}
+            onClick={resetFilters}
             className="mt-4 inline-flex items-center rounded-md border border-accent-primary bg-accent-primary/10 px-3 py-1.5 text-xs text-accent-primary font-bold hover:bg-accent-primary hover:text-canvas transition-all"
           >
-            Reset Filters
+            {t.apps.resetFilters}
           </button>
         </div>
       ) : viewMode === 'grid' ? (

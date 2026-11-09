@@ -1,12 +1,16 @@
+'use client';
+
 import Link from 'next/link';
 import { Smartphone } from 'lucide-react';
 import { AppFrontmatter } from '@/lib/apps';
+import { useLanguage } from './LanguageContext';
 
 interface AppListRowProps {
   app: AppFrontmatter;
 }
 
 export function AppListRow({ app }: AppListRowProps) {
+  const { t } = useLanguage();
   return (
     <div className="group flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-md border border-divider bg-surface p-3.5 hover:border-accent-primary hover:bg-divider/50 transition-all shadow-sm">
       {/* Left side: Icon, Name, Version, Category */}
@@ -54,7 +58,7 @@ export function AppListRow({ app }: AppListRowProps) {
           href={`/apps/${app.slug}`}
           className="rounded border border-accent-primary bg-accent-primary/10 px-2.5 py-1 text-[11px] font-bold text-accent-primary hover:bg-accent-primary hover:text-canvas transition-all"
         >
-          View &rarr;
+          {t.cards.details} &rarr;
         </Link>
       </div>
     </div>

@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Locale, translations, TranslationDictionary } from '@/lib/i18n/translations';
+import { LOCALE_STORAGE_KEY, DEFAULT_LOCALE, applyLocale, getStoredLocale } from '@/lib/locale';
 
 interface LanguageContextType {
   locale: Locale;
@@ -19,27 +20,25 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
  * lang / dir attributes are synced here.
  */
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>('en');
+  const [locale, setLocaleState] = useState<Locale>(DEFAULT_LOCALE);
 
   useEffect(() => {
-    const saved = localStorage.getItem('mzilab_locale') as Locale | null;
-    if (saved && (saved === 'en' || saved === 'fr' || saved === 'ar')) {
-      setLocaleState(saved);
-      document.documentElement.lang = saved;
-      document.documentElement.dir = saved === 'ar' ? 'rtl' : 'ltr';
+    const stored = getStoredLocale();
+    if (stored) {
+      setLocaleState(stored);
+      applyLocale(stored);
     } else {
-      document.documentElement.dir = 'ltr';
+      applyLocale(DEFAULT_LOCALE);
     }
   }, []);
 
   const setLocale = (newLocale: Locale) => {
     setLocaleState(newLocale);
-    localStorage.setItem('mzilab_locale', newLocale);
-    document.documentElement.lang = newLocale;
-    document.documentElement.dir = newLocale === 'ar' ? 'rtl' : 'ltr';
+    window.localStorage.setItem(LOCALE_STORAGE_KEY, newLocale);
+    applyLocale(newLocale);
   };
 
-  const t = translations[locale] || translations.en;
+  const t = translations[locale] || translations[DEFAULT_LOCALE];
   const isRtl = locale === 'ar';
 
   return (

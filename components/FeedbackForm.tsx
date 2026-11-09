@@ -12,6 +12,11 @@ const feedbackSchema = z.object({
   message: z.string().min(10).max(2000),
 });
 
+// Client-side rate limit: one submission per 60 seconds per visitor, stored
+// locally. Real spam protection happens in the Web3Forms dashboard.
+const RATE_LIMIT_MS = 60_000;
+const RATE_LIMIT_KEY = 'mzilab_feedback_last_sent';
+
 interface FeedbackFormProps {
   itemTitle: string;
 }
@@ -52,6 +57,12 @@ export function FeedbackForm({ itemTitle }: FeedbackFormProps) {
 
     setStatus('sending');
     try {
+      const lastSent = Number(window.localStorage.getItem(RATE_LIMIT_KEY) || 0);
+      if (Date.now() - lastSent < RATE_LIMIT_MS) {
+        setStatus('error');
+        setFieldErrors({});
+        return;
+      }
       const res = await fetch(WEB3FORMS_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -67,6 +78,7 @@ export function FeedbackForm({ itemTitle }: FeedbackFormProps) {
       });
       const json = await res.json();
       if (res.ok && json.success) {
+        window.localStorage.setItem(RATE_LIMIT_KEY, String(Date.now()));
         setStatus('success');
         setName('');
         setMessage('');

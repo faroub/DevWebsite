@@ -1,12 +1,16 @@
+'use client';
+
 import Link from 'next/link';
 import { Smartphone, ExternalLink } from 'lucide-react';
 import { AppFrontmatter } from '@/lib/apps';
+import { useLanguage } from './LanguageContext';
 
 interface AppCardProps {
   app: AppFrontmatter;
 }
 
 export function AppCard({ app }: AppCardProps) {
+  const { t } = useLanguage();
   return (
     <div className="group relative flex flex-col justify-between rounded-lg border border-divider bg-surface p-5 hover:border-accent-primary hover:shadow-glow-teal transition-all duration-200 shadow-sm">
       {/* Top Header */}
@@ -83,7 +87,7 @@ export function AppCard({ app }: AppCardProps) {
               target="_blank"
               rel="noopener noreferrer"
               className="text-text-secondary hover:text-text-primary transition-colors"
-              title="GitHub Repository"
+              title={t.cards.githubTitle}
             >
               <ExternalLink className="h-3.5 w-3.5" />
             </a>
@@ -92,7 +96,7 @@ export function AppCard({ app }: AppCardProps) {
             href={`/apps/${app.slug}`}
             className="inline-flex items-center gap-1 font-mono text-[11px] font-bold text-accent-primary hover:underline"
           >
-            Details &rarr;
+            {t.cards.details} &rarr;
           </Link>
         </div>
       </div>

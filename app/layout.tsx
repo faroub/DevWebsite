@@ -5,6 +5,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { LanguageProvider } from '@/components/LanguageContext';
 import { JsonLd } from '@/components/JsonLd';
+import { SITE } from '@/lib/site';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -43,9 +44,9 @@ export const metadata: Metadata = {
     'iOS Swift',
     'Next.js Showcase',
   ],
-  authors: [{ name: 'Farid Oubbati', url: 'https://mzilab.de' }],
-  creator: 'Farid Oubbati / mzilab',
-  publisher: 'mzilab',
+  authors: [{ name: SITE.author, url: SITE.url }],
+  creator: SITE.author,
+  publisher: SITE.name,
   robots: {
     index: true,
     follow: true,
@@ -65,10 +66,11 @@ export const metadata: Metadata = {
     title: 'mzilab — Mobile Software & Hardware Engineering Platform',
     description:
       'Dedicated developer platform showcasing native Android & iOS mobile applications, open-source projects, and technical engineering articles.',
-    url: 'https://mzilab.de',
-    siteName: 'mzilab',
+    url: SITE.url,
+    siteName: SITE.name,
     locale: 'en_US',
     type: 'website',
+    images: [{ url: '/images/og.png', width: 1200, height: 630, alt: SITE.name }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -76,6 +78,7 @@ export const metadata: Metadata = {
     description:
       'Dedicated developer platform showcasing native Android & iOS mobile applications, open-source projects, and technical engineering articles.',
     creator: '@mzilab',
+    images: ['/images/og.png'],
   },
 };
 
@@ -113,38 +116,12 @@ export default function RootLayout({
     <html
       lang="en"
       dir="ltr"
-      className={`${inter.variable} ${jetbrainsMono.variable} ${tajawal.variable} dark scroll-smooth`}
+      className={`${inter.variable} ${jetbrainsMono.variable} ${tajawal.variable} scroll-smooth`}
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-canvas text-text-primary flex flex-col bg-grid-dots selection:bg-accent-primary/20 selection:text-accent-primary" suppressHydrationWarning>
         <JsonLd id="site-schema-jsonld" data={siteJsonLd} />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var storedTheme = localStorage.getItem('theme');
-                  var root = document.documentElement;
-                  if (storedTheme === 'light') {
-                    root.classList.remove('dark');
-                    root.classList.add('light');
-                  } else {
-                    root.classList.remove('light');
-                    root.classList.add('dark');
-                  }
-
-                  var storedLocale = localStorage.getItem('mzilab_locale');
-                  if (storedLocale) {
-                    root.lang = storedLocale;
-                    root.dir = storedLocale === 'ar' ? 'rtl' : 'ltr';
-                  } else {
-                    root.dir = 'ltr';
-                  }
-                } catch (e) {}
-              })();
-            `,
-          }}
-        />
+        <script src="/boot.js" />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-accent-primary focus:px-4 focus:py-2 focus:text-white focus:font-mono focus:text-xs shadow-md"

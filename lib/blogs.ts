@@ -1,16 +1,19 @@
 import path from 'path';
+import { z } from 'zod';
 import { loadContentDirectory } from './content';
 
-export interface BlogFrontmatter {
-  title: string;
-  slug: string;
-  excerpt: string;
-  publishedAt: string;
-  readTime: string;
-  author: string;
-  tags: string[];
-  featured?: boolean;
-}
+const blogSchema = z.object({
+  title: z.string(),
+  slug: z.string(),
+  excerpt: z.string(),
+  publishedAt: z.string().date(),
+  readTime: z.string(),
+  author: z.string(),
+  tags: z.array(z.string()),
+  featured: z.boolean().optional(),
+});
+
+export type BlogFrontmatter = z.infer<typeof blogSchema>;
 
 export interface BlogData {
   frontmatter: BlogFrontmatter;
@@ -20,9 +23,7 @@ export interface BlogData {
 const BLOGS_DIRECTORY = path.join(process.cwd(), 'content/blogs');
 
 export function getAllBlogs(): BlogFrontmatter[] {
-  return loadContentDirectory<BlogFrontmatter>(BLOGS_DIRECTORY, {
-    tags: [],
-  })
+  return loadContentDirectory(BLOGS_DIRECTORY, blogSchema)
     .sort(
       (a, b) =>
         new Date(b.frontmatter.publishedAt).getTime() -
@@ -32,9 +33,9 @@ export function getAllBlogs(): BlogFrontmatter[] {
 }
 
 export function getBlogBySlug(slug: string): BlogData | null {
-  const entry = loadContentDirectory<BlogFrontmatter>(BLOGS_DIRECTORY, {
-    tags: [],
-  }).find((item) => item.slug === slug);
+  const entry = loadContentDirectory(BLOGS_DIRECTORY, blogSchema).find(
+    (item) => item.slug === slug
+  );
 
   if (!entry) {
     return null;
