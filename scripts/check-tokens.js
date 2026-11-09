@@ -39,8 +39,7 @@ TOKENS.forEach((token) => {
   const regex = new RegExp(`\\b(bg|text|border|ring|selection:bg|selection:text|hover:bg|hover:text|hover:border|focus:border)-${token.replace('-', '\\-')}(/\\d+)?\\b`, 'g');
   sourceFiles.forEach((file) => {
     const content = fs.readFileSync(file, 'utf8');
-    let match;
-    while ((match = regex.exec(content)) !== null) {
+    while (regex.exec(content) !== null) {
       extractedTokens.add(token);
     }
   });
@@ -78,7 +77,6 @@ console.log('Checking design tokens in built CSS...');
 TOKENS.forEach((token) => {
   if (extractedTokens.has(token)) {
     // Check if token rule exists in CSS
-    const escaped = token.replace('-', '\\-');
     if (allCssContent.includes(token)) {
       console.log(`  ✓ Token '${token}' is defined and generated in CSS`);
     } else {
