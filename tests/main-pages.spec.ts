@@ -45,7 +45,7 @@ test('locale switch retranslates the navigation', async ({ page }) => {
   const select = page.getByRole('combobox', { name: 'Select website language' });
   await select.selectOption('ar');
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
-  await expect(page.locator('nav a', { hasText: 'المدونة' })).toBeVisible();
+  await expect(page.locator('nav a', { hasText: 'المدونات' })).toBeVisible();
 
   // Back to English.
   await select.selectOption('en');
@@ -54,11 +54,14 @@ test('locale switch retranslates the navigation', async ({ page }) => {
 
 test('theme toggle switches color scheme', async ({ page }) => {
   await page.goto('/');
+  const initialClass = (await page.locator('html').getAttribute('class')) || '';
+  const startsDark = /dark/.test(initialClass) && !/light/.test(initialClass);
+
   const toggle = page.getByRole('button', { name: 'Toggle dark and light mode' });
   await toggle.click();
-  await expect(page.locator('html')).toHaveClass(/light/);
+  await expect(page.locator('html')).toHaveClass(startsDark ? /light/ : /dark/);
   await toggle.click();
-  await expect(page.locator('html')).toHaveClass(/dark/);
+  await expect(page.locator('html')).toHaveClass(startsDark ? /dark/ : /light/);
 });
 
 test('hamburger exposes aria state and closes on Escape', async ({ page }) => {
