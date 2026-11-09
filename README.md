@@ -9,28 +9,45 @@ The site is fully static — no database, no server, no visitor authentication.
 ## Stack
 - Next.js 16.4.x (use the latest stable App Router version at implementation time; verify with `npm show next version`; current verified line is 16.4.x / 16.4.5 as of November 2026, which patches the RCE/DoS advisories affecting 16.0.0–16.4.0)
 - App Router (NOT Pages Router)
-- React 19.2
+- React 19.3
 - TypeScript 5.1+ in strict mode
 - Tailwind CSS v3
 - MDX for content files
+- Zod 4.x for client-side form validation
 - `output: 'export'` in next.config.ts for full static generation
 - Vercel, Netlify, or Cloudflare Pages for static hosting
 - Node.js 20.9+ LTS
 
 ## Architecture
-- Content lives in `content/apps/` as Markdown/MDX files — one file per app.
-- App metadata (name, slug, version, status, platforms, languages, download links) is stored as frontmatter at the top of each MDX file.
+- Content lives in `content/apps/`, `content/projects/`, and `content/blogs/` as Markdown/MDX files — one file per entry.
+- Entry metadata (name, slug, version, status, platforms, languages, download links) is stored as frontmatter at the top of each MDX file.
+- The effective slug is the frontmatter slug when present, otherwise the filename (without extension); listing links, `generateStaticParams`, the sitemap, and detail lookups all use `lib/content.ts` as their single source.
 - The build reads these files at compile time and generates static pages.
 - No database. No Supabase. No visitor authentication.
 - There is no admin panel in the deployed site. Content is edited by a local dev-only
   Content Studio: `npm run studio` starts `next dev` plus `scripts/admin-server.js`, a
-  127.0.0.1-only file bridge secured with a per-startup token (printed once in the
-  console, required as `X-Admin-Token`). `scripts/build.mjs` stashes `app/admin` out of
-  the production build, so no admin route or studio code ever lands in `out/`.
+  127.0.0.1-only file bridge. It is hardened against cross-origin requests (only the
+  Next.js dev origins are allowed), DNS rebinding (the `Host` header must be
+  `localhost:3001`/`127.0.0.1:3001`), and requires a per-startup random token (printed
+  once in the console, stored in `sessionStorage`, sent as `X-Admin-Token`).
+  `npm run studio` uses a shell `&` (macOS/Linux only); on Windows run two terminals —
+  `npm run admin` in one, `npm run dev` in the other.
+  `scripts/build.mjs` stashes `app/admin` out of the production build, so no admin
+  route or studio code ever lands in `out/`.
+- Studio settings (notification email, Web3Forms key) live in the git-ignored
+  `.local/admin-settings.json` (`{"notifyEmail": "", "web3formsKey": ""}`); the key is
+  never copied into localStorage by the studio. The public feedback key also lives in
+  the client bundle via `NEXT_PUBLIC_WEB3FORMS_KEY` (see `.env.example`) — it is a
+  domain-allowlisted public identifier, not a secret.
 - The feedback form on detail pages posts to Web3Forms (validated with Zod on the client,
   plus a honeypot); the submission is emailed to the maintainer and is never published
   or stored on the site.
+- Theme logic has one source of truth in `lib/theme.ts` (used by `components/ThemeToggle.tsx`).
+  The only other touch point is the tiny inline bootstrap script in `app/layout.tsx`
+  that prevents a first-paint flash (see the `dangerouslySetInnerHTML` exception below).
 - Updating content = editing a Markdown file and pushing to Git.
+- `npm run lint` first runs `scripts/check-content.js` (frontmatter screenshots must
+  exist under `public/screenshots/`; URL fields must not be bare domains), then ESLint.
 
 ## Coding Rules
 - Use server components for static page rendering. Add `"use client"` only for interactive components (form handlers, mobile menu, gallery).
@@ -65,7 +82,12 @@ The site is fully static — no database, no server, no visitor authentication.
 - Add a honeypot field on all forms to catch bots.
 - Enable CAPTCHA in your form service settings if spam becomes a problem.
 - Sanitize or safely render any user-submitted content that appears in success/error messages.
-- Never use `dangerouslySetInnerHTML`.
+- Never use `dangerouslySetInnerHTML` — with two audited exceptions:
+  1. The no-flash theme/locale bootstrap script in `app/layout.tsx`. It is inline,
+     static, contains no user or content data, and must run before hydration.
+  2. Structured data via `components/JsonLd.tsx` + `lib/jsonld.ts`, which serializes
+     build-time-only data and escapes every `<` as `\u003c` so the payload can never
+     terminate the script element. Never pass user-submitted content to it.
 
 ## UX
 - Mobile-first responsive layout.
