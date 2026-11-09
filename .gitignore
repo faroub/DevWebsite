@@ -26,11 +26,11 @@ yarn-error.log*
 .env.test
 .env.production
 
-# Local-only data written by the dev admin bridge (never committed)
+# Local-only data & settings (never committed)
 /.local/
-# Temporarily holds app/admin during a production build (scripts/build.mjs)
+.admin-settings.json
+app/admin/
 /.admin-dev-stash/
-# Guard: the admin studio must never write settings into content/
 content/settings.json
 
 # Vercel / Netlify deployment caches

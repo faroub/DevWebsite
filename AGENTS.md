@@ -58,3 +58,6 @@ For multi-step tasks, state a brief plan:
 Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
 
 These guidelines are working if: fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+
+## Local-Only Admin Studio
+The admin studio (`dev-studio/`) is a dev-only tool for local content management (`npm run studio`). It is copied into `app/admin/` during local development, and deleted by `scripts/build.mjs` before production build so `out/` contains no `/admin` route or admin code.
