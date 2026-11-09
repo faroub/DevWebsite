@@ -288,7 +288,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     privacyPage: {
       title: 'Privacy Policy',
-      lastUpdated: 'Last updated: October 2026',
+      lastUpdated: 'Last updated: November 2026',
       intro:
         'At mzilab, privacy is a core principle. This platform is built as a zero-server, static website that respects your digital privacy.',
       zeroServerTitle: '1. Zero Tracking & No Server Logging',
@@ -309,7 +309,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     termsPage: {
       title: 'Terms of Service',
-      lastUpdated: 'Last updated: October 2026',
+      lastUpdated: 'Last updated: November 2026',
       intro:
         'Welcome to mzilab. By accessing this website or downloading software, applications, or hardware documentation, you agree to these Terms of Service.',
       licenseTitle: '1. Software & Content Showcase',
@@ -471,7 +471,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     privacyPage: {
       title: 'Politique de Confidentialité',
-      lastUpdated: 'Dernière mise à jour : Octobre 2026',
+      lastUpdated: 'Dernière mise à jour : Novembre 2026',
       intro:
         'Chez mzilab, la confidentialité est un principe fondamental. Cette plateforme est conçue comme un site statique sans serveur qui respecte votre vie privée numérique.',
       zeroServerTitle: '1. Aucun Suivi & Aucun Journal Serveur',
@@ -492,7 +492,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     termsPage: {
       title: 'Conditions d\'Utilisation',
-      lastUpdated: 'Dernière mise à jour : Octobre 2026',
+      lastUpdated: 'Dernière mise à jour : Novembre 2026',
       intro:
         'Bienvenue sur mzilab. En accédant à ce site ou en téléchargeant nos applications et documentation, vous acceptez ces conditions d\'utilisation.',
       licenseTitle: '1. Vitrine de Logiciels & Contenus',
@@ -654,7 +654,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     privacyPage: {
       title: 'سياسة الخصوصية',
-      lastUpdated: 'آخر تحديث: أكتوبر 2026',
+      lastUpdated: 'آخر تحديث: نوفمبر 2026',
       intro:
         'في mzilab، الخصوصية مبدأ أساسي. صُممت هذه المنصة كموقع ثابت لا يعتمد على خادم، احتراماً لخصوصيتك الرقمية.',
       zeroServerTitle: '1. لا تتبع ولا تسجيل للبيانات على الخادم',
@@ -675,7 +675,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     termsPage: {
       title: 'شروط الخدمة',
-      lastUpdated: 'آخر تحديث: أكتوبر 2026',
+      lastUpdated: 'آخر تحديث: نوفمبر 2026',
       intro:
         'مرحباً بك في mzilab. باستخدام هذا الموقع أو تنزيل برمجياته أو تطبيقاته أو وثائقه، فإنك توافق على شروط الخدمة هذه.',
       licenseTitle: '1. عرض البرمجيات والمحتوى',

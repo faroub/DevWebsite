@@ -21,33 +21,38 @@ The site is fully static — no database, no server, no visitor authentication.
 ## Architecture
 - Content lives in `content/apps/`, `content/projects/`, and `content/blogs/` as Markdown/MDX files — one file per entry.
 - Entry metadata (name, slug, version, status, platforms, languages, download links) is stored as frontmatter at the top of each MDX file.
-- The effective slug is the frontmatter slug when present, otherwise the filename (without extension); listing links, `generateStaticParams`, the sitemap, and detail lookups all use `lib/content.ts` as their single source.
+- The effective slug is derived from the filename; the frontmatter `slug` must be
+  present and equal the filename or the build fails with an error naming the file.
+  Listing links, `generateStaticParams`, the sitemap, and detail lookups all use
+  `lib/content.ts` (with a Zod schema per collection) as their single source.
 - The build reads these files at compile time and generates static pages.
 - No database. No Supabase. No visitor authentication.
 - There is no admin panel in the deployed site. Content is edited by a local dev-only
-  Content Studio: `npm run studio` starts `next dev` plus `scripts/admin-server.js`, a
-  127.0.0.1-only file bridge. It is hardened against cross-origin requests (only the
-  Next.js dev origins are allowed), DNS rebinding (the `Host` header must be
-  `localhost:3001`/`127.0.0.1:3001`), and requires a per-startup random token (printed
-  once in the console, stored in `sessionStorage`, sent as `X-Admin-Token`).
-  `npm run studio` uses a shell `&` (macOS/Linux only); on Windows run two terminals —
-  `npm run admin` in one, `npm run dev` in the other.
+  Content Studio: `npm run studio` starts `next dev` plus `scripts/admin-server.js` (via
+  `concurrently`, so it works on Windows too), a 127.0.0.1-only file bridge. It is
+  hardened against cross-origin requests (only the Next.js dev origins are allowed),
+  DNS rebinding (the `Host` header must be `localhost:3001`/`127.0.0.1:3001`), and
+  requires a per-startup random token (printed once in the console, stored in
+  `sessionStorage`, sent as `X-Admin-Token` or `Authorization: Bearer <token>`).
   `scripts/build.mjs` stashes `app/admin` out of the production build, so no admin
   route or studio code ever lands in `out/`.
 - Studio settings (notification email, Web3Forms key) live in the git-ignored
-  `.local/admin-settings.json` (`{"notifyEmail": "", "web3formsKey": ""}`); the key is
-  never copied into localStorage by the studio. The public feedback key also lives in
-  the client bundle via `NEXT_PUBLIC_WEB3FORMS_KEY` (see `.env.example`) — it is a
-  domain-allowlisted public identifier, not a secret.
-- The feedback form on detail pages posts to Web3Forms (validated with Zod on the client,
-  plus a honeypot); the submission is emailed to the maintainer and is never published
-  or stored on the site.
-- Theme logic has one source of truth in `lib/theme.ts` (used by `components/ThemeToggle.tsx`).
-  The only other touch point is the tiny inline bootstrap script in `app/layout.tsx`
-  that prevents a first-paint flash (see the `dangerouslySetInnerHTML` exception below).
+  `.local/admin-settings.json`, which the bridge creates with empty defaults on first
+  run; the key is never copied into localStorage by the studio. The public feedback
+  key also lives in the client bundle via `NEXT_PUBLIC_WEB3FORMS_KEY` (see
+  `.env.example`) — it is a domain-allowlisted public identifier, not a secret.
+- The feedback form on detail pages posts to Web3Forms (validated with Zod on the
+  client, plus a honeypot and a 60-second client-side rate limit); the submission is
+  emailed to the maintainer and is never published or stored on the site.
+- Theme logic has one source of truth in `lib/theme.ts`; locale logic in
+  `lib/locale.ts`. The only other touch point is `public/boot.js`, an external
+  pre-hydration script in `app/layout.tsx` that prevents a first-paint flash.
+- Site identity (author, domain, contact address, social links) lives in `lib/site.ts`.
 - Updating content = editing a Markdown file and pushing to Git.
-- `npm run lint` first runs `scripts/check-content.js` (frontmatter screenshots must
-  exist under `public/screenshots/`; URL fields must not be bare domains), then ESLint.
+- `npm run lint` first runs `scripts/check-content.js` (slug must equal filename,
+  required fields present, dates valid, referenced screenshots must exist under
+  `public/screenshots/`, URL fields must not be bare domains), then ESLint. The same
+  check runs automatically before `npm run build` (prebuild) and in CI.
 
 ## Coding Rules
 - Use server components for static page rendering. Add `"use client"` only for interactive components (form handlers, mobile menu, gallery).
@@ -82,12 +87,50 @@ The site is fully static — no database, no server, no visitor authentication.
 - Add a honeypot field on all forms to catch bots.
 - Enable CAPTCHA in your form service settings if spam becomes a problem.
 - Sanitize or safely render any user-submitted content that appears in success/error messages.
-- Never use `dangerouslySetInnerHTML` — with two audited exceptions:
-  1. The no-flash theme/locale bootstrap script in `app/layout.tsx`. It is inline,
-     static, contains no user or content data, and must run before hydration.
-  2. Structured data via `components/JsonLd.tsx` + `lib/jsonld.ts`, which serializes
-     build-time-only data and escapes every `<` as `\u003c` so the payload can never
-     terminate the script element. Never pass user-submitted content to it.
+- Never use `dangerouslySetInnerHTML` — with one audited exception:
+  structured data via `components/JsonLd.tsx` + `lib/jsonld.ts`, which serializes
+  build-time-only data and escapes every `<` as `\u003c` so the payload can never
+  terminate the script element. Never pass user-submitted content to it. (The
+  pre-hydration theme/locale bootstrap is an external file, `public/boot.js`.)
+
+## Development
+Setup and common commands:
+- `npm ci` — install dependencies (Node >= 20.9, see `engines`).
+- Copy `.env.example` to `.env.local` and set `NEXT_PUBLIC_WEB3FORMS_KEY` (get a free
+  key at web3forms.com). Without it the feedback form renders disabled.
+- `npm run dev` — Next.js dev server (content editing by hand).
+- `npm run studio` — dev server + the local admin bridge (cross-platform). The bridge
+  prints a one-time token; paste it into the studio header at http://localhost:3000/admin.
+- `npm run lint` / `npx tsc --noEmit` — content check + ESLint / type check.
+- `npm run build` — static export into `out/` (runs the content check first).
+- `npm run smoke` — post-build checks: every route exists, no admin route or bridge
+  strings leaked, absolute canonicals, all internal links resolve.
+- `npm run test:e2e` — build + Playwright tests against the export (installs browsers
+  on first run with `npx playwright install chromium`).
+- `npm run preview` — serve `out/` locally at http://127.0.0.1:4321.
+
+Content file format (see `content/apps/*.mdx` for examples):
+- `---`-delimited frontmatter: title, slug (**must equal the file name**), tagline,
+  description, version, status, platforms, category, languages, updatedAt (YYYY-MM-DD),
+  optional `downloadLinks` (appStore/playStore/github/web). Projects use techStack and
+  optional githubUrl/demoUrl; blogs use excerpt, publishedAt, readTime, author, tags.
+- The Markdown body is rendered as real HTML at build time; raw HTML in the source is
+  not allowed.
+- Missing required fields, invalid dates, or a slug that differs from the file name
+  fail the build with an error naming the file.
+
+Publishing:
+- `npm run build`, then deploy `out/` to Vercel, Netlify, or Cloudflare Pages.
+- Security headers (CSP, HSTS, frame-ancestors, referrer policy) are configured in
+  `vercel.json` (Vercel) and `public/_headers` (Netlify/Cloudflare Pages). The CSP
+  allows `'unsafe-inline'` for scripts because Next.js embeds inline RSC bootstrap
+  scripts at build time; no inline script handles user input.
+
+## Legal text
+The privacy and terms pages (`lib/i18n/translations.ts`) describe the real data flows
+(localStorage for theme/locale, Web3Forms as the form processor, no analytics). They
+were written by the developer, not a lawyer — have the text reviewed before relying on
+it. Keep the `lastUpdated` value current when the data flow changes.
 
 ## UX
 - Mobile-first responsive layout.
@@ -108,7 +151,8 @@ Run before considering any task complete:
 - `npm run lint`
 - `npx tsc --noEmit`
 - `npm run build` (verifies static export works)
-- Playwright E2E tests for critical user flows (optional but recommended)
+- `npm run smoke` (post-build export checks)
+- `npm run test:e2e` (Playwright: main pages, markdown rendering, locale switch, theme toggle, mobile menu, feed filters)
 
 ## Task Workflow
 1. Inspect existing files before writing code.
