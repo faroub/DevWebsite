@@ -31,6 +31,10 @@ const REQUIRED_FIELDS = {
   about: ['title', 'author', 'role', 'location', 'tagline', 'skillsMobile', 'skillsSystems', 'philosophy'],
 };
 
+// Collections whose items are routed as /<type>/<slug> (about.mdx is a
+// standalone file and carries no slug).
+const SLUGGED_TYPES = ['apps', 'projects', 'blogs'];
+
 // Date fields that must be valid YYYY-MM-DD.
 const DATE_FIELDS = { apps: ['updatedAt'], projects: ['updatedAt'], blogs: ['publishedAt'] };
 
@@ -114,7 +118,7 @@ function checkFrontmatterFile(file, type) {
   // The slug must be present and equal the filename (lib/content.ts rule).
   const fileSlug = path.basename(file).replace(/\.mdx?$/, '');
   const fmSlug = data.slug;
-  if (type && fmSlug !== fileSlug) {
+  if (SLUGGED_TYPES.includes(type) && fmSlug !== fileSlug) {
     fail(`${rel}: slug mismatch`, `frontmatter "${String(fmSlug)}" must equal filename slug "${fileSlug}"`);
   } else {
     ok(`${rel}: slug matches filename`);

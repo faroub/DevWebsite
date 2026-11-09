@@ -18,12 +18,17 @@ function describeParseError(error: z.ZodError): string {
 
 /**
  * Reads one Markdown/MDX file and validates its frontmatter against a Zod
- * schema. The slug is derived from the filename and the frontmatter `slug`
- * must match it, so listing links, generateStaticParams, the sitemap and
- * detail lookups all resolve to the same route. Every failure throws an
- * error that names the file.
+ * schema. For collection files the slug is derived from the filename and the
+ * frontmatter `slug` must match it, so listing links, generateStaticParams,
+ * the sitemap and detail lookups all resolve to the same route. Pass
+ * `{ requireSlug: false }` for standalone files that are not routed by slug
+ * (e.g. about.mdx). Every failure throws an error that names the file.
  */
-export function loadContentFile<T>(fullPath: string, schema: ZodType<T>): ContentEntry<T> {
+export function loadContentFile<T>(
+  fullPath: string,
+  schema: ZodType<T>,
+  options: { requireSlug?: boolean } = {}
+): ContentEntry<T> {
   const rel = path.relative(process.cwd(), fullPath);
 
   let raw: string;
@@ -43,7 +48,10 @@ export function loadContentFile<T>(fullPath: string, schema: ZodType<T>): Conten
   const fileName = path.basename(fullPath);
   const fileSlug = fileName.replace(/\.mdx?$/, '');
   const frontmatterSlug = (parsed.data as { slug?: unknown }).slug;
-  if (typeof frontmatterSlug !== 'string' || frontmatterSlug !== fileSlug) {
+  if (
+    (options.requireSlug ?? true) &&
+    (typeof frontmatterSlug !== 'string' || frontmatterSlug !== fileSlug)
+  ) {
     throw new Error(
       `Slug mismatch in ${rel}: frontmatter slug "${String(frontmatterSlug)}" must equal the filename "${fileName}".`
     );

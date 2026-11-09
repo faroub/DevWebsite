@@ -27,6 +27,6 @@ export interface AboutData {
 const ABOUT_FILE = path.join(process.cwd(), 'content/about.mdx');
 
 export function getAboutData(): AboutData {
-  const entry = loadContentFile(ABOUT_FILE, aboutSchema);
+  const entry = loadContentFile(ABOUT_FILE, aboutSchema, { requireSlug: false });
   return { frontmatter: entry.frontmatter, content: entry.content };
 }
