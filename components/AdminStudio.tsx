@@ -21,6 +21,7 @@ import {
   User,
   KeyRound,
 } from 'lucide-react';
+import { WEB3FORMS_ENDPOINT } from '@/lib/config';
 
 interface ContentItem {
   fileName: string;
@@ -313,7 +314,6 @@ export function AdminStudio() {
     } else {
       setEditedItem(null);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, items, selectedItemIndex]);
 
   // Handle saving current content item
@@ -442,7 +442,7 @@ export function AdminStudio() {
         excerpt: 'Short summary of the new technical article.',
         publishedAt: new Date().toISOString().split('T')[0],
         readTime: '5 min read',
-        author: 'Faroub / mzilab',
+        author: 'Farid Oubbati',
         tags: ['Architecture', 'Mobile'],
         featured: true,
       };
