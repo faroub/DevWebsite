@@ -4,16 +4,15 @@ import { useState } from 'react';
 import { Send, Star, MessageSquare, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { z } from 'zod';
 import { useLanguage } from './LanguageContext';
-import { FEEDBACK_RECIPIENT_EMAIL, WEB3FORMS_ENDPOINT } from '@/lib/config';
+import { NOTIFY_EMAIL } from '@/lib/site';
+import { WEB3FORMS_ENDPOINT } from '@/lib/config';
 
 const feedbackSchema = z.object({
   name: z.string().min(2).max(60),
   rating: z.number().int().min(1).max(5),
-  message: z.string().min(10).max(2000),
+  message: z.string().min(5).max(2000),
 });
 
-// Client-side rate limit: one submission per 60 seconds per visitor, stored
-// locally. Real spam protection happens in the Web3Forms dashboard.
 const RATE_LIMIT_MS = 60_000;
 const RATE_LIMIT_KEY = 'mzilab_feedback_last_sent';
 
@@ -41,7 +40,7 @@ export function FeedbackForm({ itemTitle }: FeedbackFormProps) {
       if (!name.trim() || name.trim().length < 2 || name.trim().length > 60) {
         errors.name = t.feedback.nameError;
       }
-      if (!message.trim() || message.trim().length < 10 || message.trim().length > 2000) {
+      if (!message.trim() || message.trim().length < 5 || message.trim().length > 2000) {
         errors.message = t.feedback.messageError;
       }
       setFieldErrors(errors);
@@ -52,6 +51,11 @@ export function FeedbackForm({ itemTitle }: FeedbackFormProps) {
     // Honeypot: bots fill hidden fields. Silently drop, no error message.
     if (honeypot) {
       setStatus('success');
+      return;
+    }
+
+    if (!accessKey) {
+      setStatus('error');
       return;
     }
 
@@ -70,7 +74,7 @@ export function FeedbackForm({ itemTitle }: FeedbackFormProps) {
           access_key: accessKey,
           subject: `[mzilab Feedback] ${itemTitle}`,
           from_name: 'mzilab Website',
-          to: FEEDBACK_RECIPIENT_EMAIL,
+          to: NOTIFY_EMAIL,
           name: parsed.data.name,
           rating: parsed.data.rating,
           message: parsed.data.message,
@@ -169,7 +173,7 @@ export function FeedbackForm({ itemTitle }: FeedbackFormProps) {
                   type="button"
                   role="radio"
                   aria-checked={rating === star}
-                  aria-label={t.feedback.starAria.replace('{star}', String(star))}
+                  aria-label={`Rate ${star} of 5`}
                   onClick={() => setRating(star)}
                   className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center motion-safe:hover:scale-110 motion-safe:transition-transform"
                 >
@@ -207,7 +211,7 @@ export function FeedbackForm({ itemTitle }: FeedbackFormProps) {
           )}
         </div>
 
-        {/* Honeypot: hidden from users with off-screen CSS, never display:none */}
+        {/* Honeypot: hidden from users with off-screen CSS */}
         <div aria-hidden="true" className="absolute left-[-9999px] top-[-9999px]">
           <label htmlFor={`feedback-honeypot-${itemTitle}`}>{t.feedback.honeypotLabel}</label>
           <input
