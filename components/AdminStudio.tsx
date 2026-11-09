@@ -236,14 +236,16 @@ export function AdminStudio() {
 
   // Save email settings
   const handleSaveSettings = async () => {
-    const newSettings = { notifyEmail, web3formsKey };
-    localStorage.setItem('mzilab_settings', JSON.stringify(newSettings));
+    // Only the notification email is cached locally; the Web3Forms key lives
+    // exclusively in the server-side settings file (.local/admin-settings.json),
+    // never in browser storage.
+    localStorage.setItem('mzilab_settings', JSON.stringify({ notifyEmail }));
 
     if (bridgeConnected) {
       try {
         const res = await adminFetch('/api/settings/save', {
           method: 'POST',
-          body: JSON.stringify(newSettings),
+          body: JSON.stringify({ notifyEmail, web3formsKey }),
         });
         if (isBridgeAuthError(res)) return;
         const json = await res.json();

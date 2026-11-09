@@ -9,7 +9,7 @@
     "build": "node scripts/build.mjs",
     "smoke": "node scripts/smoke.mjs",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "node scripts/check-content.js && eslint ."
   },
   "dependencies": {
     "@next/mdx": "^16.0.0",
