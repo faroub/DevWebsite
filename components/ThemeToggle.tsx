@@ -2,41 +2,34 @@
 
 import { useState, useEffect } from 'react';
 import { Sun, Moon } from 'lucide-react';
+import {
+  applyTheme,
+  resolveInitialTheme,
+  storeTheme,
+  type Theme,
+} from '@/lib/theme';
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+  const [theme, setTheme] = useState<Theme>('dark');
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    const storedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
-    const initialTheme = storedTheme || 'dark';
+    const initialTheme = resolveInitialTheme();
     setTheme(initialTheme);
-    if (initialTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-      document.documentElement.classList.remove('light');
-    } else {
-      document.documentElement.classList.remove('dark');
-      document.documentElement.classList.add('light');
-    }
+    applyTheme(initialTheme);
   }, []);
 
   const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    const newTheme: Theme = theme === 'dark' ? 'light' : 'dark';
     setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-    if (newTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-      document.documentElement.classList.remove('light');
-    } else {
-      document.documentElement.classList.remove('dark');
-      document.documentElement.classList.add('light');
-    }
+    storeTheme(newTheme);
+    applyTheme(newTheme);
   };
 
   if (!mounted) {
     return (
-      <div className="h-8 w-8 rounded-md border border-divider bg-surface" />
+      <div className="min-h-[44px] min-w-[44px] rounded-md border border-divider bg-surface" />
     );
   }
 
@@ -44,7 +37,7 @@ export function ThemeToggle() {
     <button
       onClick={toggleTheme}
       aria-label="Toggle dark and light mode"
-      className="flex h-8 w-8 items-center justify-center rounded-md border border-divider bg-surface text-accent-primary hover:border-accent-primary hover:shadow-glow-teal transition-all shadow-sm"
+      className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md border border-divider bg-surface text-accent-primary hover:border-accent-primary hover:shadow-glow-teal transition-all shadow-sm"
       title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode (Deep Slate)'}
     >
       {theme === 'dark' ? (

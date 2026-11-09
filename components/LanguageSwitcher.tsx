@@ -8,7 +8,7 @@ export function LanguageSwitcher() {
   const { locale, setLocale } = useLanguage();
 
   return (
-    <div className="relative inline-flex items-center rounded-md border border-divider bg-canvas px-2 py-1 font-mono text-xs shadow-sm">
+    <div className="relative inline-flex min-h-[44px] items-center rounded-md border border-divider bg-canvas px-2 font-mono text-xs shadow-sm">
       <Globe className="h-3.5 w-3.5 text-accent-primary mr-1.5 shrink-0" />
       <select
         value={locale}

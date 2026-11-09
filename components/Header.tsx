@@ -80,7 +80,7 @@ export function Header() {
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle mobile menu"
-            className="md:hidden flex h-8 w-8 items-center justify-center rounded-md border border-divider bg-canvas text-text-primary hover:border-accent-primary transition-colors"
+            className="md:hidden flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md border border-divider bg-canvas text-text-primary hover:border-accent-primary transition-colors"
           >
             {isMobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
