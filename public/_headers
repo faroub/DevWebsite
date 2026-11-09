@@ -1,0 +1,12 @@
+# Security headers for Netlify and Cloudflare Pages.
+# CSP note: Next.js static exports embed inline scripts at build time
+# (the React Server Components bootstrap), so script-src needs 'unsafe-inline'.
+# The theme/locale bootstrap itself is external (public/boot.js), and no
+# user-submitted content is ever rendered as HTML.
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://api.web3forms.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Content-Type-Options: nosniff
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload

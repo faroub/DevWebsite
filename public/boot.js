@@ -24,5 +24,5 @@
     } else {
       root.dir = 'ltr';
     }
-  } catch (e) {}
+  } catch {}
 })();

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { Inter, JetBrains_Mono, Tajawal } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/Header';
@@ -121,7 +122,7 @@ export default function RootLayout({
     >
       <body className="min-h-screen bg-canvas text-text-primary flex flex-col bg-grid-dots selection:bg-accent-primary/20 selection:text-accent-primary" suppressHydrationWarning>
         <JsonLd id="site-schema-jsonld" data={siteJsonLd} />
-        <script src="/boot.js" />
+        <Script src="/boot.js" strategy="beforeInteractive" />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-accent-primary focus:px-4 focus:py-2 focus:text-white focus:font-mono focus:text-xs shadow-md"
