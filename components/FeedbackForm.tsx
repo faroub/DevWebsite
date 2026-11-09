@@ -10,7 +10,7 @@ import { WEB3FORMS_ENDPOINT } from '@/lib/config';
 const feedbackSchema = z.object({
   name: z.string().min(2).max(60),
   rating: z.number().int().min(1).max(5),
-  message: z.string().min(5).max(2000),
+  message: z.string().min(3).max(2000),
 });
 
 const RATE_LIMIT_MS = 60_000;

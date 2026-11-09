@@ -1,3 +1,5 @@
+import { CONTACT_EMAIL } from '@/lib/site';
+
 export type Locale = 'en' | 'fr' | 'ar';
 
 export interface TranslationDictionary {
@@ -260,7 +262,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       starAria: 'Rate {star} out of 5 stars',
       messageLabel: 'Feedback / Inquiry',
       messagePlaceholder: 'Share your experience, feature request, or question about {title}...',
-      messageError: 'Please enter a message between 10 and 2000 characters.',
+      messageError: 'Please enter a message between 3 and 2000 characters.',
       honeypotLabel: 'Leave this field empty',
       sendButton: 'Send Feedback',
       sendingButton: 'Transmitting...',
@@ -298,14 +300,12 @@ export const translations: Record<Locale, TranslationDictionary> = {
       localStorageBody:
         'Your interface choices (theme mode and language selection) are saved locally in your browser storage (localStorage) and never sold or uploaded to third parties.',
       feedbackTitle: '3. Feedback & Private Messages',
-      feedbackBody:
-        'App, project, and blog pages include a private feedback form. When you submit it, your name, rating, and message are transmitted via the Web3Forms service to alert the maintainer (mzilab03dz@gmail.com). Nothing is published publicly on the site.',
+      feedbackBody: `App, project, and blog pages include a private feedback form. When you submit it, your name, rating, and message are transmitted via the Web3Forms service to alert the maintainer (${CONTACT_EMAIL}). Nothing is published publicly on the site.`,
       mobileAppsTitle: '4. Mobile Applications',
       mobileAppsBody:
         'Our native mobile applications (Android & iOS) operate under a privacy-first model. Any local storage or permissions (such as offline data caching) remain strictly on your device.',
       contactTitle: '5. Contact & Questions',
-      contactBody:
-        'If you have any questions regarding privacy or data handling, reach out directly at mzilab03dz@gmail.com.',
+      contactBody: `If you have any questions regarding privacy or data handling, reach out directly at ${CONTACT_EMAIL}.`,
     },
     termsPage: {
       title: 'Terms of Service',
@@ -325,8 +325,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       ipBody:
         'The brand name mzilab, documentation, and original software design belong to Farid Oubbati / mzilab. Open-source projects remain licensed under their respective repository licenses.',
       contactTitle: '5. Contact & Support',
-      contactBody:
-        'For inquiries, feature requests, or software support, email mzilab03dz@gmail.com.',
+      contactBody: `For inquiries, feature requests, or software support, email ${CONTACT_EMAIL}.`,
     },
     footer: {
       copy: 'mzilab © 2026',
@@ -443,7 +442,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       starAria: 'Noter {star} sur 5 étoiles',
       messageLabel: 'Message / Commentaire',
       messagePlaceholder: 'Partagez votre expérience, votre demande ou votre question au sujet de {title}...',
-      messageError: 'Veuillez saisir un message entre 10 et 2000 caractères.',
+      messageError: 'Veuillez saisir un message entre 3 et 2000 caractères.',
       honeypotLabel: 'Laissez ce champ vide',
       sendButton: 'Envoyer le message',
       sendingButton: 'Transmission...',
@@ -481,14 +480,12 @@ export const translations: Record<Locale, TranslationDictionary> = {
       localStorageBody:
         'Vos préférences d\'interface (mode d\'affichage et langue) sont enregistrées localement dans votre navigateur (localStorage) et ne sont jamais vendues ni transmises à des tiers.',
       feedbackTitle: '3. Retours & Messages Privés',
-      feedbackBody:
-        'Les pages des applications, projets et articles comportent un formulaire de retour privé. Lorsque vous l\'envoyez, votre nom, votre note et votre message sont transmis via le service Web3Forms pour alerter le responsable (mzilab03dz@gmail.com). Rien n\'est publié publiquement sur le site.',
+      feedbackBody: `Les pages des applications, projets et articles comportent un formulaire de retour privé. Lorsque vous l'envoyez, votre nom, votre note et votre message sont transmis via le service Web3Forms pour alerter le responsable (${CONTACT_EMAIL}). Rien n'est publié publiquement sur le site.`,
       mobileAppsTitle: '4. Applications Mobiles',
       mobileAppsBody:
         'Nos applications mobiles (Android & iOS) fonctionnent selon un modèle axé sur la confidentialité. Toutes les données locales restent sur votre appareil.',
       contactTitle: '5. Contact & Questions',
-      contactBody:
-        'Pour toute question concernant la confidentialité, contactez-nous à mzilab03dz@gmail.com.',
+      contactBody: `Pour toute question concernant la confidentialité, contactez-nous à ${CONTACT_EMAIL}.`,
     },
     termsPage: {
       title: 'Conditions d\'Utilisation',
@@ -508,8 +505,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       ipBody:
         'La marque mzilab et la documentation originale restent la propriété de Farid Oubbati / mzilab.',
       contactTitle: '5. Contact & Support',
-      contactBody:
-        'Pour toute question ou demande de support, écrivez à mzilab03dz@gmail.com.',
+      contactBody: `Pour toute question ou demande de support, écrivez à ${CONTACT_EMAIL}.`,
     },
     footer: {
       copy: 'mzilab © 2026',
@@ -626,7 +622,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       starAria: 'تقييم {star} من 5 نجوم',
       messageLabel: 'الملاحظات / الاستفسار',
       messagePlaceholder: 'شارك تجربتك أو طلبك لميزة أو سؤالك حول {title}...',
-      messageError: 'يرجى إدخال رسالة تتكون من 10 إلى 2000 حرف.',
+      messageError: 'يرجى إدخال رسالة تتكون من 3 إلى 2000 حرف.',
       honeypotLabel: 'اترك هذا الحقل فارغًا',
       sendButton: 'إرسال الملاحظات',
       sendingButton: 'جارٍ الإرسال...',
@@ -664,14 +660,12 @@ export const translations: Record<Locale, TranslationDictionary> = {
       localStorageBody:
         'تُحفظ تفضيلات واجهة الموقع (المظهر واللغة) محلياً في متصفحك (localStorage)، ولا تُباع أو تُرفع إلى جهات خارجية.',
       feedbackTitle: '3. الملاحظات والرسائل الخاصة',
-      feedbackBody:
-        'تحتوي صفحات التطبيقات والمشاريع والمقالات على نموذج ملاحظات خاص. عند إرساله، يُنقل اسمك وتقييمك ورسالتك عبر خدمة Web3Forms لإخطار المسؤول (mzilab03dz@gmail.com)، ولا يُنشَر أي شيء علناً على الموقع.',
+      feedbackBody: `تحتوي صفحات التطبيقات والمشاريع والمقالات على نموذج ملاحظات خاص. عند إرساله، يُنقل اسمك وتقييمك ورسالتك عبر خدمة Web3Forms لإخطار المسؤول (${CONTACT_EMAIL})، ولا يُنشَر أي شيء علناً على الموقع.`,
       mobileAppsTitle: '4. تطبيقات الجوال',
       mobileAppsBody:
         'تعمل تطبيقاتنا الأصلية للهواتف (Android وiOS) وفق نهج يضع الخصوصية أولاً. وتبقى أي بيانات مخزنة محلياً أو أذونات مستخدمة، مثل التخزين المؤقت للبيانات دون اتصال، ضمن نطاق جهازك.',
       contactTitle: '5. التواصل والاستفسارات',
-      contactBody:
-        'إذا كانت لديك أسئلة حول الخصوصية أو كيفية التعامل مع البيانات، فتواصل معنا عبر mzilab03dz@gmail.com.',
+      contactBody: `إذا كانت لديك أسئلة حول الخصوصية أو كيفية التعامل مع البيانات، فتواصل معنا عبر ${CONTACT_EMAIL}.`,
     },
     termsPage: {
       title: 'شروط الخدمة',
@@ -691,8 +685,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       ipBody:
         'علامة mzilab التجارية والوثائق والتصاميم البرمجية الأصلية مملوكة لفريد أوباتي / mzilab. وتظل المشاريع مفتوحة المصدر خاضعة للتراخيص المحددة في مستودعاتها.',
       contactTitle: '5. التواصل والدعم',
-      contactBody:
-        'للاستفسارات أو طلب ميزات أو الحصول على دعم للبرمجيات، راسلنا عبر mzilab03dz@gmail.com.',
+      contactBody: `للاستفسارات أو طلب ميزات أو الحصول على دعم للبرمجيات، راسلنا عبر ${CONTACT_EMAIL}.`,
     },
     footer: {
       copy: 'mzilab © 2026',

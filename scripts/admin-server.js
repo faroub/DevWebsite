@@ -7,8 +7,9 @@ const HOST = '127.0.0.1';
 const PORT = 3001;
 const ALLOWED_ORIGINS = new Set(['http://localhost:3000', 'http://127.0.0.1:3000']);
 const ALLOWED_TYPES = ['apps', 'projects', 'blogs'];
-const FILE_NAME_REGEX = /^[A-Za-z0-9][A-Za-z0-9_-]*\.mdx?$/;
+const FILE_NAME_REGEX = /^[a-z0-9][a-z0-9-]*\.mdx?$/;
 const MAX_BODY_BYTES = 1024 * 1024; // 1 MB limit
+const ADMIN_TOKEN = process.env.ADMIN_TOKEN || Math.random().toString(36).slice(2);
 
 const ROOT_DIR = path.join(__dirname, '..');
 const CONTENT_DIR = path.resolve(process.env.ADMIN_CONTENT_DIR || path.join(ROOT_DIR, 'content'));
@@ -90,6 +91,13 @@ function createServer() {
       return;
     }
 
+    // Require admin token header
+    const token = req.headers['x-admin-token'];
+    if (token !== ADMIN_TOKEN) {
+      sendJson(res, 401, { success: false, error: 'Unauthorized' }, origin);
+      return;
+    }
+
     // CORS Options preflight
     if (req.method === 'OPTIONS') {
       res.writeHead(204, {
@@ -104,11 +112,12 @@ function createServer() {
 
     const url = new URL(req.url, `http://${HOST}:${PORT}`);
 
-    // Settings Endpoint
+    // Settings Endpoint (do NOT return web3formsKey)
     if (req.method === 'GET' && url.pathname === '/api/settings') {
       try {
         const settings = readSettings();
-        sendJson(res, 200, { success: true, settings }, origin);
+        // Only return notifyEmail; never expose stored web3formsKey
+        sendJson(res, 200, { success: true, settings: { notifyEmail: settings.notifyEmail } }, origin);
       } catch (err) {
         sendJson(res, 500, { success: false, error: err.message }, origin);
       }
@@ -257,6 +266,7 @@ if (require.main === module) {
     console.log(`\n==================================================`);
     console.log(`🚀 Local Admin File Bridge active on http://${HOST}:${PORT}`);
     console.log(`📁 Managing files in: ${CONTENT_DIR}`);
+    console.log(`🔑 Admin Token: ${ADMIN_TOKEN} (set ADMIN_TOKEN env var to persist)`);
     console.log(`==================================================\n`);
   });
 }

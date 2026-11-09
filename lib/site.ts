@@ -18,3 +18,5 @@ export const SITE = {
 
 export const NOTIFY_EMAIL = SITE.contactEmail;
 export const SITE_CONTACT_EMAIL = SITE.contactEmail;
+export const CONTACT_EMAIL = SITE.contactEmail;
+export const SITE_URL = SITE.url;

@@ -25,6 +25,7 @@ const config: Config = {
       fontFamily: {
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
         mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
+        heading: ['var(--font-sans)', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
         'glow-teal': '0 0 20px -5px rgba(6, 182, 212, 0.35)',
