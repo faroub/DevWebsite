@@ -7,9 +7,9 @@ import { useLanguage } from './LanguageContext';
 import { FEEDBACK_RECIPIENT_EMAIL, WEB3FORMS_ENDPOINT } from '@/lib/config';
 
 const feedbackSchema = z.object({
-  name: z.string().min(2).max(50),
+  name: z.string().min(2).max(60),
   rating: z.number().int().min(1).max(5),
-  message: z.string().min(10).max(1000),
+  message: z.string().min(10).max(2000),
 });
 
 interface FeedbackFormProps {
@@ -33,10 +33,10 @@ export function FeedbackForm({ itemTitle }: FeedbackFormProps) {
     const parsed = feedbackSchema.safeParse({ name: name.trim(), rating, message: message.trim() });
     if (!parsed.success) {
       const errors: { name?: string; message?: string } = {};
-      if (!name.trim() || name.trim().length < 2 || name.trim().length > 50) {
+      if (!name.trim() || name.trim().length < 2 || name.trim().length > 60) {
         errors.name = t.feedback.nameError;
       }
-      if (!message.trim() || message.trim().length < 10 || message.trim().length > 1000) {
+      if (!message.trim() || message.trim().length < 10 || message.trim().length > 2000) {
         errors.message = t.feedback.messageError;
       }
       setFieldErrors(errors);
@@ -127,7 +127,7 @@ export function FeedbackForm({ itemTitle }: FeedbackFormProps) {
               id={`feedback-name-${itemTitle}`}
               type="text"
               required
-              maxLength={50}
+              maxLength={60}
               value={name}
               onChange={(e) => setName(e.target.value)}
               aria-invalid={Boolean(fieldErrors.name)}
@@ -159,7 +159,7 @@ export function FeedbackForm({ itemTitle }: FeedbackFormProps) {
                   aria-checked={rating === star}
                   aria-label={t.feedback.starAria.replace('{star}', String(star))}
                   onClick={() => setRating(star)}
-                  className="p-1 motion-safe:hover:scale-110 motion-safe:transition-transform"
+                  className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center motion-safe:hover:scale-110 motion-safe:transition-transform"
                 >
                   <Star
                     className={`h-4 w-4 ${
@@ -180,7 +180,7 @@ export function FeedbackForm({ itemTitle }: FeedbackFormProps) {
             id={`feedback-message-${itemTitle}`}
             required
             rows={3}
-            maxLength={1000}
+            maxLength={2000}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             aria-invalid={Boolean(fieldErrors.message)}
