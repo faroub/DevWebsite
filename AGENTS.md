@@ -61,3 +61,8 @@ These guidelines are working if: fewer unnecessary changes in diffs, fewer rewri
 
 ## Local-Only Admin Studio
 The admin studio (`dev-studio/`) is a dev-only tool for local content management (`npm run studio`). It is copied into `app/admin/` during local development, and deleted by `scripts/build.mjs` before production build so `out/` contains no `/admin` route or admin code.
+
+## dangerouslySetInnerHTML Exceptions
+`dangerouslySetInnerHTML` is prohibited across the codebase with exactly two exceptions:
+1. JSON-LD structured data (safely serialized and escaped via `lib/jsonld.ts` and `components/JsonLd.tsx`).
+2. The pre-paint theme/locale script in `app/layout.tsx` (`/boot.js` or inline script before paint).
