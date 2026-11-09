@@ -16,4 +16,5 @@ export const SITE = {
   defaultLocale: 'en',
 } as const;
 
+export const NOTIFY_EMAIL = SITE.contactEmail;
 export const SITE_CONTACT_EMAIL = SITE.contactEmail;
