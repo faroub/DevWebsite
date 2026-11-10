@@ -40,7 +40,7 @@ export function AboutContent({ frontmatter, content }: AboutContentProps) {
               className="inline-flex items-center gap-2 rounded-md border border-divider bg-canvas px-3 py-2 font-mono text-xs font-bold text-text-primary hover:border-accent-primary hover:text-accent-primary transition-colors"
             >
               <Github className="h-4 w-4" />
-              <span>GitHub</span>
+              <span>{t.cards.githubTitle}</span>
               <ExternalLink className="h-3 w-3" />
             </a>
           )}

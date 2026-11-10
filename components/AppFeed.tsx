@@ -6,6 +6,7 @@ import { AppFrontmatter } from '@/lib/apps';
 import { AppCard } from './AppCard';
 import { AppListRow } from './AppListRow';
 import { useLanguage } from './LanguageContext';
+import { filterApps, getUniqueFilters } from '@/lib/filter-apps';
 
 const ALL = 'All';
 
@@ -21,44 +22,16 @@ export function AppFeed({ initialApps }: AppFeedProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>(ALL);
   const [viewMode, setViewMode] = useState<'grid' | 'rows'>('grid');
 
-  // Unique values per filter group
+  // Unique values per filter group using pure function
   const { platforms, statuses, categories } = useMemo(() => {
-    const platformSet = new Set<string>();
-    const statusSet = new Set<string>();
-    const categorySet = new Set<string>();
-    initialApps.forEach((app) => {
-      app.platforms.forEach((p) => platformSet.add(p));
-      if (app.status) statusSet.add(app.status);
-      if (app.category) categorySet.add(app.category);
-    });
-    return {
-      platforms: Array.from(platformSet).sort(),
-      statuses: Array.from(statusSet).sort(),
-      categories: Array.from(categorySet).sort(),
-    };
+    return getUniqueFilters(initialApps);
   }, [initialApps]);
 
   const activeFilters = selectedPlatform !== ALL || selectedStatus !== ALL || selectedCategory !== ALL;
 
-  // Filter apps by search query and the three filter groups
+  // Filter apps using pure function
   const filteredApps = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
-    return initialApps.filter((app) => {
-      const matchesSearch =
-        query === '' ||
-        app.title.toLowerCase().includes(query) ||
-        app.tagline.toLowerCase().includes(query) ||
-        app.description.toLowerCase().includes(query) ||
-        app.category.toLowerCase().includes(query) ||
-        app.languages.some((l) => l.toLowerCase().includes(query)) ||
-        app.platforms.some((p) => p.toLowerCase().includes(query));
-
-      const matchesPlatform = selectedPlatform === ALL || app.platforms.includes(selectedPlatform);
-      const matchesStatus = selectedStatus === ALL || app.status === selectedStatus;
-      const matchesCategory = selectedCategory === ALL || app.category === selectedCategory;
-
-      return matchesSearch && matchesPlatform && matchesStatus && matchesCategory;
-    });
+    return filterApps(initialApps, searchQuery, selectedPlatform, selectedStatus, selectedCategory);
   }, [initialApps, searchQuery, selectedPlatform, selectedStatus, selectedCategory]);
 
   const resetFilters = () => {
@@ -82,7 +55,7 @@ export function AppFeed({ initialApps }: AppFeedProps) {
   );
 
   return (
-    <section className="w-full space-y-6">
+    <section className="w-full space-y-6" aria-label={t.apps.title}>
       {/* Control Bar: Terminal Search, Filters, and View Switcher */}
       <div className="rounded-lg border border-divider bg-surface p-4 space-y-4 shadow-sm transition-colors">
         <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
@@ -97,6 +70,7 @@ export function AppFeed({ initialApps }: AppFeedProps) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t.apps.searchPlaceholder}
+              aria-label={t.apps.searchPlaceholder}
               className="w-full rounded-md border border-divider bg-canvas py-2 pl-20 pr-8 font-mono text-xs text-text-primary placeholder-text-secondary focus:border-accent-primary focus:outline-none transition-colors"
             />
             {searchQuery && (

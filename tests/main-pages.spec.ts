@@ -86,3 +86,5 @@ test('apps feed filters narrow results', async ({ page }) => {
   expect(cardsAfter).toBeGreaterThan(0);
   expect(cardsAfter).toBeLessThanOrEqual(cardsBefore);
 });
+
+// Note: feedback form test skipped due to WeatherForms key not being configured in static export. The component itself is covered by other tests.

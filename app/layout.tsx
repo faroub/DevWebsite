@@ -63,6 +63,10 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   manifest: '/manifest.json',
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
   openGraph: {
     title: 'mzilab — Mobile Software & Hardware Engineering Platform',
     description:
