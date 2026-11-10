@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Smartphone, ExternalLink } from 'lucide-react';
+import { Smartphone, ExternalLink, ArrowRight } from 'lucide-react';
 import { AppFrontmatter } from '@/lib/apps';
 import { useLanguage } from './LanguageContext';
 
@@ -96,7 +96,8 @@ export function AppCard({ app }: AppCardProps) {
             href={`/apps/${app.slug}`}
             className="inline-flex items-center gap-1 font-mono text-[11px] font-bold text-accent-primary hover:underline"
           >
-            {t.cards.details} &rarr;
+            <span>{t.cards.details}</span>
+            <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180" />
           </Link>
         </div>
       </div>

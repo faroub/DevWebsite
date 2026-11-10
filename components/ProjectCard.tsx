@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { FolderGit2, ExternalLink } from 'lucide-react';
+import { FolderGit2, ExternalLink, ArrowRight } from 'lucide-react';
 import { ProjectFrontmatter } from '@/lib/projects';
 import { useLanguage } from './LanguageContext';
 
@@ -69,7 +69,8 @@ export function ProjectCard({ project }: ProjectCardProps) {
             href={`/projects/${project.slug}`}
             className="inline-flex items-center gap-1 font-mono text-[11px] font-bold text-accent-primary hover:underline"
           >
-            {t.cards.details} &rarr;
+            <span>{t.cards.details}</span>
+            <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180" />
           </Link>
         </div>
       </div>
