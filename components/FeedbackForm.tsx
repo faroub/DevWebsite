@@ -5,7 +5,7 @@ import { Send, Star, MessageSquare, AlertCircle, CheckCircle2 } from 'lucide-rea
 import { z } from 'zod';
 import { useLanguage } from './LanguageContext';
 import { NOTIFY_EMAIL } from '@/lib/site';
-import { WEB3FORMS_ENDPOINT } from '@/lib/config';
+import { WEB3FORMS_ENDPOINT, DEFAULT_WEB3FORMS_KEY } from '@/lib/config';
 
 /**
  * Client validation. Fields posted to the form service:
@@ -40,7 +40,7 @@ interface FeedbackFormProps {
 
 export function FeedbackForm({ itemTitle }: FeedbackFormProps) {
   const { t } = useLanguage();
-  const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
+  const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_KEY || DEFAULT_WEB3FORMS_KEY;
 
   const [name, setName] = useState('');
   const [rating, setRating] = useState<number | null>(null);
