@@ -7,8 +7,6 @@
   },
   "scripts": {
     "dev": "next dev",
-    "admin": "node scripts/admin-server.js",
-    "studio": "node scripts/copy-studio.js && concurrently -k -n bridge,dev -c teal,gray \"node scripts/admin-server.js\" \"next dev\"",
     "build": "node scripts/build.mjs",
     "prebuild": "node scripts/check-content.js",
     "smoke": "node scripts/smoke.mjs",

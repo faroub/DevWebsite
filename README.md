@@ -27,20 +27,11 @@ The site is fully static — no database, no server, no visitor authentication.
   `lib/content.ts` (with a Zod schema per collection) as their single source.
 - The build reads these files at compile time and generates static pages.
 - No database. No Supabase. No visitor authentication.
-- There is no admin panel in the deployed site. Content is edited by a local dev-only
-  Content Studio: `npm run studio` starts `next dev` plus `scripts/admin-server.js` (via
-  `concurrently`, so it works on Windows too), a 127.0.0.1-only file bridge. It is
-  hardened against cross-origin requests (only the Next.js dev origins are allowed),
-  DNS rebinding (the `Host` header must be `localhost:3001`/`127.0.0.1:3001`), and
-  requires a per-startup random token (printed once in the console, stored in
-  `sessionStorage`, sent as `X-Admin-Token` or `Authorization: Bearer <token>`).
-  `scripts/build.mjs` stashes `app/admin` out of the production build, so no admin
-  route or studio code ever lands in `out/`.
-- Studio settings (notification email, Web3Forms key) live in the git-ignored
-  `.local/admin-settings.json`, which the bridge creates with empty defaults on first
-  run; the key is never copied into localStorage by the studio. The public feedback
-  key also lives in the client bundle via `NEXT_PUBLIC_WEB3FORMS_KEY` (see
-  `.env.example`) — it is a domain-allowlisted public identifier, not a secret.
+- There is no admin panel in the deployed site; content is edited as Markdown/MDX files
+  and pushed to Git.
+- Settings live in environment variables (see `.env.example`). The public feedback
+  key also lives in the client bundle via `NEXT_PUBLIC_WEB3FORMS_KEY` — it is a
+  domain-allowlisted public identifier, not a secret.
 - The feedback form on detail pages posts to Web3Forms (validated with Zod on the
   client, plus a honeypot and a 60-second client-side rate limit); the submission is
   emailed to the maintainer and is never published or stored on the site.
@@ -99,8 +90,6 @@ Setup and common commands:
 - Copy `.env.example` to `.env.local` and set `NEXT_PUBLIC_WEB3FORMS_KEY` (get a free
   key at web3forms.com). Without it the feedback form renders disabled.
 - `npm run dev` — Next.js dev server (content editing by hand).
-- `npm run studio` — dev server + the local admin bridge (cross-platform). The bridge
-  prints a one-time token; paste it into the studio header at http://localhost:3000/admin.
 - `npm run lint` / `npx tsc --noEmit` — content check + ESLint / type check.
 - `npm run build` — static export into `out/` (runs the content check first).
 - `npm run smoke` — post-build checks: every route exists, no admin route or bridge
