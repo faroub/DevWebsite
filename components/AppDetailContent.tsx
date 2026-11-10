@@ -128,15 +128,15 @@ export function AppDetailContent({ frontmatter, children, changelogEntries }: Ap
         </div>
       </div>
 
-      {/* Screenshots gallery — only rendered when screenshots exist */}
+      {/* Screenshots gallery */}
       {screenshots.length > 0 && (
         <ScreenshotGallery screenshots={screenshots} title={frontmatter.title} />
       )}
 
-      {/* Release changelog — only rendered when the app has changelog entries */}
+      {/* Release changelog */}
       <ChangelogSection entries={changelogEntries} />
 
-      {/* Private feedback form */}
+      {/* Feedback Form */}
       <FeedbackForm itemTitle={frontmatter.title} />
     </article>
   );

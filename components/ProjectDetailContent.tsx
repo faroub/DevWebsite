@@ -83,7 +83,7 @@ export function ProjectDetailContent({ frontmatter, children }: ProjectDetailCon
         </div>
       </div>
 
-      {/* Private feedback form */}
+      {/* Feedback Form */}
       <FeedbackForm itemTitle={frontmatter.title} />
     </article>
   );

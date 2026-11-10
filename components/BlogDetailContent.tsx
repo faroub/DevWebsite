@@ -62,7 +62,7 @@ export function BlogDetailContent({ frontmatter, children }: BlogDetailContentPr
         <div className="max-w-none space-y-4">{children}</div>
       </div>
 
-      {/* Private feedback form */}
+      {/* Feedback Form */}
       <FeedbackForm itemTitle={frontmatter.title} />
     </article>
   );
