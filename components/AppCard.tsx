@@ -10,7 +10,11 @@ interface AppCardProps {
 }
 
 export function AppCard({ app }: AppCardProps) {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
+
+  const title = (locale === 'ar' && app.title_ar) || (locale === 'fr' && app.title_fr) || app.title;
+  const tagline = (locale === 'ar' && app.tagline_ar) || (locale === 'fr' && app.tagline_fr) || app.tagline || app.description;
+
   return (
     <div className="group relative flex flex-col justify-between rounded-lg border border-divider bg-surface p-5 hover:border-accent-primary hover:shadow-glow-teal transition-all duration-200 shadow-sm">
       {/* Top Header */}
@@ -25,7 +29,7 @@ export function AppCard({ app }: AppCardProps) {
                 href={`/apps/${app.slug}`}
                 className="font-sans text-base font-bold text-text-primary group-hover:text-accent-primary transition-colors"
               >
-                {app.title}
+                {title}
               </Link>
               <div className="flex items-center gap-2 mt-0.5">
                 <span className="font-mono text-[11px] text-accent-primary bg-accent-primary/10 border border-accent-primary/30 px-1.5 py-0.5 rounded font-semibold">
@@ -54,7 +58,7 @@ export function AppCard({ app }: AppCardProps) {
 
         {/* Tagline / Description */}
         <p className="text-xs text-text-secondary line-clamp-2 mb-4 leading-relaxed font-sans">
-          {app.tagline || app.description}
+          {tagline}
         </p>
 
         {/* Platform & Language Tag Pills */}

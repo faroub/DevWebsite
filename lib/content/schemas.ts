@@ -2,25 +2,20 @@ import { z } from 'zod';
 
 /**
  * Allowed `status` values in the App and Project frontmatter.
- *
- * It is used by both `appSchema` and `projectSchema` (and by the build so a
- * content file with an unknown status fails loudly rather than rendering in
- * an installed theme.) Keep this list in sync with the values the UI and
- * the landing pages display, and update it when a new status is shipped.
  */
 export const APP_STATUSES = ['Active', 'Beta', 'Archived', 'Deprecated'] as const;
 
-/**
- * The frontmatter of a single entry in `content/changelogs/<app>/*.mdx`.
- * The `slug` must match the filename (the repo-wide slug rule), and the
- * `date` fields are sorted by the changelog loader.
- */
-
 export const appSchema = z.object({
   title: z.string(),
+  title_fr: z.string().optional(),
+  title_ar: z.string().optional(),
   slug: z.string(),
   tagline: z.string(),
+  tagline_fr: z.string().optional(),
+  tagline_ar: z.string().optional(),
   description: z.string(),
+  description_fr: z.string().optional(),
+  description_ar: z.string().optional(),
   version: z.string(),
   status: z.enum(APP_STATUSES),
   featured: z.boolean().optional(),
@@ -36,10 +31,6 @@ export const appSchema = z.object({
       web: z.string().optional(),
     })
     .optional(),
-  /**
-   * Root-relative screenshot paths (e.g. `/screenshots/<app>/features-1.png`)
-   * that must exist under `public/screenshots/`. Used by ScreenshotGallery.
-   */
   screenshots: z.array(z.string()).optional(),
 });
 
@@ -47,9 +38,15 @@ export type AppFrontmatter = z.infer<typeof appSchema>;
 
 export const projectSchema = z.object({
   title: z.string(),
+  title_fr: z.string().optional(),
+  title_ar: z.string().optional(),
   slug: z.string(),
   tagline: z.string(),
+  tagline_fr: z.string().optional(),
+  tagline_ar: z.string().optional(),
   description: z.string(),
+  description_fr: z.string().optional(),
+  description_ar: z.string().optional(),
   status: z.enum(APP_STATUSES),
   featured: z.boolean().optional(),
   category: z.string(),
@@ -63,8 +60,12 @@ export type ProjectFrontmatter = z.infer<typeof projectSchema>;
 
 export const blogSchema = z.object({
   title: z.string(),
+  title_fr: z.string().optional(),
+  title_ar: z.string().optional(),
   slug: z.string(),
   excerpt: z.string(),
+  excerpt_fr: z.string().optional(),
+  excerpt_ar: z.string().optional(),
   publishedAt: z.string().date(),
   readTime: z.string(),
   author: z.string(),
@@ -84,7 +85,6 @@ export const changelogSchema = z.object({
 export type ChangelogFrontmatter = z.infer<typeof changelogSchema>;
 
 export interface ChangelogEntry {
-  /** Canonical slug derived from the filename. */
   slug: string;
   frontmatter: ChangelogFrontmatter;
   content: string;

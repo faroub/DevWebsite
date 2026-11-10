@@ -10,7 +10,11 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
+
+  const title = (locale === 'ar' && project.title_ar) || (locale === 'fr' && project.title_fr) || project.title;
+  const tagline = (locale === 'ar' && project.tagline_ar) || (locale === 'fr' && project.tagline_fr) || project.tagline || project.description;
+
   return (
     <div className="group relative flex flex-col justify-between rounded-lg border border-divider bg-surface p-5 hover:border-accent-primary hover:shadow-git-glow transition-all duration-200 shadow-sm">
       <div>
@@ -24,7 +28,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
                 href={`/projects/${project.slug}`}
                 className="font-sans text-base font-bold text-text-primary group-hover:text-accent-primary transition-colors"
               >
-                {project.title}
+                {title}
               </Link>
               <p className="font-mono text-[11px] text-text-secondary mt-0.5">{project.category}</p>
             </div>
@@ -37,7 +41,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
         </div>
 
         <p className="text-xs text-text-secondary line-clamp-2 mb-4 leading-relaxed font-sans">
-          {project.tagline || project.description}
+          {tagline}
         </p>
 
         <div className="flex flex-wrap gap-1.5 mb-5">
