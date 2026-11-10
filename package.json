@@ -14,6 +14,7 @@
     "lint": "node scripts/check-content.js && eslint .",
     "test:e2e": "node scripts/check-content.js && npm run build && playwright test",
     "test:unit": "vitest run",
+    "check-tracked": "node scripts/check-tracked.mjs",
     "preview": "node scripts/serve-static.mjs"
   },
   "dependencies": {

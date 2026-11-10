@@ -121,6 +121,8 @@ schemas in `lib/content/schemas.ts`):
   fail the build with an error naming the file.
 - `status` is displayed on listings: Active (green dot), Beta, Archived, etc.
 - `featured` marks entries shown on the homepage.
+- The internal builder (lib/content/load.ts) validates every frontmatter file with
+  Zod, so a content file with a bad status or date never reaches the build.
 
 ## Environment variables
 
@@ -128,22 +130,31 @@ All are public (no secrets): they come from `env` on the host, documented in
 `.env.example`:
 
 - `NEXT_PUBLIC_WEB3FORMS_KEY` — the form service key; used by the feedback forms
-  (`components/FeedbackForm.tsx`) and checked on `process.env`.
+  (`components/FeedbackForm.tsx`) and checked on `process.env`. The deployment
+  value is public; a placeholder is used in CI just so the form's client-side
+  validation tests can render the section.
 - `NEXT_PUBLIC_NOTIFY_EMAIL` — the site contact address; read by `lib/site.ts` as
   `contactEmail` and printed on `/privacy` and `/terms` pages (safe fallback if unset).
 
 Publishing:
-- `npm run build`, then deploy `out/` to Vercel, Netlify, or Cloudflare Pages.
-- Security headers (CSP, HSTS, frame-ancestors, referrer policy) are configured in
-  `vercel.json` (Vercel) and `public/_headers` (Netlify/Cloudflare Pages). The CSP
-  allows `'unsafe-inline'` for scripts because Next.js embeds inline RSC bootstrap
-  scripts at build time; no inline script handles user input.
+- `npm run build`, then deploy `out/` to Vercel. The project has a `vercel.json`
+  config that sets the `out/` directory as the static export root and configures
+  the security headers (CSP, HSTS, frame-ancestors, referrer policy). Cloudflare
+  Pages and Netlify can serve `out/` with `public/_headers` instead.
+- The static URL is https://mzilab.de (set in `metadataBase` of
+  `app/layout.tsx`).
+- The build runs `scripts/check-content.js` automatically (via the `prebuild`
+  script in `package.json`), so the feedback form only ships when every content
+  file is valid.
+- Development: `npm run dev` serves `http://127.0.0.1:3000`;
+  `npm run preview` serves `out/` at `http://127.0.0.1:4321`.
 
 ## Legal text
 The privacy and terms pages (`lib/i18n/translations.ts`) describe the real data flows
-(localStorage for theme/locale, Web3Forms as the form processor, no analytics). They
-were written by the developer, not a lawyer — have the text reviewed before relying on
-it. Keep the `lastUpdated` value current when the data flow changes.
+(theme and locale are stored in the browser, feedback data goes through Web3Forms to
+the maintainer, no analytics). They were written by the developer, not a lawyer — have
+the text reviewed before relying on it. Keep the `lastUpdated` value current when the
+data flow changes.
 
 ## UX
 - Mobile-first responsive layout.
@@ -165,7 +176,13 @@ Run before considering any task complete:
 - `npx tsc --noEmit`
 - `npm run build` (verifies static export works)
 - `npm run smoke` (post-build export checks)
+- `npm run check-tracked` (fails if any tracked file path starts with `node_modules/`
+  or `.next/`, i.e. no build metadata should be committed)
 - `npm run test:e2e` (Playwright: main pages, markdown rendering, locale switch, theme toggle, mobile menu, feed filters)
+
+CI runs on every push and pull request to `main` (`.github/workflows/ci.yml`):
+`npm ci`, `npm run lint`, `npx tsc --noEmit`, `npm run build`, `npm run smoke` on
+Node 20.9.x. The Playwright E2E suite runs in the change-approval pass (`npm test:e2e`).
 
 ## Task Workflow
 1. Inspect existing files before writing code.

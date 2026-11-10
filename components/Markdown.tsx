@@ -17,7 +17,12 @@ export function Markdown({ children }: MarkdownProps) {
       remarkPlugins={[remarkGfm]}
       components={{
         h1: ({ children: c }: ComponentProps<'h1'>) => (
-          <h1 className="mt-6 mb-3 text-2xl font-extrabold text-text-primary font-sans">{c}</h1>
+          // Content is nested inside a detail page whose own h1 is the entry
+          // title, so the body's h1 renders as h2 to keep one top-level
+          // heading per page.
+          <h2 className="mt-6 mb-3 text-2xl font-extrabold text-text-primary font-sans">
+            {c}
+          </h2>
         ),
         h2: ({ children: c }: ComponentProps<'h2'>) => (
           <h2 className="mt-6 mb-3 text-xl font-bold text-text-primary font-sans border-b border-divider pb-2">{c}</h2>
