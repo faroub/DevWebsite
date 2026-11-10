@@ -29,7 +29,7 @@ export function ChangelogSection({ entries }: ChangelogSectionProps) {
             <button
               type="button"
               onClick={() => setOpen(open === entry.slug ? null : entry.slug)}
-              className="flex w-full items-center justify-between gap-3 px-4 py-3 font-sans text-left text-text-primary transition-colors hover:bg-canvas rounded-lg focus:outline-none focus-visible:rounded-lg"
+              className="flex w-full items-center justify-between gap-3 px-4 py-3 font-sans text-left text-text-primary transition-colors hover:bg-canvas rounded-lg focus-visible:rounded-lg"
               aria-expanded={open === entry.slug}
             >
               <div className="space-y-1">

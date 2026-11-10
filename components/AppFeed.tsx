@@ -71,7 +71,7 @@ export function AppFeed({ initialApps }: AppFeedProps) {
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t.apps.searchPlaceholder}
               aria-label={t.apps.searchPlaceholder}
-              className="w-full rounded-md border border-divider bg-canvas py-2 pl-20 pr-8 font-mono text-xs text-text-primary placeholder-text-secondary focus:border-accent-primary focus:outline-none transition-colors"
+              className="w-full rounded-md border border-divider bg-canvas py-2 pl-20 pr-8 font-mono text-xs text-text-primary placeholder-text-secondary focus:border-accent-primary transition-colors"
             />
             {searchQuery && (
               <button

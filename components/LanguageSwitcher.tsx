@@ -13,7 +13,7 @@ export function LanguageSwitcher() {
       <select
         value={locale}
         onChange={(e) => setLocale(e.target.value as Locale)}
-        className="bg-transparent text-text-primary focus:outline-none cursor-pointer font-bold text-xs"
+        className="bg-transparent text-text-primary cursor-pointer font-bold text-xs"
         aria-label="Select website language"
       >
         <option value="en" className="bg-surface text-text-primary">EN - English</option>

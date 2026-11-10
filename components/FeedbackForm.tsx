@@ -7,14 +7,32 @@ import { useLanguage } from './LanguageContext';
 import { NOTIFY_EMAIL } from '@/lib/site';
 import { WEB3FORMS_ENDPOINT } from '@/lib/config';
 
+/**
+ * Client validation. Fields posted to the form service:
+ * name, rating (if given), message. The service adds a timestamp.
+ */
 const feedbackSchema = z.object({
-  name: z.string().min(2).max(60),
-  rating: z.number().int().min(1).max(5),
-  message: z.string().min(3).max(2000),
+  name: z.string().min(1).max(80),
+  rating: z.number().int().min(1).max(5).optional(),
+  message: z.string().min(10).max(2000),
 });
 
+/**
+ * Rate limit is kept in memory for the current session only.
+ * Nothing is persisted in localStorage, so nothing looks like
+ * shared or public feedback.
+ */
 const RATE_LIMIT_MS = 60_000;
-const RATE_LIMIT_KEY = 'mzilab_feedback_last_sent';
+let lastSent = 0;
+
+/** Field labels that identify an input to a screen reader. */
+const inputId = (itemTitle: string, field: 'name' | 'message' | 'rating' | 'honeypot') =>
+  `feedback-${field}-${itemTitle}`;
+/** Status messages for the screen-reader only region. */
+const statusId = (itemTitle: string) => `feedback-status-${itemTitle}`;
+/** Error text ids, keyed by the source input. */
+const messageTextId = (itemTitle: string, field: 'name' | 'message') =>
+  `feedback-${field}-message-${itemTitle}`;
 
 interface FeedbackFormProps {
   itemTitle: string;
@@ -25,24 +43,28 @@ export function FeedbackForm({ itemTitle }: FeedbackFormProps) {
   const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
 
   const [name, setName] = useState('');
-  const [rating, setRating] = useState<number>(5);
+  const [rating, setRating] = useState<number | null>(null);
   const [message, setMessage] = useState('');
   const [honeypot, setHoneypot] = useState('');
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const [fieldErrors, setFieldErrors] = useState<{ name?: string; message?: string }>({});
 
+  const handleRating = (star: number) => {
+    setRating((current) => (current === star ? null : star));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const parsed = feedbackSchema.safeParse({ name: name.trim(), rating, message: message.trim() });
+    const parsed = feedbackSchema.safeParse({
+      name: name.trim(),
+      rating,
+      message: message.trim(),
+    });
     if (!parsed.success) {
       const errors: { name?: string; message?: string } = {};
-      if (!name.trim() || name.trim().length < 2 || name.trim().length > 60) {
-        errors.name = t.feedback.nameError;
-      }
-      if (!message.trim() || message.trim().length < 5 || message.trim().length > 2000) {
-        errors.message = t.feedback.messageError;
-      }
+      if (!name.trim() || name.trim().length < 1 || name.trim().length > 80) errors.name = t.feedback.nameError;
+      if (!message.trim() || message.trim().length < 10 || message.trim().length > 2000) errors.message = t.feedback.messageError;
       setFieldErrors(errors);
       return;
     }
@@ -59,14 +81,14 @@ export function FeedbackForm({ itemTitle }: FeedbackFormProps) {
       return;
     }
 
+    if (Date.now() - lastSent < RATE_LIMIT_MS) {
+      setStatus('error');
+      return;
+    }
+
     setStatus('sending');
     try {
-      const lastSent = Number(window.localStorage.getItem(RATE_LIMIT_KEY) || 0);
-      if (Date.now() - lastSent < RATE_LIMIT_MS) {
-        setStatus('error');
-        setFieldErrors({});
-        return;
-      }
+      lastSent = Date.now();
       const res = await fetch(WEB3FORMS_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -82,11 +104,10 @@ export function FeedbackForm({ itemTitle }: FeedbackFormProps) {
       });
       const json = await res.json();
       if (res.ok && json.success) {
-        window.localStorage.setItem(RATE_LIMIT_KEY, String(Date.now()));
         setStatus('success');
         setName('');
         setMessage('');
-        setRating(5);
+        setRating(null);
       } else {
         setStatus('error');
       }
@@ -136,50 +157,52 @@ export function FeedbackForm({ itemTitle }: FeedbackFormProps) {
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor={`feedback-name-${itemTitle}`} className="block text-text-primary mb-1 font-medium">
+            <label htmlFor={inputId(itemTitle, 'name')} className="block text-text-primary mb-1 font-medium">
               {t.feedback.nameLabel} <span className="text-accent-primary">*</span>
             </label>
             <input
-              id={`feedback-name-${itemTitle}`}
+              id={inputId(itemTitle, 'name')}
               type="text"
               required
-              maxLength={60}
+              maxLength={80}
               value={name}
               onChange={(e) => setName(e.target.value)}
               aria-invalid={Boolean(fieldErrors.name)}
-              aria-describedby={fieldErrors.name ? `feedback-name-error-${itemTitle}` : undefined}
+              aria-describedby={
+                fieldErrors.name ? messageTextId(itemTitle, 'name') : undefined
+              }
               placeholder={t.feedback.namePlaceholder}
-              className="w-full rounded border border-divider bg-surface px-3 py-2 text-text-primary focus:border-accent-primary focus:outline-none"
+              className="w-full rounded border border-divider bg-surface px-3 py-2 text-text-primary focus:border-accent-primary transition-colors"
             />
             {fieldErrors.name && (
-              <p id={`feedback-name-error-${itemTitle}`} className="mt-1 text-accent-error">
+              <p id={messageTextId(itemTitle, 'name')} className="mt-1 text-accent-error">
                 {fieldErrors.name}
               </p>
             )}
           </div>
 
           <div>
-            <span className="block text-text-primary mb-1 font-medium" id={`feedback-rating-label-${itemTitle}`}>
+            <span className="block text-text-primary mb-1 font-medium" id={`${inputId(itemTitle, 'rating')}-label`}>
               {t.feedback.ratingLabel}
             </span>
             <div
-              role="radiogroup"
-              aria-labelledby={`feedback-rating-label-${itemTitle}`}
+              role="group"
+              aria-labelledby={`${inputId(itemTitle, 'rating')}-label`}
               className="flex items-center gap-1 py-1.5"
             >
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
                   type="button"
-                  role="radio"
-                  aria-checked={rating === star}
-                  aria-label={`Rate ${star} of 5`}
-                  onClick={() => setRating(star)}
+                  role="button"
+                  aria-label={t.feedback.starAria.replace('{star}', String(star))}
+                  aria-pressed={rating === star}
+                  onClick={() => handleRating(star)}
                   className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center motion-safe:hover:scale-110 motion-safe:transition-transform"
                 >
                   <Star
                     className={`h-4 w-4 ${
-                      star <= rating ? 'text-amber-400 fill-amber-400' : 'text-text-secondary'
+                      star <= (rating ?? 0) ? 'text-amber-400 fill-amber-400' : 'text-text-secondary'
                     }`}
                   />
                 </button>
@@ -189,23 +212,25 @@ export function FeedbackForm({ itemTitle }: FeedbackFormProps) {
         </div>
 
         <div>
-          <label htmlFor={`feedback-message-${itemTitle}`} className="block text-text-primary mb-1 font-medium">
+          <label htmlFor={inputId(itemTitle, 'message')} className="block text-text-primary mb-1 font-medium">
             {t.feedback.messageLabel} <span className="text-accent-primary">*</span>
           </label>
           <textarea
-            id={`feedback-message-${itemTitle}`}
+            id={inputId(itemTitle, 'message')}
             required
             rows={3}
             maxLength={2000}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             aria-invalid={Boolean(fieldErrors.message)}
-            aria-describedby={fieldErrors.message ? `feedback-message-error-${itemTitle}` : undefined}
+            aria-describedby={
+              fieldErrors.message ? messageTextId(itemTitle, 'message') : undefined
+            }
             placeholder={t.feedback.messagePlaceholder.replace('{title}', itemTitle)}
-            className="w-full rounded border border-divider bg-surface p-3 text-text-primary focus:border-accent-primary focus:outline-none resize-none font-sans text-xs"
+            className="w-full rounded border border-divider bg-surface p-3 text-text-primary focus:border-accent-primary transition-colors resize-none font-sans text-xs"
           />
           {fieldErrors.message && (
-            <p id={`feedback-message-error-${itemTitle}`} className="mt-1 text-accent-error">
+            <p id={messageTextId(itemTitle, 'message')} className="mt-1 text-accent-error">
               {fieldErrors.message}
             </p>
           )}
@@ -213,9 +238,9 @@ export function FeedbackForm({ itemTitle }: FeedbackFormProps) {
 
         {/* Honeypot: hidden from users with off-screen CSS */}
         <div aria-hidden="true" className="absolute left-[-9999px] top-[-9999px]">
-          <label htmlFor={`feedback-honeypot-${itemTitle}`}>{t.feedback.honeypotLabel}</label>
+          <label htmlFor={inputId(itemTitle, 'honeypot')}>{t.feedback.honeypotLabel}</label>
           <input
-            id={`feedback-honeypot-${itemTitle}`}
+            id={inputId(itemTitle, 'honeypot')}
             type="text"
             tabIndex={-1}
             autoComplete="off"
@@ -236,7 +261,7 @@ export function FeedbackForm({ itemTitle }: FeedbackFormProps) {
         </div>
       </form>
 
-      <div aria-live="polite" className="min-h-[1.25rem]">
+      <div id={statusId(itemTitle)} role="status" aria-live="polite" className="min-h-[1.25rem]">
         {status === 'success' && (
           <p className="flex items-center gap-2 font-mono text-xs text-accent-success">
             <CheckCircle2 className="h-4 w-4" />

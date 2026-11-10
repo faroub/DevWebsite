@@ -310,9 +310,9 @@ export const translations: Record<Locale, TranslationDictionary> = {
         'We do not run tracking cookies, third-party analytics scripts, or backend user logging. Pages are compiled statically and served directly via CDN, and the fonts are served from this site itself.',
       localStorageTitle: '2. Local Storage on Your Device',
       localStorageBody:
-        'Your interface choices (theme mode and language selection) are saved locally in your browser storage (localStorage) and never sold or uploaded to third parties.',
+        'Your interface choices (theme mode and language selection) are saved locally in your browser storage (localStorage) and are not sold or uploaded to third parties.',
       feedbackTitle: '3. Feedback & Private Messages',
-      feedbackBody: `App, project, and blog pages include a private feedback form. When you submit it, your name, rating, and message are transmitted via the Web3Forms service to alert the maintainer (${CONTACT_EMAIL}). Nothing is published publicly on the site.`,
+      feedbackBody: `App, project, and blog pages include a private feedback form. When you submit it, your name, rating (if given), message and a timestamp created by the form service are transmitted via Web3Forms to the maintainer (${CONTACT_EMAIL}). These messages are delivered as private emails and are never published on the site.`,
       mobileAppsTitle: '4. Mobile Applications',
       mobileAppsBody:
         'Our native mobile applications (Android & iOS) operate under a privacy-first model. Any local storage or permissions (such as offline data caching) remain strictly on your device.',
@@ -498,7 +498,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       localStorageBody:
         'Vos préférences d\'interface (mode d\'affichage et langue) sont enregistrées localement dans votre navigateur (localStorage) et ne sont jamais vendues ni transmises à des tiers.',
       feedbackTitle: '3. Retours & Messages Privés',
-      feedbackBody: `Les pages des applications, projets et articles comportent un formulaire de retour privé. Lorsque vous l'envoyez, votre nom, votre note et votre message sont transmis via le service Web3Forms pour alerter le responsable (${CONTACT_EMAIL}). Rien n'est publié publiquement sur le site.`,
+      feedbackBody: `Les pages des applications, projets et articles comportent un formulaire de retour privé. Quand vous l'envoyez, votre nom, votre note (si donnée), votre message et une date créée par le service de formulaire sont transmis via Web3Forms au responsable (${CONTACT_EMAIL}). Ces messages sont envoyés en privé et ne sont jamais publiés sur le site.`,
       mobileAppsTitle: '4. Applications Mobiles',
       mobileAppsBody:
         'Nos applications mobiles (Android & iOS) fonctionnent selon un modèle axé sur la confidentialité. Toutes les données locales restent sur votre appareil.',
@@ -682,9 +682,9 @@ export const translations: Record<Locale, TranslationDictionary> = {
         'لا نستخدم ملفات تعريف ارتباط للتتبع أو نصوص تحليلات تابعة لجهات خارجية، ولا نسجل بيانات المستخدمين على خادم. تُنشأ الصفحات مسبقاً وتُقدّم مباشرة عبر شبكة توصيل المحتوى (CDN)، وتُقدَّم الخطوط من هذا الموقع نفسه.',
       localStorageTitle: '2. التخزين المحلي على جهازك',
       localStorageBody:
-        'تُحفظ تفضيلات واجهة الموقع (المظهر واللغة) محلياً في متصفحك (localStorage)، ولا تُباع أو تُرفع إلى جهات خارجية.',
+        'تُحفظ تفضيلات واجهة الموقع الوحيدة (المظهر واللغة) محلياً في متصفحك (localStorage)، ولا تُباع أو تُرفع إلى جهات خارجية.',
       feedbackTitle: '3. الملاحظات والرسائل الخاصة',
-      feedbackBody: `تحتوي صفحات التطبيقات والمشاريع والمقالات على نموذج ملاحظات خاص. عند إرساله، يُنقل اسمك وتقييمك ورسالتك عبر خدمة Web3Forms لإخطار المسؤول (${CONTACT_EMAIL})، ولا يُنشَر أي شيء علناً على الموقع.`,
+      feedbackBody: `تحتوي صفحات التطبيقات والمشاريع والمقالات على نموذج ملاحظات خاص. عند إرساله، يُنقل اسمك وتقييمك (إن وجد) ورسالتك وتاريخ الإنشاء الناتج عن خدمة النموذج عبر Web3Forms إلى المسؤول (${CONTACT_EMAIL})، وهذه الرسائل تُرسل كرسائل بريد إلكتروني خاصة ولا يُنشَر منها أي شيء على الموقع.`,
       mobileAppsTitle: '4. تطبيقات الجوال',
       mobileAppsBody:
         'تعمل تطبيقاتنا الأصلية للهواتف (Android وiOS) وفق نهج يضع الخصوصية أولاً. وتبقى أي بيانات مخزنة محلياً أو أذونات مستخدمة، مثل التخزين المؤقت للبيانات دون اتصال، ضمن نطاق جهازك.',
