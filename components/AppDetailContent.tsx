@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Smartphone, ExternalLink, Download } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
-import { FeedbackForm } from './FeedbackForm';
+import { CommentThread } from './CommentThread';
 import { ScreenshotGallery } from './ScreenshotGallery';
 import { ChangelogSection } from './ChangelogSection';
 import type { AppFrontmatter } from '@/lib/apps';
@@ -136,8 +136,8 @@ export function AppDetailContent({ frontmatter, children, changelogEntries }: Ap
       {/* Release changelog */}
       <ChangelogSection entries={changelogEntries} />
 
-      {/* Feedback Form */}
-      <FeedbackForm itemTitle={frontmatter.title} />
+      {/* Public Discussion & Feedback Thread */}
+      <CommentThread itemSlug={frontmatter.slug} itemTitle={frontmatter.title} itemType="app" />
     </article>
   );
 }

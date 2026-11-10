@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Calendar, Clock } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
-import { FeedbackForm } from './FeedbackForm';
+import { CommentThread } from './CommentThread';
 import type { BlogFrontmatter } from '@/lib/blogs';
 
 interface BlogDetailContentProps {
@@ -62,8 +62,8 @@ export function BlogDetailContent({ frontmatter, children }: BlogDetailContentPr
         <div className="max-w-none space-y-4">{children}</div>
       </div>
 
-      {/* Feedback Form */}
-      <FeedbackForm itemTitle={frontmatter.title} />
+      {/* Public Discussion & Feedback Thread */}
+      <CommentThread itemSlug={frontmatter.slug} itemTitle={frontmatter.title} itemType="blog" />
     </article>
   );
 }

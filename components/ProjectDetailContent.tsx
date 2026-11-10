@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, FolderGit2, ExternalLink } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
-import { FeedbackForm } from './FeedbackForm';
+import { CommentThread } from './CommentThread';
 import type { ProjectFrontmatter } from '@/lib/projects';
 
 interface ProjectDetailContentProps {
@@ -83,8 +83,8 @@ export function ProjectDetailContent({ frontmatter, children }: ProjectDetailCon
         </div>
       </div>
 
-      {/* Feedback Form */}
-      <FeedbackForm itemTitle={frontmatter.title} />
+      {/* Public Discussion & Feedback Thread */}
+      <CommentThread itemSlug={frontmatter.slug} itemTitle={frontmatter.title} itemType="project" />
     </article>
   );
 }
