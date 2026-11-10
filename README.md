@@ -104,8 +104,17 @@ Content file format (see `content/apps/*.mdx` for examples; fields mirror the
 schemas in `lib/content/schemas.ts`):
 - `---`-delimited frontmatter: title, slug (**must equal the file name**), tagline,
   description, version, status, platforms, category, languages, updatedAt (YYYY-MM-DD),
-  optional `downloadLinks` (appStore/playStore/github/web). Projects use techStack and
-  optional githubUrl/demoUrl; blogs use excerpt, publishedAt, readTime, author, tags.
+  optional `downloadLinks` (appStore/playStore/github/web), optional `screenshots`.
+- `screenshots` (apps only): root-relative paths (e.g. `/screenshots/<app>/<n>.png`)
+  that must exist under `public/screenshots/<app>/`; they are rendered in the
+  ScreenshotGallery on `/apps/<slug>`.
+- Changelogs live in `content/changelogs/<app>/<slug>.mdx` (one file per release,
+  matched to an app by the `apps/<app>` slug): frontmatter `title`, `slug` (**must
+  equal the file name**), optional `version`, `date` (YYYY-MM-DD). The body is
+  rendered as real HTML in an accordion list on `/apps/<app>` (newest first); the
+  section renders nothing when there are no files.
+- Projects use techStack and optional githubUrl/demoUrl; blogs use excerpt,
+  publishedAt, readTime, author, tags.
 - The Markdown body is rendered as real HTML at build time; raw HTML in the source is
   not allowed.
 - Missing required fields, invalid dates, or a slug that differs from the file name

@@ -65,6 +65,12 @@ export interface TranslationDictionary {
     platformsAndTech: string;
     keyFeatures: string;
     changelog: string;
+    galleryTitle: string;
+    screenshotAlt: string;
+    galleryOpen: string;
+    closeLabel: string;
+    previousLabel: string;
+    nextLabel: string;
     overviewTitle: string;
     downloadAppStore: string;
     downloadPlayStore: string;
@@ -234,6 +240,12 @@ export const translations: Record<Locale, TranslationDictionary> = {
       platformsAndTech: 'Platforms & Tech:',
       keyFeatures: 'Key Features',
       changelog: 'Release Changelog',
+      galleryTitle: 'Screenshots',
+      screenshotAlt: 'Screenshot {index} of {count} — {title}',
+      galleryOpen: 'Open screenshot {index}',
+      closeLabel: 'Close',
+      previousLabel: 'Previous screenshot',
+      nextLabel: 'Next screenshot',
       overviewTitle: 'Architecture & Overview',
       downloadAppStore: 'App Store',
       downloadPlayStore: 'Google Play',
@@ -414,6 +426,12 @@ export const translations: Record<Locale, TranslationDictionary> = {
       platformsAndTech: 'Plateformes & Technologies :',
       keyFeatures: 'Fonctionnalités Clés',
       changelog: 'Historique des Versions',
+      galleryTitle: 'Captures d\'écran',
+      screenshotAlt: 'Capture d\'écran {index} sur {count} — {title}',
+      galleryOpen: 'Ouvrir la capture d\'écran {index}',
+      closeLabel: 'Fermer',
+      previousLabel: 'Capture précédente',
+      nextLabel: 'Capture suivante',
       overviewTitle: 'Architecture & Aperçu',
       downloadAppStore: 'App Store',
       downloadPlayStore: 'Google Play',
@@ -594,6 +612,12 @@ export const translations: Record<Locale, TranslationDictionary> = {
       platformsAndTech: 'المنصات والتقنيات:',
       keyFeatures: 'الميزات الأساسية',
       changelog: 'سجل الإصدارات',
+      galleryTitle: 'لقطات الشاشة',
+      screenshotAlt: 'لقطة {index} من {count} — {title}',
+      galleryOpen: 'افتح لقطة الشاشة {index}',
+      closeLabel: 'إغلاق',
+      previousLabel: 'اللقطة السابقة',
+      nextLabel: 'اللقطة التالية',
       overviewTitle: 'البنية والنظرة العامة',
       downloadAppStore: 'App Store',
       downloadPlayStore: 'Google Play',

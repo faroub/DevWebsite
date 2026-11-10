@@ -5,15 +5,20 @@ import Link from 'next/link';
 import { ArrowLeft, Smartphone, ExternalLink, Download } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { FeedbackForm } from './FeedbackForm';
+import { ScreenshotGallery } from './ScreenshotGallery';
+import { ChangelogSection } from './ChangelogSection';
 import type { AppFrontmatter } from '@/lib/apps';
+import type { ChangelogEntry } from '@/lib/changelogs';
 
 interface AppDetailContentProps {
   frontmatter: AppFrontmatter;
   children: ReactNode;
+  changelogEntries: ChangelogEntry[];
 }
 
-export function AppDetailContent({ frontmatter, children }: AppDetailContentProps) {
+export function AppDetailContent({ frontmatter, children, changelogEntries }: AppDetailContentProps) {
   const { t } = useLanguage();
+  const screenshots = frontmatter.screenshots ?? [];
 
   return (
     <article className="max-w-4xl mx-auto space-y-8 font-sans">
@@ -122,6 +127,14 @@ export function AppDetailContent({ frontmatter, children }: AppDetailContentProp
           {children}
         </div>
       </div>
+
+      {/* Screenshots gallery — only rendered when screenshots exist */}
+      {screenshots.length > 0 && (
+        <ScreenshotGallery screenshots={screenshots} title={frontmatter.title} />
+      )}
+
+      {/* Release changelog — only rendered when the app has changelog entries */}
+      <ChangelogSection entries={changelogEntries} />
 
       {/* Private feedback form */}
       <FeedbackForm itemTitle={frontmatter.title} />

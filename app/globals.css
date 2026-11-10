@@ -33,6 +33,24 @@ body {
   color: rgb(var(--color-text-primary));
 }
 
+/* Gallery modal: the native <dialog> element is centered on the page with a
+   native backdrop overlay. */
+dialog {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  margin: auto;
+  padding: 0;
+}
+
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
 /* Full RTL typography and layout styling for Arabic mode.
    Applied on body (not html) so it overrides the body font-family rule. */
 [dir="rtl"] body {

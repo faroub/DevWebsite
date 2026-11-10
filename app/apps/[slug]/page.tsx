@@ -1,4 +1,5 @@
 import { getAllApps, getAppBySlug } from '@/lib/apps';
+import { getAppChangelogs } from '@/lib/changelogs';
 import { notFound } from 'next/navigation';
 import { Markdown } from '@/components/Markdown';
 import { AppDetailContent } from '@/components/AppDetailContent';
@@ -38,6 +39,7 @@ export default async function AppDetailPage({ params }: PageProps) {
   }
 
   const { frontmatter, content } = appData;
+  const changelogEntries = getAppChangelogs(slug);
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -52,7 +54,7 @@ export default async function AppDetailPage({ params }: PageProps) {
   return (
     <>
       <JsonLd id={`jsonld-app-${slug}`} data={jsonLd} />
-      <AppDetailContent frontmatter={frontmatter}>
+      <AppDetailContent frontmatter={frontmatter} changelogEntries={changelogEntries}>
         <Markdown>{content}</Markdown>
       </AppDetailContent>
     </>
