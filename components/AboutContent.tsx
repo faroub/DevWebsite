@@ -1,130 +1,53 @@
 'use client';
 
 import Image from 'next/image';
-import { Terminal, Code, Compass, MapPin, ExternalLink, Github, Smartphone, Cpu, Sparkles } from 'lucide-react';
+import { Terminal, Code, Compass, MapPin, ExternalLink } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
-import { Markdown } from './Markdown';
-import type { AboutFrontmatter } from '@/lib/about';
 
-interface AboutContentProps {
-  frontmatter: AboutFrontmatter;
-  content: string;
-}
-
-export function AboutContent({ frontmatter, content }: AboutContentProps) {
+export function AboutContent() {
   const { t } = useLanguage();
-  const hasContent = content.trim().length > 0;
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 font-sans">
-      {/* Profile header from content/about.mdx frontmatter — each field renders only where set */}
-      <section className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-4 shadow-sm transition-colors">
-        <div className="flex items-start justify-between gap-4 flex-wrap">
-          <div className="space-y-1">
-            <h1 className="text-2xl sm:text-3xl font-bold text-text-primary">{frontmatter.title}</h1>
-            {frontmatter.role && (
-              <p className="font-mono text-sm text-accent-primary">{frontmatter.role}</p>
-            )}
-            {frontmatter.location && (
-              <p className="flex items-center gap-1.5 font-mono text-xs text-text-secondary">
-                <MapPin className="h-3.5 w-3.5" />
-                <span>{frontmatter.location}</span>
-              </p>
-            )}
-          </div>
-          {frontmatter.githubUrl && (
-            <a
-              href={frontmatter.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-md border border-divider bg-canvas px-3 py-2 font-mono text-xs font-bold text-text-primary hover:border-accent-primary hover:text-accent-primary transition-colors"
-            >
-              <Github className="h-4 w-4" />
-              <span>{t.cards.githubTitle}</span>
-              <ExternalLink className="h-3 w-3" />
-            </a>
-          )}
+      {/* Section 1: What is mzilab? */}
+      <section className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-3 shadow-sm transition-colors">
+        <div className="inline-flex items-center gap-2 rounded-md border border-divider bg-canvas px-3 py-1 font-mono text-xs text-accent-primary font-bold">
+          <Terminal className="h-3.5 w-3.5" />
+          <span>mzilab@developer-station:~$ ./whoami</span>
         </div>
 
-        {frontmatter.tagline && (
-          <p className="text-sm sm:text-base text-text-secondary leading-relaxed">{frontmatter.tagline}</p>
-        )}
-
-        <div className="flex flex-wrap gap-2 pt-1">
-          {frontmatter.skillsMobile && (
-            <span className="inline-flex items-center gap-1.5 rounded border border-divider bg-canvas px-2.5 py-1 font-mono text-[11px] text-text-secondary">
-              <Smartphone className="h-3 w-3 text-accent-primary" />
-              <span>{frontmatter.skillsMobile}</span>
-            </span>
-          )}
-          {frontmatter.skillsSystems && (
-            <span className="inline-flex items-center gap-1.5 rounded border border-divider bg-canvas px-2.5 py-1 font-mono text-[11px] text-text-secondary">
-              <Cpu className="h-3 w-3 text-accent-primary" />
-              <span>{frontmatter.skillsSystems}</span>
-            </span>
-          )}
-          {frontmatter.philosophy && (
-            <span className="inline-flex items-center gap-1.5 rounded border border-divider bg-canvas px-2.5 py-1 font-mono text-[11px] text-text-secondary">
-              <Sparkles className="h-3 w-3 text-accent-primary" />
-              <span>{frontmatter.philosophy}</span>
-            </span>
-          )}
-        </div>
+        <h1 className="text-2xl sm:text-4xl font-extrabold text-text-primary border-b border-divider pb-3 flex items-center gap-2">
+          <Code className="h-6 w-6 text-accent-primary shrink-0" />
+          <span>{t.aboutPage.whatIsTitle}</span>
+        </h1>
+        <p className="text-sm sm:text-base text-text-secondary leading-relaxed font-sans">
+          {t.aboutPage.whatIsBody}
+        </p>
       </section>
 
-      {hasContent ? (
-        // The MDX body (with its own section headings) replaces the
-        // translated section defaults whenever content is present.
-        <section className="rounded-xl border border-divider bg-surface p-6 sm:p-8 shadow-sm transition-colors">
-          <Markdown>{content}</Markdown>
-        </section>
-      ) : (
-        <>
-          {/* Section 1: What is mzilab? */}
-          <section className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-3 shadow-sm transition-colors">
-            <h2 className="text-xl sm:text-2xl font-bold text-text-primary border-b border-divider pb-3 flex items-center gap-2">
-              <Code className="h-5 w-5 text-accent-primary" />
-              <span>{t.aboutPage.whatIsTitle}</span>
-            </h2>
-            <p className="text-sm sm:text-base text-text-secondary leading-relaxed font-sans">
-              {t.aboutPage.whatIsBody}
-            </p>
-          </section>
+      {/* Section 2: Who am I? */}
+      <section className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-3 shadow-sm transition-colors">
+        <h2 className="text-xl sm:text-2xl font-bold text-text-primary border-b border-divider pb-3 flex items-center gap-2">
+          <Terminal className="h-5 w-5 text-accent-primary shrink-0" />
+          <span>{t.aboutPage.whoAmITitle}</span>
+        </h2>
+        <p className="text-sm sm:text-base text-text-secondary leading-relaxed font-sans">
+          {t.aboutPage.whoAmIBody}
+        </p>
+      </section>
 
-          {/* Section 2: Who am I? */}
-          <section className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-3 shadow-sm transition-colors">
-            <h2 className="text-xl sm:text-2xl font-bold text-text-primary border-b border-divider pb-3 flex items-center gap-2">
-              <Terminal className="h-5 w-5 text-accent-primary" />
-              <span>{t.aboutPage.whoAmITitle}</span>
-            </h2>
-            <p className="text-sm sm:text-base text-text-secondary leading-relaxed font-sans">
-              {t.aboutPage.whoAmIBody}
-            </p>
-          </section>
-
-          {/* Section 3: The Origin of "mzi" */}
-          <section className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-6 shadow-sm transition-colors">
-            <h2 className="text-xl sm:text-2xl font-bold text-text-primary border-b border-divider pb-3 flex items-center gap-2">
-              <Compass className="h-5 w-5 text-accent-primary" />
-              <span>{t.aboutPage.originTitle}</span>
-            </h2>
-
-            <p className="text-sm sm:text-base text-text-secondary leading-relaxed font-sans">
-              {t.aboutPage.originBody}
-            </p>
-          </section>
-        </>
-      )}
-
-      {/* Attached Photography Cards (chrome stays translated) */}
+      {/* Section 3: The Origin of "mzi" */}
       <section className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-6 shadow-sm transition-colors">
-        {hasContent && (
-          <h2 className="text-xl sm:text-2xl font-bold text-text-primary border-b border-divider pb-3 flex items-center gap-2">
-            <Compass className="h-5 w-5 text-accent-primary" />
-            <span>{t.aboutPage.originTitle}</span>
-          </h2>
-        )}
+        <h2 className="text-xl sm:text-2xl font-bold text-text-primary border-b border-divider pb-3 flex items-center gap-2">
+          <Compass className="h-5 w-5 text-accent-primary shrink-0" />
+          <span>{t.aboutPage.originTitle}</span>
+        </h2>
 
+        <p className="text-sm sm:text-base text-text-secondary leading-relaxed font-sans">
+          {t.aboutPage.originBody}
+        </p>
+
+        {/* Attached Photography Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
           <div className="rounded-lg border border-divider bg-canvas overflow-hidden space-y-2 p-3 shadow-sm group">
             <div className="relative aspect-[4/3] w-full rounded border border-divider overflow-hidden bg-surface">
