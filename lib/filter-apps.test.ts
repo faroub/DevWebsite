@@ -1,4 +1,4 @@
-/// <reference types="vitest" />
+import { describe, it, expect } from 'vitest';
 import { filterApps, getUniqueFilters } from './filter-apps';
 import type { AppFrontmatter } from './apps';
 
@@ -13,7 +13,6 @@ const mockApps: AppFrontmatter[] = [
     status: 'Active',
     platforms: ['Android', 'iOS'],
     languages: ['Swift', 'Kotlin'],
-    publishedAt: '2024-01-01',
     updatedAt: '2024-01-01',
     downloadLinks: { github: 'https://github.com/example' },
   },
@@ -27,7 +26,6 @@ const mockApps: AppFrontmatter[] = [
     status: 'Beta',
     platforms: ['Android'],
     languages: ['Java'],
-    publishedAt: '2024-02-01',
     updatedAt: '2024-02-01',
     downloadLinks: { github: 'https://github.com/example' },
   },
@@ -41,7 +39,6 @@ const mockApps: AppFrontmatter[] = [
     status: 'Archived',
     platforms: ['iOS'],
     languages: ['Swift'],
-    publishedAt: '2024-03-01',
     updatedAt: '2024-03-01',
     downloadLinks: { github: 'https://github.com/example' },
   },
