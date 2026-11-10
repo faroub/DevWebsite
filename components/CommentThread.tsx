@@ -76,6 +76,7 @@ export function CommentThread({ itemSlug, itemTitle }: CommentThreadProps) {
   const [rating, setRating] = useState<number>(5);
   const [honeypot, setHoneypot] = useState('');
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [fieldErrors, setFieldErrors] = useState<{ name?: string; message?: string }>({});
 
   // Reply State
   const [replyingToId, setReplyingToId] = useState<string | null>(null);
@@ -116,7 +117,16 @@ export function CommentThread({ itemSlug, itemTitle }: CommentThreadProps) {
 
   const handleAddComment = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !body.trim()) return;
+
+    const errors: { name?: string; message?: string } = {};
+    if (!name.trim() || name.trim().length < 1 || name.trim().length > 80) errors.name = t.feedback.nameError;
+    if (!body.trim() || body.trim().length < 10 || body.trim().length > 2000) errors.message = t.feedback.messageError;
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      return;
+    }
+    setFieldErrors({});
 
     if (honeypot) {
       setStatus('success');
@@ -216,7 +226,7 @@ export function CommentThread({ itemSlug, itemTitle }: CommentThreadProps) {
       </div>
 
       {/* Post New Comment / Review Form */}
-      <form onSubmit={handleAddComment} className="rounded-lg border border-divider bg-canvas p-5 space-y-4 font-mono text-xs">
+      <form onSubmit={handleAddComment} noValidate className="rounded-lg border border-divider bg-canvas p-5 space-y-4 font-mono text-xs">
         <h3 className="font-bold text-text-primary flex items-center gap-1.5 text-sm font-sans">
           <span>Leave a Review, Question, or Comment</span>
         </h3>
@@ -233,9 +243,16 @@ export function CommentThread({ itemSlug, itemTitle }: CommentThreadProps) {
               maxLength={80}
               value={name}
               onChange={(e) => setName(e.target.value)}
+              aria-invalid={Boolean(fieldErrors.name)}
+              aria-describedby={fieldErrors.name ? `feedback-name-error-${itemTitle}` : undefined}
               placeholder="e.g. Salim B. or Visitor"
               className="w-full rounded border border-divider bg-surface px-3 py-2 text-text-primary focus:border-accent-primary focus:outline-none"
             />
+            {fieldErrors.name && (
+              <p id={`feedback-name-error-${itemTitle}`} className="mt-1 text-accent-error">
+                {fieldErrors.name}
+              </p>
+            )}
           </div>
 
           <div>
@@ -274,9 +291,16 @@ export function CommentThread({ itemSlug, itemTitle }: CommentThreadProps) {
             maxLength={2000}
             value={body}
             onChange={(e) => setBody(e.target.value)}
+            aria-invalid={Boolean(fieldErrors.message)}
+            aria-describedby={fieldErrors.message ? `feedback-message-error-${itemTitle}` : undefined}
             placeholder={`Share your review, question, or response about ${itemTitle}...`}
             className="w-full rounded border border-divider bg-surface p-3 text-text-primary focus:border-accent-primary focus:outline-none resize-none font-sans text-xs"
           />
+          {fieldErrors.message && (
+            <p id={`feedback-message-error-${itemTitle}`} className="mt-1 text-accent-error">
+              {fieldErrors.message}
+            </p>
+          )}
         </div>
 
         {/* Honeypot: hidden from users with off-screen CSS */}
@@ -297,13 +321,13 @@ export function CommentThread({ itemSlug, itemTitle }: CommentThreadProps) {
             {status === 'success' && (
               <p className="flex items-center gap-1.5 text-accent-success text-xs font-mono font-bold">
                 <CheckCircle2 className="h-4 w-4" />
-                <span>Published &amp; sent to maintainer!</span>
+                <span>{t.feedback.statusSuccess}</span>
               </p>
             )}
             {status === 'error' && (
               <p className="flex items-center gap-1.5 text-accent-error text-xs font-mono">
                 <AlertCircle className="h-4 w-4" />
-                <span>Error sending feedback. Try again.</span>
+                <span>{t.feedback.statusError}</span>
               </p>
             )}
           </div>
