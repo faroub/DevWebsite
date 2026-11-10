@@ -1,23 +1,9 @@
 import path from 'path';
-import { z } from 'zod';
-import { loadContentFile } from './content';
+import { loadContentFile } from './content/load';
+import { aboutSchema, type AboutFrontmatter } from './content/schemas';
 
-const aboutSchema = z.object({
-  title: z.string(),
-  author: z.string(),
-  role: z.string(),
-  location: z.string(),
-  tagline: z.string(),
-  email: z.string().optional(),
-  githubUrl: z.string().optional(),
-  linkedinUrl: z.string().optional(),
-  twitterUrl: z.string().optional(),
-  skillsMobile: z.string(),
-  skillsSystems: z.string(),
-  philosophy: z.string(),
-});
-
-export type AboutFrontmatter = z.infer<typeof aboutSchema>;
+/** The About collection frontmatter as declared in `content/about.mdx`. */
+export type { AboutFrontmatter };
 
 export interface AboutData {
   frontmatter: AboutFrontmatter;

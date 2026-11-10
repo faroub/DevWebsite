@@ -1,19 +1,9 @@
 import path from 'path';
-import { z } from 'zod';
-import { loadContentDirectory } from './content';
+import { loadContentDirectory } from './content/load';
+import { blogSchema, type BlogFrontmatter } from './content/schemas';
 
-const blogSchema = z.object({
-  title: z.string(),
-  slug: z.string(),
-  excerpt: z.string(),
-  publishedAt: z.string().date(),
-  readTime: z.string(),
-  author: z.string(),
-  tags: z.array(z.string()),
-  featured: z.boolean().optional(),
-});
-
-export type BlogFrontmatter = z.infer<typeof blogSchema>;
+/** The Blog collection frontmatter as declared in `content/blogs/*.mdx`. */
+export type { BlogFrontmatter };
 
 export interface BlogData {
   frontmatter: BlogFrontmatter;
@@ -22,14 +12,13 @@ export interface BlogData {
 
 const BLOGS_DIRECTORY = path.join(process.cwd(), 'content/blogs');
 
+/** Returns every blog sorted by newest `publishedAt` first. */
 export function getAllBlogs(): BlogFrontmatter[] {
-  return loadContentDirectory(BLOGS_DIRECTORY, blogSchema)
-    .sort(
-      (a, b) =>
-        new Date(b.frontmatter.publishedAt).getTime() -
-        new Date(a.frontmatter.publishedAt).getTime()
-    )
-    .map((entry) => entry.frontmatter);
+  return loadContentDirectory(
+    BLOGS_DIRECTORY,
+    blogSchema,
+    (a, b) => new Date(b.frontmatter.publishedAt).getTime() - new Date(a.frontmatter.publishedAt).getTime()
+  ).map((entry) => entry.frontmatter);
 }
 
 export function getBlogBySlug(slug: string): BlogData | null {

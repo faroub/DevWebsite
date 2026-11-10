@@ -1,22 +1,9 @@
 import path from 'path';
-import { z } from 'zod';
-import { loadContentDirectory } from './content';
+import { loadContentDirectory } from './content/load';
+import { projectSchema, type ProjectFrontmatter } from './content/schemas';
 
-const projectSchema = z.object({
-  title: z.string(),
-  slug: z.string(),
-  tagline: z.string(),
-  description: z.string(),
-  status: z.string(),
-  featured: z.boolean().optional(),
-  category: z.string(),
-  techStack: z.array(z.string()),
-  updatedAt: z.string().date(),
-  githubUrl: z.string().optional(),
-  demoUrl: z.string().optional(),
-});
-
-export type ProjectFrontmatter = z.infer<typeof projectSchema>;
+/** The Project collection frontmatter as declared in `content/projects/*.mdx`. */
+export type { ProjectFrontmatter };
 
 export interface ProjectData {
   frontmatter: ProjectFrontmatter;
@@ -25,14 +12,13 @@ export interface ProjectData {
 
 const PROJECTS_DIRECTORY = path.join(process.cwd(), 'content/projects');
 
+/** Returns every project sorted by newest `updatedAt` first. */
 export function getAllProjects(): ProjectFrontmatter[] {
-  return loadContentDirectory(PROJECTS_DIRECTORY, projectSchema)
-    .sort(
-      (a, b) =>
-        new Date(b.frontmatter.updatedAt).getTime() -
-        new Date(a.frontmatter.updatedAt).getTime()
-    )
-    .map((entry) => entry.frontmatter);
+  return loadContentDirectory(
+    PROJECTS_DIRECTORY,
+    projectSchema,
+    (a, b) => new Date(b.frontmatter.updatedAt).getTime() - new Date(a.frontmatter.updatedAt).getTime()
+  ).map((entry) => entry.frontmatter);
 }
 
 export function getProjectBySlug(slug: string): ProjectData | null {

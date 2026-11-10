@@ -23,6 +23,8 @@ function describeParseError(error: z.ZodError): string {
  * the sitemap and detail lookups all resolve to the same route. Pass
  * `{ requireSlug: false }` for standalone files that are not routed by slug
  * (e.g. about.mdx). Every failure throws an error that names the file.
+ *
+ * The file location is always relative to the current working directory.
  */
 export function loadContentFile<T>(
   fullPath: string,
@@ -68,8 +70,16 @@ export function loadContentFile<T>(
 /**
  * Loads and validates every Markdown/MDX file in a content directory.
  * Returns entries sorted by filename for stable build output.
+ *
+ * Pass `sort` to sort parsed entries by a date field instead of filename.
+ * `updatedAt`-sorted loaded entries compare dates, and every entry with an
+ * unparsable date throws.
  */
-export function loadContentDirectory<T>(directory: string, schema: ZodType<T>): ContentEntry<T>[] {
+export function loadContentDirectory<T>(
+  directory: string,
+  schema: ZodType<T>,
+  sort?: (a: ContentEntry<T>, b: ContentEntry<T>) => number
+): ContentEntry<T>[] {
   if (!fs.existsSync(directory)) {
     return [];
   }
@@ -78,5 +88,6 @@ export function loadContentDirectory<T>(directory: string, schema: ZodType<T>): 
     .readdirSync(directory)
     .filter((fileName) => fileName.endsWith('.md') || fileName.endsWith('.mdx'))
     .sort()
-    .map((fileName) => loadContentFile(path.join(directory, fileName), schema));
+    .map((fileName) => loadContentFile(path.join(directory, fileName), schema))
+    .sort(sort ?? undefined);
 }

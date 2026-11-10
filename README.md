@@ -35,6 +35,7 @@ The site is fully static — no database, no server, no visitor authentication.
 - The feedback form on detail pages posts to Web3Forms (validated with Zod on the
   client, plus a honeypot and a 60-second client-side rate limit); the submission is
   emailed to the maintainer and is never published or stored on the site.
+  Visitor feedback is sent only through this external form service.
 - Theme logic has one source of truth in `lib/theme.ts`; locale logic in
   `lib/locale.ts`. The only other touch point is `public/boot.js`, an external
   pre-hydration script in `app/layout.tsx` that prevents a first-paint flash.
@@ -88,7 +89,8 @@ The site is fully static — no database, no server, no visitor authentication.
 Setup and common commands:
 - `npm ci` — install dependencies (Node >= 20.9, see `engines`).
 - Copy `.env.example` to `.env.local` and set `NEXT_PUBLIC_WEB3FORMS_KEY` (get a free
-  key at web3forms.com). Without it the feedback form renders disabled.
+  key at web3forms.com). Without it the feedback form renders disabled. `NEXT_PUBLIC_NOTIFY_EMAIL`
+  is optional; it only overrides the contact address on the legal pages.
 - `npm run dev` — Next.js dev server (content editing by hand).
 - `npm run lint` / `npx tsc --noEmit` — content check + ESLint / type check.
 - `npm run build` — static export into `out/` (runs the content check first).
@@ -98,7 +100,8 @@ Setup and common commands:
   on first run with `npx playwright install chromium`).
 - `npm run preview` — serve `out/` locally at http://127.0.0.1:4321.
 
-Content file format (see `content/apps/*.mdx` for examples):
+Content file format (see `content/apps/*.mdx` for examples; fields mirror the
+schemas in `lib/content/schemas.ts`):
 - `---`-delimited frontmatter: title, slug (**must equal the file name**), tagline,
   description, version, status, platforms, category, languages, updatedAt (YYYY-MM-DD),
   optional `downloadLinks` (appStore/playStore/github/web). Projects use techStack and
@@ -107,6 +110,18 @@ Content file format (see `content/apps/*.mdx` for examples):
   not allowed.
 - Missing required fields, invalid dates, or a slug that differs from the file name
   fail the build with an error naming the file.
+- `status` is displayed on listings: Active (green dot), Beta, Archived, etc.
+- `featured` marks entries shown on the homepage.
+
+## Environment variables
+
+All are public (no secrets): they come from `env` on the host, documented in
+`.env.example`:
+
+- `NEXT_PUBLIC_WEB3FORMS_KEY` — the form service key; used by the feedback forms
+  (`components/FeedbackForm.tsx`) and checked on `process.env`.
+- `NEXT_PUBLIC_NOTIFY_EMAIL` — the site contact address; read by `lib/site.ts` as
+  `contactEmail` and printed on `/privacy` and `/terms` pages (safe fallback if unset).
 
 Publishing:
 - `npm run build`, then deploy `out/` to Vercel, Netlify, or Cloudflare Pages.
@@ -147,69 +162,8 @@ Run before considering any task complete:
 1. Inspect existing files before writing code.
 2. Explain the plan before broad changes.
 3. Implement one focused task at a time.
-4. Report: files changed, commands run, tests, limitations.
-5. Commit after each completed phase.
-6. Never delete working functionality when adding new features.
-7. Never create fake or placeholder implementations — all content must be real.
+4. Commit after each completed phase.
 
-## General Guidelines
-Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
-
-Tradeoff: These guidelines bias toward caution over speed. For trivial tasks, use judgment.
-
-1. Think Before Coding
-
-Don't assume. Don't hide confusion. Surface tradeoffs.
-
-Before implementing:
-
-    State your assumptions explicitly. If uncertain, ask.
-    If multiple interpretations exist, present them - don't pick silently.
-    If a simpler approach exists, say so. Push back when warranted.
-    If something is unclear, stop. Name what's confusing. Ask.
-
-2. Simplicity First
-
-Minimum code that solves the problem. Nothing speculative.
-
-    No features beyond what was asked.
-    No abstractions for single-use code.
-    No "flexibility" or "configurability" that wasn't requested.
-    No error handling for impossible scenarios.
-    If you write 200 lines and it could be 50, rewrite it.
-
-Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify. 3. Surgical Changes
-
-Touch only what you must. Clean up only your own mess.
-
-When editing existing code:
-
-    Don't "improve" adjacent code, comments, or formatting.
-    Don't refactor things that aren't broken.
-    Match existing style, even if you'd do it differently.
-    If you notice unrelated dead code, mention it - don't delete it.
-
-When your changes create orphans:
-
-    Remove imports/variables/functions that YOUR changes made unused.
-    Don't remove pre-existing dead code unless asked.
-
-The test: Every changed line should trace directly to the user's request. 4. Goal-Driven Execution
-
-Define success criteria. Loop until verified.
-
-Transform tasks into verifiable goals:
-
-    "Add validation" → "Write tests for invalid inputs, then make them pass"
-    "Fix the bug" → "Write a test that reproduces it, then make it pass"
-    "Refactor X" → "Ensure tests pass before and after"
-
-For multi-step tasks, state a brief plan:
-
-1. [Step] → verify: [check]
-2. [Step] → verify: [check]
-3. [Step] → verify: [check]
-
-Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
-
-These guidelines are working if: fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+## Compliance guidelines
+Behavioral guidelines live in `AGENTS.md`. Highlights: no `any` types, no placeholder content,
+no `dangerouslySetInnerHTML` outside the documented exceptions, commit after each completed phase.
