@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, remediation-refactor]
+    branches: [main, remediation-pack, remediation-refactor]
   pull_request:
     branches: [main]
 
@@ -38,7 +38,7 @@ jobs:
         run: npm run build
 
       - name: Playwright E2E suite
-        run: npx playwright install chromium && npm run test:e2e
+        run: npx playwright install chromium && npx playwright test
 
       - name: Post-build smoke checks
         run: npm run smoke
