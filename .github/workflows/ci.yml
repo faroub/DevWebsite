@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, remediation-refactor]
   pull_request:
     branches: [main]
 
@@ -14,8 +14,6 @@ jobs:
     name: Build and test
     runs-on: ubuntu-latest
     env:
-      # The public key renders the feedback form in the export so the form's
-      # client-side validation (P13) and keyboard tests can run.
       NEXT_PUBLIC_WEB3FORMS_KEY: test-access-key
     steps:
       - name: Checkout the repository
@@ -24,7 +22,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20.9.x
+          node-version: 24.x
           cache: npm
 
       - name: Install dependencies
