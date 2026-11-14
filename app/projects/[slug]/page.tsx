@@ -12,10 +12,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const projectData = getProjectBySlug(slug);
   if (!projectData) {
-    return { title: 'Project Not Found — mzilab.de' };
+    return { title: 'Project Not Found' };
   }
   return {
-    title: `${projectData.frontmatter.title} — mzilab.de`,
+    title: projectData.frontmatter.title,
     description: projectData.frontmatter.tagline || projectData.frontmatter.description,
     alternates: { canonical: `/projects/${slug}` },
   };

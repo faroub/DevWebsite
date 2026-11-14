@@ -14,10 +14,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const appData = getAppBySlug(slug);
   if (!appData) {
-    return { title: 'App Not Found — mzilab.de' };
+    return { title: 'App Not Found' };
   }
   return {
-    title: `${appData.frontmatter.title} — mzilab.de`,
+    title: appData.frontmatter.title,
     description: appData.frontmatter.tagline || appData.frontmatter.description,
     alternates: { canonical: `/apps/${slug}` },
   };

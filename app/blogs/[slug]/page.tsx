@@ -13,10 +13,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const blogData = getBlogBySlug(slug);
   if (!blogData) {
-    return { title: 'Article Not Found — mzilab.de' };
+    return { title: 'Article Not Found' };
   }
   return {
-    title: `${blogData.frontmatter.title} — mzilab.de`,
+    title: blogData.frontmatter.title,
     description: blogData.frontmatter.excerpt,
     alternates: { canonical: `/blogs/${slug}` },
   };
