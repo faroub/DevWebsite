@@ -4,7 +4,7 @@
 # The theme/locale bootstrap itself is external (public/boot.js), and no
 # user-submitted content is ever rendered as HTML.
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://api.web3forms.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://giscus.app; style-src 'self' 'unsafe-inline' https://giscus.app; img-src 'self' data: blob: https://github.com https://avatars.githubusercontent.com; font-src 'self'; connect-src 'self' https://api.web3forms.com https://giscus.app; frame-src 'self' https://giscus.app; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
   X-Content-Type-Options: nosniff
