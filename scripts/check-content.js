@@ -43,6 +43,15 @@ function isBareDomain(value) {
   }
 }
 
+function isUnsafeUrl(value) {
+  try {
+    const url = new URL(value);
+    return !['http:', 'https:'].includes(url.protocol);
+  } catch {
+    return false;
+  }
+}
+
 function collectUrls(obj, prefix = '') {
   const urls = [];
   if (!obj || typeof obj !== 'object') return urls;
@@ -109,12 +118,18 @@ function checkFrontmatterFile(file, type) {
 
   if (type) checkRequiredFields(type, rel, data);
 
-  const urlErrors = collectUrls(data).filter((u) => isBareDomain(u.value));
-  if (urlErrors.length === 0) {
-    ok(`${rel}: no bare-domain URLs`);
+  const urls = collectUrls(data);
+  const bareDomainErrors = urls.filter((u) => isBareDomain(u.value));
+  const unsafeUrlErrors = urls.filter((u) => isUnsafeUrl(u.value));
+
+  if (bareDomainErrors.length === 0 && unsafeUrlErrors.length === 0) {
+    ok(`${rel}: no bare-domain or unsafe URLs`);
   } else {
-    for (const { key, value } of urlErrors) {
+    for (const { key, value } of bareDomainErrors) {
       fail(`${rel}: "${key}" is a bare domain, not a real link`, value);
+    }
+    for (const { key, value } of unsafeUrlErrors) {
+      fail(`${rel}: "${key}" uses an unsafe protocol`, value);
     }
   }
 
