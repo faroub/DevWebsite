@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowLeft, Smartphone, ExternalLink, Download } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { CommentThread } from './CommentThread';
+import { Comments } from './Comments';
 import { ScreenshotGallery } from './ScreenshotGallery';
 import { ChangelogSection } from './ChangelogSection';
 import type { AppFrontmatter } from '@/lib/apps';
@@ -136,7 +137,10 @@ export function AppDetailContent({ frontmatter, children, changelogEntries }: Ap
       {/* Release changelog */}
       <ChangelogSection entries={changelogEntries} />
 
-      {/* Public Discussion & Feedback Thread */}
+      {/* GitHub Giscus Live Discussions */}
+      <Comments term={`app:${frontmatter.slug}`} />
+
+      {/* Local Community Discussion & Feedback Thread */}
       <CommentThread itemSlug={frontmatter.slug} itemTitle={frontmatter.title} itemType="app" />
     </article>
   );

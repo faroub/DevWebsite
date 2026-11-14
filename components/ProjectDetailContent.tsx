@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowLeft, FolderGit2, ExternalLink } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { CommentThread } from './CommentThread';
+import { Comments } from './Comments';
 import type { ProjectFrontmatter } from '@/lib/projects';
 
 interface ProjectDetailContentProps {
@@ -82,6 +83,9 @@ export function ProjectDetailContent({ frontmatter, children }: ProjectDetailCon
           {children}
         </div>
       </div>
+
+      {/* GitHub Giscus Live Discussions */}
+      <Comments term={`project:${frontmatter.slug}`} />
 
       {/* Public Discussion & Feedback Thread */}
       <CommentThread itemSlug={frontmatter.slug} itemTitle={frontmatter.title} itemType="project" />

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowLeft, Calendar, Clock } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { CommentThread } from './CommentThread';
+import { Comments } from './Comments';
 import type { BlogFrontmatter } from '@/lib/blogs';
 
 interface BlogDetailContentProps {
@@ -62,7 +63,10 @@ export function BlogDetailContent({ frontmatter, children }: BlogDetailContentPr
         <div className="max-w-none space-y-4">{children}</div>
       </div>
 
-      {/* Public Discussion & Feedback Thread */}
+      {/* GitHub Giscus Live Discussions */}
+      <Comments term={`blog:${frontmatter.slug}`} />
+
+      {/* Local Community Discussion & Feedback Thread */}
       <CommentThread itemSlug={frontmatter.slug} itemTitle={frontmatter.title} itemType="blog" />
     </article>
   );
