@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, FolderGit2, ExternalLink } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
-import { CommentThread } from './CommentThread';
+import { FeedbackForm } from './FeedbackForm';
 import { Comments } from './Comments';
 import type { ProjectFrontmatter } from '@/lib/projects';
 
@@ -84,11 +84,11 @@ export function ProjectDetailContent({ frontmatter, children }: ProjectDetailCon
         </div>
       </div>
 
-      {/* GitHub Giscus Live Discussions */}
+      {/* Public Discussion: Giscus (GitHub Discussions) */}
       <Comments term={`project:${frontmatter.slug}`} />
 
-      {/* Public Discussion & Feedback Thread */}
-      <CommentThread itemSlug={frontmatter.slug} itemTitle={frontmatter.title} itemType="project" />
+      {/* Private Feedback Form */}
+      <FeedbackForm itemTitle={frontmatter.title} />
     </article>
   );
 }

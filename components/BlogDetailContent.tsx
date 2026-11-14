@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Calendar, Clock } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
-import { CommentThread } from './CommentThread';
+import { FeedbackForm } from './FeedbackForm';
 import { Comments } from './Comments';
 import type { BlogFrontmatter } from '@/lib/blogs';
 
@@ -63,11 +63,11 @@ export function BlogDetailContent({ frontmatter, children }: BlogDetailContentPr
         <div className="max-w-none space-y-4">{children}</div>
       </div>
 
-      {/* GitHub Giscus Live Discussions */}
+      {/* Public Discussion: Giscus (GitHub Discussions) */}
       <Comments term={`blog:${frontmatter.slug}`} />
 
-      {/* Local Community Discussion & Feedback Thread */}
-      <CommentThread itemSlug={frontmatter.slug} itemTitle={frontmatter.title} itemType="blog" />
+      {/* Private Feedback Form */}
+      <FeedbackForm itemTitle={frontmatter.title} />
     </article>
   );
 }
