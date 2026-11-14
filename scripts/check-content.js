@@ -1,13 +1,6 @@
 #!/usr/bin/env node
 // Content sanity checks. Run via `npm run lint` (or directly with
 // `node scripts/check-content.js`) before building the site.
-//
-// Fails when:
-//   1. a frontmatter screenshot references a file missing from public/screenshots/
-//   2. a frontmatter URL is a bare domain (e.g. "https://apps.apple.com") with
-//      no path — a leftover placeholder rather than a real store/project link
-//
-// Exits non-zero with a failure list so CI and local runs both stop here.
 
 const fs = require('fs');
 const path = require('path');
@@ -16,14 +9,10 @@ const matter = require('gray-matter');
 const ROOT = path.resolve(__dirname, '..');
 const CONTENT_TYPES = ['apps', 'projects', 'blogs'];
 const SCREENSHOTS_DIR = path.join(ROOT, 'public', 'screenshots');
-// The site's own origin is a valid demo target: the showcase project's live
-// demo is the deployed site itself. Everything else needs a real path.
 const SITE_ORIGIN = 'https://mzilab.de';
 
-// URL fields (scalar or array) that must point somewhere specific.
 const URL_FIELDS = ['appStore', 'playStore', 'github', 'githubUrl', 'demoUrl', 'web'];
 
-// Required non-slug fields per collection, mirroring the Zod schemas in lib/*.
 const REQUIRED_FIELDS = {
   apps: ['title', 'tagline', 'description', 'version', 'status', 'platforms', 'category', 'languages', 'updatedAt'],
   projects: ['title', 'tagline', 'description', 'status', 'category', 'techStack', 'updatedAt'],
@@ -31,13 +20,9 @@ const REQUIRED_FIELDS = {
   about: ['title', 'author', 'role', 'location', 'tagline', 'skillsMobile', 'skillsSystems', 'philosophy'],
 };
 
-// Collections whose items are routed as /<type>/<slug> (about.mdx is a
-// standalone file and carries no slug).
 const SLUGGED_TYPES = ['apps', 'projects', 'blogs'];
 
-// Date fields that must be valid YYYY-MM-DD.
 const DATE_FIELDS = { apps: ['updatedAt'], projects: ['updatedAt'], blogs: ['publishedAt'] };
-
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 const failures = [];
@@ -49,25 +34,24 @@ const fail = (name, detail) => {
 };
 
 function isBareDomain(value) {
-  if (value === SITE_ORIGIN) return false; // The site itself is a real demo target.
+  if (value === SITE_ORIGIN) return false;
   try {
     const url = new URL(value);
     return !url.pathname.replace(/\/+$/, '') && !url.search && !url.hash;
   } catch {
-    return false; // Not a URL at all — other checks handle bad values.
+    return false;
   }
 }
 
-function collectUrls(frontmatter) {
+function collectUrls(obj, prefix = '') {
   const urls = [];
-  for (const [key, value] of Object.entries(frontmatter)) {
-    if (!URL_FIELDS.includes(key)) continue;
-    if (typeof value === 'string') {
-      urls.push({ key, value });
-    } else if (Array.isArray(value)) {
-      value.forEach((item) => {
-        if (typeof item === 'string') urls.push({ key, value: item });
-      });
+  if (!obj || typeof obj !== 'object') return urls;
+  for (const [key, value] of Object.entries(obj)) {
+    const fullKey = prefix ? `${prefix}.${key}` : key;
+    if (typeof value === 'string' && URL_FIELDS.includes(key)) {
+      urls.push({ key: fullKey, value });
+    } else if (typeof value === 'object' && value !== null) {
+      urls.push(...collectUrls(value, fullKey));
     }
   }
   return urls;
@@ -115,7 +99,6 @@ function checkFrontmatterFile(file, type) {
   }
   const data = parsed.data || {};
 
-  // The slug must be present and equal the filename (lib/content.ts rule).
   const fileSlug = path.basename(file).replace(/\.mdx?$/, '');
   const fmSlug = data.slug;
   if (SLUGGED_TYPES.includes(type) && fmSlug !== fileSlug) {
