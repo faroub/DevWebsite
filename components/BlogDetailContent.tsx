@@ -14,7 +14,10 @@ interface BlogDetailContentProps {
 }
 
 export function BlogDetailContent({ frontmatter, children }: BlogDetailContentProps) {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
+
+  const title = (locale === 'ar' && frontmatter.title_ar) || (locale === 'fr' && frontmatter.title_fr) || frontmatter.title;
+  const excerpt = (locale === 'ar' && frontmatter.excerpt_ar) || (locale === 'fr' && frontmatter.excerpt_fr) || frontmatter.excerpt;
 
   return (
     <article className="max-w-4xl mx-auto space-y-8 font-sans">
@@ -40,11 +43,11 @@ export function BlogDetailContent({ frontmatter, children }: BlogDetailContentPr
         </div>
 
         <h1 className="text-2xl sm:text-4xl font-extrabold text-text-primary leading-tight">
-          {frontmatter.title}
+          {title}
         </h1>
 
         <p className="text-sm sm:text-base text-text-secondary leading-relaxed font-sans border-l-2 border-accent-primary pl-4 py-1 italic">
-          {frontmatter.excerpt}
+          {excerpt}
         </p>
 
         <div className="flex flex-wrap gap-1.5 pt-2">
@@ -67,7 +70,7 @@ export function BlogDetailContent({ frontmatter, children }: BlogDetailContentPr
       <Comments term={`blog:${frontmatter.slug}`} />
 
       {/* Private Feedback Form */}
-      <FeedbackForm itemTitle={frontmatter.title} />
+      <FeedbackForm itemTitle={title} />
     </article>
   );
 }

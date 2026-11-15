@@ -18,8 +18,12 @@ interface AppDetailContentProps {
 }
 
 export function AppDetailContent({ frontmatter, children, changelogEntries }: AppDetailContentProps) {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const screenshots = frontmatter.screenshots ?? [];
+
+  const title = (locale === 'ar' && frontmatter.title_ar) || (locale === 'fr' && frontmatter.title_fr) || frontmatter.title;
+  const tagline = (locale === 'ar' && frontmatter.tagline_ar) || (locale === 'fr' && frontmatter.tagline_fr) || frontmatter.tagline;
+  const description = (locale === 'ar' && frontmatter.description_ar) || (locale === 'fr' && frontmatter.description_fr) || frontmatter.description;
 
   return (
     <article className="max-w-4xl mx-auto space-y-8 font-sans">
@@ -41,7 +45,7 @@ export function AppDetailContent({ frontmatter, children, changelogEntries }: Ap
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-text-primary">{frontmatter.title}</h1>
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-text-primary">{title}</h1>
                 <span className="font-mono text-xs text-accent-primary bg-canvas px-2 py-0.5 rounded border border-divider font-bold">
                   {frontmatter.version}
                 </span>
@@ -60,7 +64,7 @@ export function AppDetailContent({ frontmatter, children, changelogEntries }: Ap
         </div>
 
         <p className="text-sm sm:text-base text-text-secondary leading-relaxed">
-          {frontmatter.description}
+          {description}
         </p>
 
         {/* Tags */}
@@ -124,14 +128,14 @@ export function AppDetailContent({ frontmatter, children, changelogEntries }: Ap
           {t.appDetail.overviewTitle}
         </h2>
         <div className="max-w-none space-y-4">
-          <p className="text-sm text-text-secondary leading-relaxed">{frontmatter.tagline}</p>
+          <p className="text-sm text-text-secondary leading-relaxed">{tagline}</p>
           {children}
         </div>
       </div>
 
       {/* Screenshots gallery */}
       {screenshots.length > 0 && (
-        <ScreenshotGallery screenshots={screenshots} title={frontmatter.title} />
+        <ScreenshotGallery screenshots={screenshots} title={title} />
       )}
 
       {/* Release changelog */}
@@ -141,7 +145,7 @@ export function AppDetailContent({ frontmatter, children, changelogEntries }: Ap
       <Comments term={`app:${frontmatter.slug}`} />
 
       {/* Private Feedback Form */}
-      <FeedbackForm itemTitle={frontmatter.title} />
+      <FeedbackForm itemTitle={title} />
     </article>
   );
 }

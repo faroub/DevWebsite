@@ -14,7 +14,11 @@ interface ProjectDetailContentProps {
 }
 
 export function ProjectDetailContent({ frontmatter, children }: ProjectDetailContentProps) {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
+
+  const title = (locale === 'ar' && frontmatter.title_ar) || (locale === 'fr' && frontmatter.title_fr) || frontmatter.title;
+  const tagline = (locale === 'ar' && frontmatter.tagline_ar) || (locale === 'fr' && frontmatter.tagline_fr) || frontmatter.tagline;
+  const description = (locale === 'ar' && frontmatter.description_ar) || (locale === 'fr' && frontmatter.description_fr) || frontmatter.description;
 
   return (
     <article className="max-w-4xl mx-auto space-y-8 font-sans">
@@ -33,7 +37,7 @@ export function ProjectDetailContent({ frontmatter, children }: ProjectDetailCon
               <FolderGit2 className="h-8 w-8" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-text-primary">{frontmatter.title}</h1>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-text-primary">{title}</h1>
               <p className="text-sm text-text-secondary mt-1">{frontmatter.category}</p>
             </div>
           </div>
@@ -47,7 +51,7 @@ export function ProjectDetailContent({ frontmatter, children }: ProjectDetailCon
         </div>
 
         <p className="text-sm sm:text-base text-text-secondary leading-relaxed">
-          {frontmatter.description}
+          {description}
         </p>
 
         <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-divider">
@@ -79,7 +83,7 @@ export function ProjectDetailContent({ frontmatter, children }: ProjectDetailCon
           {t.projectDetail.overviewTitle}
         </h2>
         <div className="max-w-none space-y-4">
-          <p className="text-sm text-text-secondary leading-relaxed">{frontmatter.tagline}</p>
+          <p className="text-sm text-text-secondary leading-relaxed">{tagline}</p>
           {children}
         </div>
       </div>
@@ -88,7 +92,7 @@ export function ProjectDetailContent({ frontmatter, children }: ProjectDetailCon
       <Comments term={`project:${frontmatter.slug}`} />
 
       {/* Private Feedback Form */}
-      <FeedbackForm itemTitle={frontmatter.title} />
+      <FeedbackForm itemTitle={title} />
     </article>
   );
 }
