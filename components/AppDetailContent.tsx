@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Smartphone, Download, Globe, BookOpen, FileText } from 'lucide-react';
+import { ArrowLeft, Smartphone, Download, Globe } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { Comments } from './Comments';
 import { ScreenshotGallery } from './ScreenshotGallery';
@@ -128,49 +128,7 @@ export function AppDetailContent({ frontmatter, children, changelogEntries }: Ap
         <QrCodeCard downloadUrl={primaryDownloadUrl} appTitle={title} />
       )}
 
-      {/* User Manuals & Documentation Section */}
-      {(frontmatter.userManualUrl || (frontmatter.userManuals && frontmatter.userManuals.length > 0)) && (
-        <div className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-4 transition-colors shadow-sm font-sans">
-          <div className="flex items-center gap-2.5 border-b border-divider pb-3">
-            <BookOpen className="h-5 w-5 text-accent-primary shrink-0" />
-            <h2 className="font-sans text-xl font-bold text-text-primary">
-              {t.appDetail.userManualTitle}
-            </h2>
-          </div>
-
-          <div className="flex flex-wrap gap-3 pt-2">
-            {frontmatter.userManualUrl && (
-              <a
-                href={frontmatter.userManualUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-md border border-accent-primary bg-accent-primary px-4 py-2 font-mono text-xs font-bold text-white hover:opacity-90 transition-colors shadow-sm"
-              >
-                <FileText className="h-4 w-4" />
-                <span>{t.appDetail.viewManual}</span>
-              </a>
-            )}
-
-            {frontmatter.userManuals?.map((manual, idx) => {
-              const itemTitle = getLocalizedField(manual as unknown as Record<string, unknown>, 'title', locale);
-              return (
-                <a
-                  key={idx}
-                  href={manual.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-md border border-divider bg-canvas px-4 py-2 font-mono text-xs text-text-primary hover:border-accent-primary font-semibold transition-colors"
-                >
-                  <FileText className="h-4 w-4 text-accent-primary" />
-                  <span>{itemTitle || t.appDetail.viewManual} {manual.format ? `(${manual.format})` : ''}</span>
-                </a>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* Content / Features Documentation */}
+      {/* Content / Features & Illustrated How-To Documentation */}
       <div className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-4 transition-colors shadow-sm">
         <h2 className="font-sans text-xl font-bold text-text-primary border-b border-divider pb-3">
           {t.appDetail.overviewTitle}

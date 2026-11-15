@@ -102,9 +102,6 @@ export interface TranslationDictionary {
     downloadPlayStore: string;
     downloadGithub: string;
     downloadWeb: string;
-    userManualTitle: string;
-    viewManual: string;
-    downloadPdfManual: string;
   };
   projectDetail: {
     backToProjects: string;
@@ -276,9 +273,6 @@ export const translations: Record<Locale, TranslationDictionary> = {
       downloadPlayStore: 'Google Play',
       downloadGithub: 'GitHub Repository',
       downloadWeb: 'Web App',
-      userManualTitle: 'User Manual & Operating Guide',
-      viewManual: 'View User Manual',
-      downloadPdfManual: 'Download PDF Guide',
     },
     projectDetail: {
       backToProjects: 'Back to all projects',
@@ -461,9 +455,6 @@ export const translations: Record<Locale, TranslationDictionary> = {
       downloadPlayStore: 'Google Play',
       downloadGithub: 'Dépôt GitHub',
       downloadWeb: 'Application Web',
-      userManualTitle: 'Manuel d\'Utilisation & Guide',
-      viewManual: 'Consulter le Manuel',
-      downloadPdfManual: 'Télécharger le Guide PDF',
     },
     projectDetail: {
       backToProjects: 'Retour aux projets',
@@ -646,9 +637,6 @@ export const translations: Record<Locale, TranslationDictionary> = {
       downloadPlayStore: 'Google Play',
       downloadGithub: 'مستودع GitHub',
       downloadWeb: 'تطبيق الويب',
-      userManualTitle: 'دليل الاستخدام والتشغيل',
-      viewManual: 'عرض دليل الاستخدام',
-      downloadPdfManual: 'تنزيل دليل الاستخدام (PDF)',
     },
     projectDetail: {
       backToProjects: 'العودة إلى جميع المشاريع',
