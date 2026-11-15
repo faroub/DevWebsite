@@ -52,6 +52,17 @@ test('locale switch retranslates the navigation', async ({ page }) => {
   await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
 });
 
+test('locale preference survives page reload and applies RTL for Arabic', async ({ page }) => {
+  await page.goto('/');
+  const select = page.getByRole('combobox', { name: 'Select website language' });
+  await select.selectOption('ar');
+  await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ar');
+});
+
 test('theme toggle switches color scheme', async ({ page }) => {
   await page.goto('/');
   const initialClass = (await page.locator('html').getAttribute('class')) || '';
@@ -62,6 +73,17 @@ test('theme toggle switches color scheme', async ({ page }) => {
   await expect(page.locator('html')).toHaveClass(startsDark ? /light/ : /dark/);
   await toggle.click();
   await expect(page.locator('html')).toHaveClass(startsDark ? /dark/ : /light/);
+});
+
+test('theme preference survives page reload', async ({ page }) => {
+  await page.goto('/');
+  const toggle = page.getByRole('button', { name: 'Toggle dark and light mode' });
+  await toggle.click();
+  const switchedClass = (await page.locator('html').getAttribute('class')) || '';
+
+  await page.reload();
+  const reloadedClass = (await page.locator('html').getAttribute('class')) || '';
+  expect(reloadedClass).toBe(switchedClass);
 });
 
 test('hamburger exposes aria state and closes on Escape', async ({ page }) => {
