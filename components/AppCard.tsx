@@ -34,7 +34,7 @@ export function AppCard({ app }: AppCardProps) {
                 {title}
               </Link>
               <div className="flex items-center gap-2 mt-0.5">
-                <span className="font-mono text-[11px] text-accent-primary bg-accent-primary/10 border border-accent-primary/30 px-1.5 py-0.5 rounded font-semibold">
+                <span className="font-mono text-[11px] text-accent-primary bg-canvas border border-divider px-1.5 py-0.5 rounded font-semibold">
                   {app.version}
                 </span>
                 <span className="font-mono text-[11px] text-text-secondary">{app.category}</span>
@@ -63,22 +63,14 @@ export function AppCard({ app }: AppCardProps) {
           {tagline}
         </p>
 
-        {/* Platform & Language Tag Pills */}
+        {/* Platform Tag Pills Only */}
         <div className="flex flex-wrap gap-1.5 mb-5">
           {app.platforms.map((platform) => (
             <span
               key={platform}
-              className="inline-flex items-center rounded-md border border-divider bg-divider/80 px-2 py-0.5 font-mono text-[10px] text-text-primary font-medium"
+              className="inline-flex items-center rounded-md border border-divider bg-canvas px-2 py-0.5 font-mono text-[10px] text-text-primary font-medium"
             >
               {platform}
-            </span>
-          ))}
-          {app.languages.map((lang) => (
-            <span
-              key={lang}
-              className="inline-flex items-center rounded-md border border-accent-primary/30 bg-accent-primary/10 px-2 py-0.5 font-mono text-[10px] text-accent-primary font-semibold"
-            >
-              #{lang}
             </span>
           ))}
         </div>

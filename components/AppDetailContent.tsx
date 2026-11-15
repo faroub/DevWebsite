@@ -73,17 +73,12 @@ export function AppDetailContent({ frontmatter, children, changelogEntries }: Ap
           {description}
         </p>
 
-        {/* Tags */}
+        {/* Platform Tags Only */}
         <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-divider">
           <span className="font-mono text-xs text-text-secondary mr-1">{t.appDetail.platformsAndTech}</span>
           {frontmatter.platforms.map((p) => (
-            <span key={p} className="font-mono text-xs rounded bg-canvas border border-divider px-2 py-0.5 text-text-primary font-medium">
+            <span key={p} className="font-mono text-xs rounded bg-canvas border border-divider px-2.5 py-0.5 text-text-primary font-medium">
               {p}
-            </span>
-          ))}
-          {frontmatter.languages.map((l) => (
-            <span key={l} className="font-mono text-xs rounded bg-accent-primary/10 border border-accent-primary/30 px-2 py-0.5 text-accent-primary font-semibold">
-              #{l}
             </span>
           ))}
         </div>
