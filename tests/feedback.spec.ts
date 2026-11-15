@@ -55,6 +55,36 @@ test('filled honeypot is refused with the success message', async ({ page }) => 
   await expect(page.locator('[id^="feedback-status"] p')).toHaveText('Message sent successfully!');
 });
 
+test('handles network failure gracefully and permits retry', async ({ page }) => {
+  let callCount = 0;
+  await page.route(FEEDBACK_URL, async (route: Route) => {
+    callCount++;
+    if (callCount === 1) {
+      await route.fulfill({ status: 500, body: JSON.stringify({ success: false }) });
+    } else {
+      await route.fulfill({ status: 200, body: JSON.stringify({ success: true }) });
+    }
+  });
+
+  await page.goto('/apps/focus-flow');
+  const name = page.locator('input[id^="feedback-name-"]');
+  const message = page.locator('textarea[id^="feedback-message-"]');
+  const submit = page.locator('button[type=submit]');
+
+  await name.fill('Farid Tester');
+  await message.fill('This is a test message for retry handling.');
+
+  // First submission fails
+  await submit.click();
+  await expect(page.locator('[id^="feedback-status"] p')).toHaveText(/error/i);
+  // Input fields retain values
+  await expect(name).toHaveValue('Farid Tester');
+
+  // Retry immediately succeeds without cooldown lockout
+  await submit.click();
+  await expect(page.locator('[id^="feedback-status"] p')).toHaveText('Message sent successfully!');
+});
+
 test('the form can be completed keyboard-only', async ({ page }) => {
   await page.goto('/apps/focus-flow');
   for (let i = 0; i < 20; i++) {
