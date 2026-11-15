@@ -13,7 +13,7 @@
     "start": "next start",
     "lint": "node scripts/check-content.js && eslint .",
     "test:e2e": "node scripts/check-content.js && npm run build && playwright test",
-    "test:unit": "vitest run",
+    "test:unit": "vitest run && node --test scripts/*.test.js",
     "check-tracked": "node scripts/check-tracked.mjs",
     "preview": "node scripts/serve-static.mjs"
   },
