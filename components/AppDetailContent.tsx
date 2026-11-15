@@ -10,6 +10,7 @@ import { ScreenshotGallery } from './ScreenshotGallery';
 import { ChangelogSection } from './ChangelogSection';
 import type { AppFrontmatter } from '@/lib/apps';
 import type { ChangelogEntry } from '@/lib/changelogs';
+import { getLocalizedField } from '@/lib/content/localize';
 
 interface AppDetailContentProps {
   frontmatter: AppFrontmatter;
@@ -21,9 +22,9 @@ export function AppDetailContent({ frontmatter, children, changelogEntries }: Ap
   const { t, locale } = useLanguage();
   const screenshots = frontmatter.screenshots ?? [];
 
-  const title = (locale === 'ar' && frontmatter.title_ar) || (locale === 'fr' && frontmatter.title_fr) || frontmatter.title;
-  const tagline = (locale === 'ar' && frontmatter.tagline_ar) || (locale === 'fr' && frontmatter.tagline_fr) || frontmatter.tagline;
-  const description = (locale === 'ar' && frontmatter.description_ar) || (locale === 'fr' && frontmatter.description_fr) || frontmatter.description;
+  const title = getLocalizedField(frontmatter as unknown as Record<string, unknown>, 'title', locale);
+  const tagline = getLocalizedField(frontmatter as unknown as Record<string, unknown>, 'tagline', locale);
+  const description = getLocalizedField(frontmatter as unknown as Record<string, unknown>, 'description', locale);
 
   return (
     <article className="max-w-4xl mx-auto space-y-8 font-sans">

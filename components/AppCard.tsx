@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Smartphone, ExternalLink, ArrowRight } from 'lucide-react';
 import { AppFrontmatter } from '@/lib/apps';
 import { useLanguage } from './LanguageContext';
+import { getLocalizedField } from '@/lib/content/localize';
 
 interface AppCardProps {
   app: AppFrontmatter;
@@ -12,8 +13,9 @@ interface AppCardProps {
 export function AppCard({ app }: AppCardProps) {
   const { t, locale } = useLanguage();
 
-  const title = (locale === 'ar' && app.title_ar) || (locale === 'fr' && app.title_fr) || app.title;
-  const tagline = (locale === 'ar' && app.tagline_ar) || (locale === 'fr' && app.tagline_fr) || app.tagline || app.description;
+  const title = getLocalizedField(app as unknown as Record<string, unknown>, 'title', locale);
+  const tagline = getLocalizedField(app as unknown as Record<string, unknown>, 'tagline', locale) ||
+                  getLocalizedField(app as unknown as Record<string, unknown>, 'description', locale);
 
   return (
     <div className="group relative flex flex-col justify-between rounded-lg border border-divider bg-surface p-5 hover:border-accent-primary hover:shadow-glow-teal transition-all duration-200 shadow-sm">

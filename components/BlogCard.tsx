@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { BookOpen, Calendar, Clock, ArrowRight } from 'lucide-react';
 import { BlogFrontmatter } from '@/lib/blogs';
 import { useLanguage } from './LanguageContext';
+import { getLocalizedField } from '@/lib/content/localize';
 
 interface BlogCardProps {
   blog: BlogFrontmatter;
@@ -12,8 +13,8 @@ interface BlogCardProps {
 export function BlogCard({ blog }: BlogCardProps) {
   const { t, locale } = useLanguage();
 
-  const title = (locale === 'ar' && blog.title_ar) || (locale === 'fr' && blog.title_fr) || blog.title;
-  const excerpt = (locale === 'ar' && blog.excerpt_ar) || (locale === 'fr' && blog.excerpt_fr) || blog.excerpt;
+  const title = getLocalizedField(blog as unknown as Record<string, unknown>, 'title', locale);
+  const excerpt = getLocalizedField(blog as unknown as Record<string, unknown>, 'excerpt', locale);
 
   return (
     <div className="group relative flex flex-col justify-between rounded-lg border border-divider bg-surface p-5 hover:border-accent-primary hover:shadow-glow-teal transition-all duration-200 shadow-sm">

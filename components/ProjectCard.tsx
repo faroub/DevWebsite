@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { FolderGit2, ExternalLink, ArrowRight } from 'lucide-react';
 import { ProjectFrontmatter } from '@/lib/projects';
 import { useLanguage } from './LanguageContext';
+import { getLocalizedField } from '@/lib/content/localize';
 
 interface ProjectCardProps {
   project: ProjectFrontmatter;
@@ -12,8 +13,9 @@ interface ProjectCardProps {
 export function ProjectCard({ project }: ProjectCardProps) {
   const { t, locale } = useLanguage();
 
-  const title = (locale === 'ar' && project.title_ar) || (locale === 'fr' && project.title_fr) || project.title;
-  const tagline = (locale === 'ar' && project.tagline_ar) || (locale === 'fr' && project.tagline_fr) || project.tagline || project.description;
+  const title = getLocalizedField(project as unknown as Record<string, unknown>, 'title', locale);
+  const tagline = getLocalizedField(project as unknown as Record<string, unknown>, 'tagline', locale) ||
+                  getLocalizedField(project as unknown as Record<string, unknown>, 'description', locale);
 
   return (
     <div className="group relative flex flex-col justify-between rounded-lg border border-divider bg-surface p-5 hover:border-accent-primary hover:shadow-git-glow transition-all duration-200 shadow-sm">

@@ -7,6 +7,7 @@ import { useLanguage } from './LanguageContext';
 import { FeedbackForm } from './FeedbackForm';
 import { Comments } from './Comments';
 import type { BlogFrontmatter } from '@/lib/blogs';
+import { getLocalizedField } from '@/lib/content/localize';
 
 interface BlogDetailContentProps {
   frontmatter: BlogFrontmatter;
@@ -16,8 +17,8 @@ interface BlogDetailContentProps {
 export function BlogDetailContent({ frontmatter, children }: BlogDetailContentProps) {
   const { t, locale } = useLanguage();
 
-  const title = (locale === 'ar' && frontmatter.title_ar) || (locale === 'fr' && frontmatter.title_fr) || frontmatter.title;
-  const excerpt = (locale === 'ar' && frontmatter.excerpt_ar) || (locale === 'fr' && frontmatter.excerpt_fr) || frontmatter.excerpt;
+  const title = getLocalizedField(frontmatter as unknown as Record<string, unknown>, 'title', locale);
+  const excerpt = getLocalizedField(frontmatter as unknown as Record<string, unknown>, 'excerpt', locale);
 
   return (
     <article className="max-w-4xl mx-auto space-y-8 font-sans">
