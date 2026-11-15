@@ -102,8 +102,6 @@ export interface TranslationDictionary {
     downloadPlayStore: string;
     downloadGithub: string;
     downloadWeb: string;
-    feedbackHeader: string;
-    feedbackSub: string;
   };
   projectDetail: {
     backToProjects: string;
@@ -116,25 +114,6 @@ export interface TranslationDictionary {
   blogDetail: {
     backToBlogs: string;
     by: string;
-  };
-  feedback: {
-    title: string;
-    sub: string;
-    nameLabel: string;
-    namePlaceholder: string;
-    nameError: string;
-    ratingLabel: string;
-    starAria: string;
-    messageLabel: string;
-    messagePlaceholder: string;
-    messageError: string;
-    honeypotLabel: string;
-    sendButton: string;
-    sendingButton: string;
-    statusSuccess: string;
-    statusError: string;
-    notConfiguredTitle: string;
-    notConfiguredBody: string;
   };
   aboutPage: {
     whatIsTitle: string;
@@ -294,8 +273,6 @@ export const translations: Record<Locale, TranslationDictionary> = {
       downloadPlayStore: 'Google Play',
       downloadGithub: 'GitHub Repository',
       downloadWeb: 'Web App',
-      feedbackHeader: 'Inquiries & Feedback',
-      feedbackSub: 'Have a question or feature request? Send a note directly.',
     },
     projectDetail: {
       backToProjects: 'Back to all projects',
@@ -308,26 +285,6 @@ export const translations: Record<Locale, TranslationDictionary> = {
     blogDetail: {
       backToBlogs: 'Back to all blogs',
       by: 'By {author}',
-    },
-    feedback: {
-      title: 'Developer & Visitor Feedback',
-      sub: 'Have a question, feature request, or bug report? Send a note straight to our inbox.',
-      nameLabel: 'Name',
-      namePlaceholder: 'e.g. Salim B. or Visitor',
-      nameError: 'Please enter a name between 1 and 80 characters.',
-      ratingLabel: 'Rating (1 - 5 Stars)',
-      starAria: 'Rate {star} of 5 stars',
-      messageLabel: 'Feedback / Inquiry',
-      messagePlaceholder: 'Share your experience, feature request, or inquiry about {title}...',
-      messageError: 'Please enter a message between 10 and 2000 characters.',
-      honeypotLabel: 'Leave this field empty',
-      sendButton: 'Send Feedback',
-      sendingButton: 'Transmitting...',
-      statusSuccess: 'Message sent successfully!',
-      statusError: 'An error occurred. Please try again later.',
-      notConfiguredTitle: 'Feedback is not configured',
-      notConfiguredBody:
-        'The site owner must set NEXT_PUBLIC_WEB3FORMS_KEY before messages can be sent.',
     },
     aboutPage: {
       whatIsTitle: 'What is mzilab?',
@@ -356,8 +313,9 @@ export const translations: Record<Locale, TranslationDictionary> = {
       localStorageTitle: '2. Local Storage on Your Device',
       localStorageBody:
         'Your interface choices (theme mode and language selection) are saved locally in your browser storage (localStorage) and are not sold or uploaded to third parties.',
-      feedbackTitle: '3. Feedback & Public Discussions',
-      feedbackBody: `App, project, and blog pages include a private feedback form (submitted via Web3Forms directly to the maintainer ${CONTACT_EMAIL}) and a public community discussion section hosted via Giscus and GitHub Discussions (giscus.app) where posted comments are visible to other visitors.`,
+      feedbackTitle: '3. Public Discussions & Feedback',
+      feedbackBody:
+        'App, project, and blog pages feature a public community discussion and feedback section powered by Giscus and GitHub Discussions (giscus.app). Comments, reviews, and replies posted in these threads are visible to visitors.',
       mobileAppsTitle: '4. Mobile Applications',
       mobileAppsBody:
         'Our native mobile applications (Android & iOS) operate under a privacy-first model. Any local storage or permissions (such as offline data caching) remain strictly on your device.',
@@ -376,7 +334,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
       asIsBody:
         'Software builds, demonstration applications, and code writeups are provided "As-Is" without express or implied warranties. Use and testing are at your own discretion.',
       commentsTitle: '3. Respectful Community Conduct',
-      commentsBody: `Visitors participating in public community discussions via Giscus agree to maintain respectful, constructive, and relevant communication. Private feedback submitted via Web3Forms is transmitted directly to the maintainer (${CONTACT_EMAIL}).`,
+      commentsBody:
+        'Visitors participating in public community discussions and feedback via Giscus agree to maintain respectful, constructive, and relevant communication.',
       ipTitle: '4. Intellectual Property',
       ipBody:
         'The brand name mzilab, documentation, and original software design belong to Farid Oubbati / mzilab. Open-source projects remain licensed under their respective repository licenses.',
@@ -496,8 +455,6 @@ export const translations: Record<Locale, TranslationDictionary> = {
       downloadPlayStore: 'Google Play',
       downloadGithub: 'Dépôt GitHub',
       downloadWeb: 'Application Web',
-      feedbackHeader: 'Questions & Commentaires',
-      feedbackSub: 'Une suggestion ou un problème ? Envoyez un message direct.',
     },
     projectDetail: {
       backToProjects: 'Retour aux projets',
@@ -510,26 +467,6 @@ export const translations: Record<Locale, TranslationDictionary> = {
     blogDetail: {
       backToBlogs: 'Retour aux articles',
       by: 'Par {author}',
-    },
-    feedback: {
-      title: 'Commentaires & Demandes',
-      sub: 'Une question ou une suggestion ? Envoyez votre message directement au développeur.',
-      nameLabel: 'Nom',
-      namePlaceholder: 'ex. Salim B. ou Visiteur',
-      nameError: 'Veuillez saisir un nom entre 1 et 80 caractères.',
-      ratingLabel: 'Note (1 à 5 étoiles)',
-      starAria: 'Noter {star} sur 5 étoiles',
-      messageLabel: 'Message / Commentaire',
-      messagePlaceholder: 'Partagez votre expérience, votre demande ou votre question au sujet de {title}...',
-      messageError: 'Veuillez saisir un message entre 10 et 2000 caractères.',
-      honeypotLabel: 'Laissez ce champ vide',
-      sendButton: 'Envoyer le message',
-      sendingButton: 'Transmission...',
-      statusSuccess: 'Message envoyé avec succès !',
-      statusError: 'Une erreur est survenue. Veuillez réessayer plus tard.',
-      notConfiguredTitle: 'Les retours ne sont pas configurés',
-      notConfiguredBody:
-        "Le propriétaire du site doit configurer NEXT_PUBLIC_WEB3FORMS_KEY pour permettre l'envoi de messages.",
     },
     aboutPage: {
       whatIsTitle: 'Qu\'est-ce que mzilab ?',
@@ -558,8 +495,9 @@ export const translations: Record<Locale, TranslationDictionary> = {
       localStorageTitle: '2. Stockage Local sur Votre Appareil',
       localStorageBody:
         'Vos préférences d\'interface (mode d\'affichage et langue) sont enregistrées localement dans votre navigateur (localStorage) et ne sont jamais vendues ni transmises à des tiers.',
-      feedbackTitle: '3. Retours & Discussions Publiques',
-      feedbackBody: `Les pages d'applications, de projets et d'articles incluent un formulaire de retour privé (transmis via Web3Forms au responsable ${CONTACT_EMAIL}) ainsi qu'une section de discussion publique hébergée via Giscus et GitHub Discussions (giscus.app) où les commentaires publiés sont visibles par les autres visiteurs.`,
+      feedbackTitle: '3. Discussions Publiques & Commentaires',
+      feedbackBody:
+        'Les pages d\'applications, de projets et d\'articles intègrent une section de discussion et de commentaires hébergée via Giscus et GitHub Discussions (giscus.app). Les commentaires et avis publiés sont visibles par les autres visiteurs.',
       mobileAppsTitle: '4. Applications Mobiles',
       mobileAppsBody:
         'Nos applications mobiles (Android & iOS) fonctionnent selon un modèle axé sur la confidentialité. Toutes les données locales restent sur votre appareil.',
@@ -578,7 +516,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
       asIsBody:
         'Les applications et codes de démonstration sont fournis « en l\'état », sans garantie expresse ou implicit. L\'utilisation se fait à votre entière discrétion.',
       commentsTitle: '3. Conduite Respectueuse',
-      commentsBody: `Les visiteurs participant aux discussions publiques via Giscus s'engagent à maintenir une communication respectueuse, constructive et pertinente. Les retours privés transmis via Web3Forms sont envoyés directement au responsable (${CONTACT_EMAIL}).`,
+      commentsBody:
+        'Les visiteurs participant aux discussions publiques via Giscus s\'engagent à maintenir une communication respectueuse, constructive et pertinente.',
       ipTitle: '4. Propriété Intellectuelle',
       ipBody:
         'La marque mzilab et la documentation originale restent la propriété de Farid Oubbati / mzilab. Open-source projects remain licensed under their respective repository licenses.',
@@ -698,8 +637,6 @@ export const translations: Record<Locale, TranslationDictionary> = {
       downloadPlayStore: 'Google Play',
       downloadGithub: 'مستودع GitHub',
       downloadWeb: 'تطبيق الويب',
-      feedbackHeader: 'الاستفسارات والملاحظات',
-      feedbackSub: 'هل لديك سؤال أو اقتراح لميزة جديدة؟ أرسل رسالتك مباشرة.',
     },
     projectDetail: {
       backToProjects: 'العودة إلى جميع المشاريع',
@@ -712,26 +649,6 @@ export const translations: Record<Locale, TranslationDictionary> = {
     blogDetail: {
       backToBlogs: 'العودة إلى جميع المقالات',
       by: 'بقلم {author}',
-    },
-    feedback: {
-      title: 'ملاحظات المطورين والزوار',
-      sub: 'هل لديك سؤال أو طلب ميزة أو بلاغ عن خلل؟ أرسل رسالتك مباشرة إلى المطور.',
-      nameLabel: 'الاسم',
-      namePlaceholder: 'مثال: سليم ب. أو زائر',
-      nameError: 'يرجى إدخال اسم يتكون من حرف واحد إلى 80 حرفًا.',
-      ratingLabel: 'التقييم (1 - 5 نجوم)',
-      starAria: 'تقييم {star} من 5 نجوم',
-      messageLabel: 'الملاحظات / الاستفسار',
-      messagePlaceholder: 'شارك تجربتك أو طلبك لميزة أو سؤالك حول {title}...',
-      messageError: 'يرجى إدخال رسالة تتكون من 10 إلى 2000 حرف.',
-      honeypotLabel: 'اترك هذا الحقل فارغًا',
-      sendButton: 'إرسال الملاحظات',
-      sendingButton: 'جارٍ الإرسال...',
-      statusSuccess: 'تم إرسال الرسالة بنجاح!',
-      statusError: 'حدث خطأ ما. يرجى المحاولة مرة أخرى لاحقًا.',
-      notConfiguredTitle: 'الملاحظات غير مُفعّلة',
-      notConfiguredBody:
-        'يجب على مالك الموقع ضبط NEXT_PUBLIC_WEB3FORMS_KEY قبل أن يصبح إرسال الرسائل ممكنًا.',
     },
     aboutPage: {
       whatIsTitle: 'ما هو موقع mzilab؟',
@@ -760,8 +677,9 @@ export const translations: Record<Locale, TranslationDictionary> = {
       localStorageTitle: '2. التخزين المحلي على جهازك',
       localStorageBody:
         'تُحفظ تفضيلات واجهة الموقع الوحيدة (المظهر واللغة) محلياً في متصفحك (localStorage)، ولا تُباع أو تُرفع إلى جهات خارجية.',
-      feedbackTitle: '3. الملاحظات والمناقشات العامة',
-      feedbackBody: `تحتوي صفحات التطبيقات والمشاريع والمقالات على نموذج ملاحظات خاص (يُرسل عبر Web3Forms إلى المسؤول ${CONTACT_EMAIL}) وقسم مناقشات عامة متاح عبر خدمة Giscus ومناقشات GitHub حيث تكون التعليقات المنشورة مرئية للزوار الآخرين.`,
+      feedbackTitle: '3. المناقشات العامة والتعليقات',
+      feedbackBody:
+        'تحتوي صفحات التطبيقات والمشاريع والمقالات على قسم مناقشات وملاحظات متاح عبر خدمة Giscus ومناقشات GitHub، حيث تكون التعليقات والآراء المنشورة مرئية للزوار الآخرين.',
       mobileAppsTitle: '4. تطبيقات الجوال',
       mobileAppsBody:
         'تعمل تطبيقاتنا الأصلية للهواتف (Android وiOS) وفق نهج يضع الخصوصية أولاً. وتبقى أي بيانات مخزنة محلياً أو أذونات مستخدمة، مثل التخزين المؤقت للبيانات دون اتصال، ضمن نطاق جهازك.',
@@ -780,7 +698,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
       asIsBody:
         'تُقدّم إصدارات البرمجيات والتطبيقات التجريبية والشروحات البرمجية «كما هي»، دون أي ضمان صريح أو ضمني. ويكون استخدامها واختبارها على مسؤوليتك.',
       commentsTitle: '3. السلوك المحترم',
-      commentsBody: `يلتزم الزوار المشاركون في المناقشات العامة عبر Giscus بالحفاظ على تواصل محترم وبنّاء وذات صلة. وتُرسل الملاحظات الخاصة عبر Web3Forms مباشرة إلى المسؤول (${CONTACT_EMAIL}).`,
+      commentsBody:
+        'يلتزم الزوار المشاركون في المناقشات العامة عبر Giscus بالحفاظ على تواصل محترم وبنّاء وذات صلة.',
       ipTitle: '4. الملكية الفكرية',
       ipBody:
         'علامة mzilab التجارية والوثائق والتصاميم البرمجية الأصلية مملوكة لفريد أوباتي / mzilab. وتظل المشاريع مفتوحة المصدر خاضعة للتراخيص المحددة في مستودعاتها.',

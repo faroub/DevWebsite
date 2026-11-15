@@ -13,8 +13,6 @@ jobs:
   check:
     name: Build and test
     runs-on: ubuntu-latest
-    env:
-      NEXT_PUBLIC_WEB3FORMS_KEY: test-access-key
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4

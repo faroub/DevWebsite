@@ -4,7 +4,6 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, FolderGit2, ExternalLink, Globe } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
-import { FeedbackForm } from './FeedbackForm';
 import { Comments } from './Comments';
 import type { ProjectFrontmatter } from '@/lib/projects';
 import { getLocalizedField } from '@/lib/content/localize';
@@ -102,11 +101,8 @@ export function ProjectDetailContent({ frontmatter, children }: ProjectDetailCon
         </div>
       </div>
 
-      {/* Public Discussion: Giscus (GitHub Discussions) */}
+      {/* Public Discussion & Feedback: Giscus (GitHub Discussions) */}
       <Comments term={`project:${frontmatter.slug}`} />
-
-      {/* Private Feedback Form */}
-      <FeedbackForm itemTitle={title} />
     </article>
   );
 }

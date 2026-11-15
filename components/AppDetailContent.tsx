@@ -4,7 +4,6 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Smartphone, ExternalLink, Download, Globe } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
-import { FeedbackForm } from './FeedbackForm';
 import { Comments } from './Comments';
 import { ScreenshotGallery } from './ScreenshotGallery';
 import { ChangelogSection } from './ChangelogSection';
@@ -153,11 +152,8 @@ export function AppDetailContent({ frontmatter, children, changelogEntries }: Ap
       {/* Release changelog */}
       <ChangelogSection entries={changelogEntries} />
 
-      {/* Public Discussion: Giscus (GitHub Discussions) */}
+      {/* Public Discussion & Feedback: Giscus (GitHub Discussions) */}
       <Comments term={`app:${frontmatter.slug}`} />
-
-      {/* Private Feedback Form */}
-      <FeedbackForm itemTitle={title} />
     </article>
   );
 }
