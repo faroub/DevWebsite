@@ -26,6 +26,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Check repository tracked files
+        run: npm run check-tracked
+
       - name: Content check and lint
         run: npm run lint
 
