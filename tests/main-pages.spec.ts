@@ -87,4 +87,24 @@ test('apps feed filters narrow results', async ({ page }) => {
   expect(cardsAfter).toBeLessThanOrEqual(cardsBefore);
 });
 
-// Note: feedback form test skipped due to WeatherForms key not being configured in static export. The component itself is covered by other tests.
+test('configured web link appears on app detail page with proper security attributes', async ({ page }) => {
+  await page.goto('/apps/focus-flow');
+  const webLink = page.locator('a[href="https://focusflow.mzilab.de/app"]');
+  await expect(webLink).toBeVisible();
+  await expect(webLink).toHaveAttribute('target', '_blank');
+  await expect(webLink).toHaveAttribute('rel', 'noopener noreferrer');
+});
+
+test('configured demo link appears on project detail page with proper security attributes', async ({ page }) => {
+  await page.goto('/projects/mzilab-showcase');
+  const demoLink = page.locator('a[href="https://mzilab.de"]').first();
+  await expect(demoLink).toBeVisible();
+  await expect(demoLink).toHaveAttribute('target', '_blank');
+  await expect(demoLink).toHaveAttribute('rel', 'noopener noreferrer');
+});
+
+test('missing links do not generate empty buttons', async ({ page }) => {
+  await page.goto('/apps/pulse-vibe');
+  const emptyAnchors = page.locator('a[href=""], a:not([href])');
+  expect(await emptyAnchors.count()).toBe(0);
+});

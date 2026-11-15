@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, FolderGit2, ExternalLink } from 'lucide-react';
+import { ArrowLeft, FolderGit2, ExternalLink, Globe } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { FeedbackForm } from './FeedbackForm';
 import { Comments } from './Comments';
@@ -63,17 +63,30 @@ export function ProjectDetailContent({ frontmatter, children }: ProjectDetailCon
           ))}
         </div>
 
-        {frontmatter.githubUrl && (
-          <div className="pt-4 border-t border-divider">
-            <a
-              href={frontmatter.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-md border border-accent-primary bg-accent-primary px-4 py-2 font-mono text-xs font-bold text-white hover:opacity-90 transition-colors shadow-sm"
-            >
-              <ExternalLink className="h-3.5 w-3.5" />
-              <span>{t.projectDetail.githubRepo}</span>
-            </a>
+        {(frontmatter.githubUrl || frontmatter.demoUrl) && (
+          <div className="flex flex-wrap gap-3 pt-4 border-t border-divider">
+            {frontmatter.demoUrl && (
+              <a
+                href={frontmatter.demoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-md border border-accent-primary bg-accent-primary px-4 py-2 font-mono text-xs font-bold text-white hover:opacity-90 transition-colors shadow-sm"
+              >
+                <Globe className="h-3.5 w-3.5" />
+                <span>{t.projectDetail.liveDemo}</span>
+              </a>
+            )}
+            {frontmatter.githubUrl && (
+              <a
+                href={frontmatter.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-md border border-divider bg-canvas px-4 py-2 font-mono text-xs text-text-primary hover:border-accent-primary font-semibold transition-colors"
+              >
+                <ExternalLink className="h-3.5 w-3.5 text-accent-primary" />
+                <span>{t.projectDetail.githubRepo}</span>
+              </a>
+            )}
           </div>
         )}
       </div>

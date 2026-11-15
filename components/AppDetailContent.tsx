@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Smartphone, ExternalLink, Download } from 'lucide-react';
+import { ArrowLeft, Smartphone, ExternalLink, Download, Globe } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { FeedbackForm } from './FeedbackForm';
 import { Comments } from './Comments';
@@ -82,7 +82,7 @@ export function AppDetailContent({ frontmatter, children, changelogEntries }: Ap
           ))}
         </div>
 
-        {/* Download links */}
+        {/* Download & External links */}
         {frontmatter.downloadLinks && (
           <div className="flex flex-wrap gap-3 pt-4 border-t border-divider">
             {frontmatter.downloadLinks.appStore && (
@@ -105,6 +105,17 @@ export function AppDetailContent({ frontmatter, children, changelogEntries }: Ap
               >
                 <Download className="h-3.5 w-3.5" />
                 <span>{t.appDetail.downloadPlayStore}</span>
+              </a>
+            )}
+            {frontmatter.downloadLinks.web && (
+              <a
+                href={frontmatter.downloadLinks.web}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-md border border-divider bg-canvas px-4 py-2 font-mono text-xs text-text-primary hover:border-accent-primary font-semibold transition-colors"
+              >
+                <Globe className="h-3.5 w-3.5 text-accent-primary" />
+                <span>{t.appDetail.downloadWeb}</span>
               </a>
             )}
             {frontmatter.downloadLinks.github && (

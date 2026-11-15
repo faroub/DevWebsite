@@ -101,6 +101,7 @@ export interface TranslationDictionary {
     downloadAppStore: string;
     downloadPlayStore: string;
     downloadGithub: string;
+    downloadWeb: string;
     feedbackHeader: string;
     feedbackSub: string;
   };
@@ -110,6 +111,7 @@ export interface TranslationDictionary {
     techStack: string;
     overviewTitle: string;
     githubRepo: string;
+    liveDemo: string;
   };
   blogDetail: {
     backToBlogs: string;
@@ -291,6 +293,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       downloadAppStore: 'App Store',
       downloadPlayStore: 'Google Play',
       downloadGithub: 'GitHub Repository',
+      downloadWeb: 'Web App',
       feedbackHeader: 'Inquiries & Feedback',
       feedbackSub: 'Have a question or feature request? Send a note directly.',
     },
@@ -300,6 +303,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       techStack: 'Tech Stack:',
       overviewTitle: 'Project Overview',
       githubRepo: 'GitHub Repository',
+      liveDemo: 'Live Demo',
     },
     blogDetail: {
       backToBlogs: 'Back to all blogs',
@@ -491,6 +495,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       downloadAppStore: 'App Store',
       downloadPlayStore: 'Google Play',
       downloadGithub: 'Dépôt GitHub',
+      downloadWeb: 'Application Web',
       feedbackHeader: 'Questions & Commentaires',
       feedbackSub: 'Une suggestion ou un problème ? Envoyez un message direct.',
     },
@@ -500,6 +505,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       techStack: 'Pile technique :',
       overviewTitle: 'Aperçu du projet',
       githubRepo: 'Dépôt GitHub',
+      liveDemo: 'Démo en Direct',
     },
     blogDetail: {
       backToBlogs: 'Retour aux articles',
@@ -691,6 +697,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       downloadAppStore: 'App Store',
       downloadPlayStore: 'Google Play',
       downloadGithub: 'مستودع GitHub',
+      downloadWeb: 'تطبيق الويب',
       feedbackHeader: 'الاستفسارات والملاحظات',
       feedbackSub: 'هل لديك سؤال أو اقتراح لميزة جديدة؟ أرسل رسالتك مباشرة.',
     },
@@ -700,6 +707,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       techStack: 'التقنيات المستخدمة:',
       overviewTitle: 'نظرة عامة على المشروع',
       githubRepo: 'مستودع GitHub',
+      liveDemo: 'العرض التوضيحي المباشر',
     },
     blogDetail: {
       backToBlogs: 'العودة إلى جميع المقالات',
