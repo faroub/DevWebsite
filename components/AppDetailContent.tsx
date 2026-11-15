@@ -2,11 +2,12 @@
 
 import type { ReactNode } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Smartphone, ExternalLink, Download, Globe } from 'lucide-react';
+import { ArrowLeft, Smartphone, Download, Globe } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { Comments } from './Comments';
 import { ScreenshotGallery } from './ScreenshotGallery';
 import { ChangelogSection } from './ChangelogSection';
+import { QrCodeCard } from './QrCodeCard';
 import type { AppFrontmatter } from '@/lib/apps';
 import type { ChangelogEntry } from '@/lib/changelogs';
 import { getLocalizedField } from '@/lib/content/localize';
@@ -24,6 +25,11 @@ export function AppDetailContent({ frontmatter, children, changelogEntries }: Ap
   const title = getLocalizedField(frontmatter as unknown as Record<string, unknown>, 'title', locale);
   const tagline = getLocalizedField(frontmatter as unknown as Record<string, unknown>, 'tagline', locale);
   const description = getLocalizedField(frontmatter as unknown as Record<string, unknown>, 'description', locale);
+
+  const primaryDownloadUrl =
+    frontmatter.downloadLinks?.playStore ||
+    frontmatter.downloadLinks?.appStore ||
+    frontmatter.downloadLinks?.web;
 
   return (
     <article className="max-w-4xl mx-auto space-y-8 font-sans">
@@ -82,7 +88,7 @@ export function AppDetailContent({ frontmatter, children, changelogEntries }: Ap
           ))}
         </div>
 
-        {/* Download & External links */}
+        {/* Download & Store links */}
         {frontmatter.downloadLinks && (
           <div className="flex flex-wrap gap-3 pt-4 border-t border-divider">
             {frontmatter.downloadLinks.appStore && (
@@ -118,20 +124,14 @@ export function AppDetailContent({ frontmatter, children, changelogEntries }: Ap
                 <span>{t.appDetail.downloadWeb}</span>
               </a>
             )}
-            {frontmatter.downloadLinks.github && (
-              <a
-                href={frontmatter.downloadLinks.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-md border border-divider bg-canvas px-4 py-2 font-mono text-xs text-text-primary hover:border-accent-primary font-semibold transition-colors"
-              >
-                <ExternalLink className="h-3.5 w-3.5 text-accent-primary" />
-                <span>{t.appDetail.downloadGithub}</span>
-              </a>
-            )}
           </div>
         )}
       </div>
+
+      {/* QR Code Testing & Download Card */}
+      {primaryDownloadUrl && (
+        <QrCodeCard downloadUrl={primaryDownloadUrl} appTitle={title} />
+      )}
 
       {/* Content / Features Documentation */}
       <div className="rounded-xl border border-divider bg-surface p-6 sm:p-8 space-y-4 transition-colors shadow-sm">

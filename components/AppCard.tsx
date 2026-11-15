@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Smartphone, ExternalLink, ArrowRight } from 'lucide-react';
+import { Smartphone, ArrowRight } from 'lucide-react';
 import { AppFrontmatter } from '@/lib/apps';
 import { useLanguage } from './LanguageContext';
 import { getLocalizedField } from '@/lib/content/localize';
@@ -84,20 +84,9 @@ export function AppCard({ app }: AppCardProps) {
         </div>
       </div>
 
-      {/* Footer Metrics & Links */}
+      {/* Footer Details Link */}
       <div className="pt-3 border-t border-divider/60 flex items-center justify-between text-xs font-mono text-text-secondary">
         <div className="flex items-center gap-2">
-          {app.downloadLinks?.github && (
-            <a
-              href={app.downloadLinks.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-text-secondary hover:text-text-primary transition-colors"
-              title={t.cards.githubTitle}
-            >
-              <ExternalLink className="h-3.5 w-3.5" />
-            </a>
-          )}
           <Link
             href={`/apps/${app.slug}`}
             className="inline-flex items-center gap-1 font-mono text-[11px] font-bold text-accent-primary hover:underline"
