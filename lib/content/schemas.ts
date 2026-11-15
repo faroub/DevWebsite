@@ -5,6 +5,24 @@ import { z } from 'zod';
  */
 export const APP_STATUSES = ['Active', 'Beta', 'Archived', 'Deprecated'] as const;
 
+/**
+ * Reusable schema for validating external content URLs.
+ * Must use http: or https: protocols; rejects javascript:, data:, file:, etc.
+ */
+export const externalUrlSchema = z.string().refine(
+  (val) => {
+    try {
+      const url = new URL(val);
+      return url.protocol === 'http:' || url.protocol === 'https:';
+    } catch {
+      return false;
+    }
+  },
+  {
+    message: 'Must be a valid HTTP or HTTPS URL (e.g. https://example.com)',
+  }
+);
+
 export const appSchema = z.object({
   title: z.string(),
   title_fr: z.string().optional(),
@@ -25,10 +43,10 @@ export const appSchema = z.object({
   updatedAt: z.string().date(),
   downloadLinks: z
     .object({
-      appStore: z.string().optional(),
-      playStore: z.string().optional(),
-      github: z.string().optional(),
-      web: z.string().optional(),
+      appStore: externalUrlSchema.optional(),
+      playStore: externalUrlSchema.optional(),
+      github: externalUrlSchema.optional(),
+      web: externalUrlSchema.optional(),
     })
     .optional(),
   screenshots: z.array(z.string()).optional(),
@@ -52,8 +70,8 @@ export const projectSchema = z.object({
   category: z.string(),
   techStack: z.array(z.string()),
   updatedAt: z.string().date(),
-  githubUrl: z.string().optional(),
-  demoUrl: z.string().optional(),
+  githubUrl: externalUrlSchema.optional(),
+  demoUrl: externalUrlSchema.optional(),
 });
 
 export type ProjectFrontmatter = z.infer<typeof projectSchema>;
@@ -97,9 +115,9 @@ export const aboutSchema = z.object({
   location: z.string(),
   tagline: z.string(),
   email: z.string().optional(),
-  githubUrl: z.string().optional(),
-  linkedinUrl: z.string().optional(),
-  twitterUrl: z.string().optional(),
+  githubUrl: externalUrlSchema.optional(),
+  linkedinUrl: externalUrlSchema.optional(),
+  twitterUrl: externalUrlSchema.optional(),
   skillsMobile: z.string(),
   skillsSystems: z.string(),
   philosophy: z.string(),
