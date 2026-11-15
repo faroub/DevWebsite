@@ -17,11 +17,15 @@
 }
 
 .light {
-  --color-canvas: 248 250 252;     /* #F8FAFC */
-  --color-surface: 255 255 255;    /* #FFFFFF */
-  --color-divider: 226 232 240;    /* #E2E8F0 */
-  --color-text-primary: 15 23 42;  /* #0F172A */
-  --color-text-secondary: 51 65 85; /* #334155 */
+  /* Soft, low-glare light mode tokens optimized for reading comfort */
+  --color-canvas: 241 245 249;     /* #F1F5F9 Soft Slate Canvas */
+  --color-surface: 248 250 252;    /* #F8FAFC Muted Elevated Surface */
+  --color-divider: 203 213 225;    /* #CBD5E1 Soft Subdued Divider */
+  --color-text-primary: 30 41 59;  /* #1E293B Deep Slate Text */
+  --color-text-secondary: 71 85 105; /* #475569 Secondary Slate Text */
+  --color-accent-primary: 14 116 144; /* #0E7490 Rich Deep Teal Accent */
+  --color-accent-success: 5 150 105;  /* #059669 Emerald Green */
+  --color-accent-error: 220 38 38;   /* #DC2626 Crimson */
   color-scheme: light;
 }
 
@@ -68,7 +72,7 @@ dialog::backdrop {
 }
 
 .light .bg-grid-dots {
-  background-image: radial-gradient(rgba(15, 23, 42, 0.08) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(148, 163, 184, 0.18) 1px, transparent 1px);
   background-size: 24px 24px;
 }
 
@@ -83,7 +87,7 @@ dialog::backdrop {
 }
 
 .light ::-webkit-scrollbar-track {
-  background: #F8FAFC;
+  background: #F1F5F9;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -95,16 +99,25 @@ dialog::backdrop {
 .light ::-webkit-scrollbar-thumb {
   background: #CBD5E1;
   border-radius: 4px;
-  border: 2px solid #F8FAFC;
+  border: 2px solid #F1F5F9;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: #06B6D4;
 }
 
+.light ::-webkit-scrollbar-thumb:hover {
+  background: #0E7490;
+}
+
 /* Focus outlines */
 *:focus-visible {
   outline: 2px solid #06B6D4;
+  outline-offset: 2px;
+}
+
+.light *:focus-visible {
+  outline: 2px solid #0E7490;
   outline-offset: 2px;
 }
 
