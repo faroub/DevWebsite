@@ -16,8 +16,8 @@ export function AboutContent() {
           <span>mzilab@developer-station:~$ ./whoami</span>
         </div>
 
-        <h1 className="text-2xl sm:text-4xl font-extrabold text-text-primary border-b border-divider pb-3 flex items-center gap-2">
-          <Code className="h-6 w-6 text-accent-primary shrink-0" />
+        <h1 className="text-xl sm:text-2xl font-bold text-text-primary border-b border-divider pb-3 flex items-center gap-2">
+          <Code className="h-5 w-5 text-accent-primary shrink-0" />
           <span>{t.aboutPage.whatIsTitle}</span>
         </h1>
         <p className="text-sm sm:text-base text-text-secondary leading-relaxed font-sans">
