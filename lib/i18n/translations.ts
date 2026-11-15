@@ -20,9 +20,21 @@ export interface TranslationDictionary {
     viewAllProjects: string;
   };
   collections: {
-    apps: { catalogHeader: string; title: string; subtitle: string };
-    projects: { catalogHeader: string; title: string; subtitle: string };
-    blogs: { catalogHeader: string; title: string; subtitle: string };
+    apps: {
+      catalogHeader: string;
+      title: string;
+      subtitle: string;
+    };
+    projects: {
+      catalogHeader: string;
+      title: string;
+      subtitle: string;
+    };
+    blogs: {
+      catalogHeader: string;
+      title: string;
+      subtitle: string;
+    };
   };
   cards: {
     details: string;
@@ -30,6 +42,20 @@ export interface TranslationDictionary {
     article: string;
     by: string;
     readArticle: string;
+  };
+  hero: {
+    station: string;
+    titleStart: string;
+    titleHighlight: string;
+    subtitle: string;
+    description: string;
+    exploreApps: string;
+    requestApp: string;
+    featuredAppsTitle: string;
+    featuredAppsSub: string;
+    allAppsDirectory: string;
+    recentUpdatesTitle: string;
+    recentUpdatesSub: string;
   };
   apps: {
     catalogHeader: string;
@@ -172,11 +198,11 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     home: {
       latestArticles: 'Latest Articles',
-      viewAllArticles: 'View all articles',
-      latestApps: 'Latest Apps',
-      viewAllApps: 'View all apps',
+      viewAllArticles: 'View All Articles',
+      latestApps: 'Latest Applications',
+      viewAllApps: 'View All Applications',
       latestProjects: 'Latest Projects',
-      viewAllProjects: 'View all projects',
+      viewAllProjects: 'View All Projects',
     },
     collections: {
       apps: {
@@ -205,22 +231,37 @@ export const translations: Record<Locale, TranslationDictionary> = {
       by: 'By',
       readArticle: 'Read Article',
     },
+    hero: {
+      station: 'mzilab@developer-station:~$ ./welcome.sh',
+      titleStart: 'Mobile Engineering & ',
+      titleHighlight: 'App Showcase',
+      subtitle: 'Designed and managed by Farid Oubbati.',
+      description:
+        'Explore production mobile apps, open-source projects, and technical writeups on Jetpack Compose, Next.js, Rust, and AI-assisted software engineering.',
+      exploreApps: 'Explore Apps',
+      requestApp: 'Request an App',
+      featuredAppsTitle: 'Featured Mobile Apps',
+      featuredAppsSub: 'Highlighted applications in active development or beta testing.',
+      allAppsDirectory: 'All Apps Directory',
+      recentUpdatesTitle: 'Recent Release Notes',
+      recentUpdatesSub: 'Latest changelog releases and feature commits.',
+    },
     apps: {
-      catalogHeader: 'App Catalog',
-      title: 'Mobile Applications',
+      catalogHeader: 'AppForge Catalog',
+      title: 'Mobile Applications Directory',
       subtitle:
         'Browse production builds, beta releases, and mobile apps built for iOS, Android, and macOS. Filter by platform or search by tech stack.',
-      searchPlaceholder: 'Search apps by name, tech stack, or platform...',
+      searchPlaceholder: 'Search apps by name, description, or keyword...',
       modeLabel: 'Mode:',
       modeGrid: 'Grid',
       modeRows: 'Rows',
-      gridViewTitle: 'Grid view',
-      rowsViewTitle: 'Rows view',
+      gridViewTitle: 'Grid View',
+      rowsViewTitle: 'Rows View',
       tagsLabel: 'Tags:',
       showingResults: 'Showing',
       ofRepositories: 'repositories',
       resetFilters: 'Reset Filters',
-      clearFilter: 'Clear filter',
+      clearFilter: 'Clear Filter',
       noMatchingApps: 'No apps match the selected filters',
       noMatchingSub: 'Try adjusting your search query or filter selection.',
       viewApp: 'View App',
@@ -268,18 +309,18 @@ export const translations: Record<Locale, TranslationDictionary> = {
       title: 'Developer & Visitor Feedback',
       sub: 'Have a question, feature request, or bug report? Send a note straight to our inbox.',
       nameLabel: 'Name',
-      namePlaceholder: 'e.g. Salim B. or Dev Visitor',
-      nameError: 'Please enter a name between 2 and 60 characters.',
+      namePlaceholder: 'e.g. Salim B. or Visitor',
+      nameError: 'Please enter a name between 1 and 80 characters.',
       ratingLabel: 'Rating (1 - 5 Stars)',
-      starAria: 'Rate {star} out of 5 stars',
+      starAria: 'Rate {star} of 5 stars',
       messageLabel: 'Feedback / Inquiry',
-      messagePlaceholder: 'Share your experience, feature request, or question about {title}...',
-      messageError: 'Please enter a message between 3 and 2000 characters.',
+      messagePlaceholder: 'Share your experience, feature request, or inquiry about {title}...',
+      messageError: 'Please enter a message between 10 and 2000 characters.',
       honeypotLabel: 'Leave this field empty',
       sendButton: 'Send Feedback',
       sendingButton: 'Transmitting...',
       statusSuccess: 'Message sent successfully!',
-      statusError: 'Something went wrong. Please try again later.',
+      statusError: 'An error occurred. Please try again later.',
       notConfiguredTitle: 'Feedback is not configured',
       notConfiguredBody:
         'The site owner must set NEXT_PUBLIC_WEB3FORMS_KEY before messages can be sent.',
@@ -302,17 +343,17 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     privacyPage: {
       title: 'Privacy Policy',
-      lastUpdated: 'Last updated: November 2026',
+      lastUpdated: 'November 2026',
       intro:
         'At mzilab, privacy is a core principle. This platform is built as a zero-server, static website that respects your digital privacy.',
       zeroServerTitle: '1. Zero Tracking & No Server Logging',
       zeroServerBody:
-        'We do not run tracking cookies, third-party analytics scripts, or backend user logging. Pages are compiled statically and served directly via CDN, and the fonts are served from this site itself.',
+        'We do not run tracking cookies, third-party analytics scripts, or backend user logging. Pages are compiled statically and served directly via CDN, and fonts are self-hosted.',
       localStorageTitle: '2. Local Storage on Your Device',
       localStorageBody:
         'Your interface choices (theme mode and language selection) are saved locally in your browser storage (localStorage) and are not sold or uploaded to third parties.',
-      feedbackTitle: '3. Feedback & Private Messages',
-      feedbackBody: `App, project, and blog pages include a private feedback form. When you submit it, your name, rating (if given), message and a timestamp created by the form service are transmitted via Web3Forms to the maintainer (${CONTACT_EMAIL}). These messages are delivered as private emails and are never published on the site.`,
+      feedbackTitle: '3. Feedback & Public Discussions',
+      feedbackBody: `App, project, and blog pages include a private feedback form (submitted via Web3Forms directly to the maintainer ${CONTACT_EMAIL}) and a public community discussion section hosted via Giscus and GitHub Discussions (giscus.app) where posted comments are visible to other visitors.`,
       mobileAppsTitle: '4. Mobile Applications',
       mobileAppsBody:
         'Our native mobile applications (Android & iOS) operate under a privacy-first model. Any local storage or permissions (such as offline data caching) remain strictly on your device.',
@@ -321,7 +362,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     termsPage: {
       title: 'Terms of Service',
-      lastUpdated: 'Last updated: November 2026',
+      lastUpdated: 'November 2026',
       intro:
         'Welcome to mzilab. By accessing this website or downloading software, applications, or hardware documentation, you agree to these Terms of Service.',
       licenseTitle: '1. Software & Content Showcase',
@@ -330,9 +371,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
       asIsTitle: '2. Provided "As-Is" Without Warranty',
       asIsBody:
         'Software builds, demonstration applications, and code writeups are provided "As-Is" without express or implied warranties. Use and testing are at your own discretion.',
-      commentsTitle: '3. Respectful Conduct',
-      commentsBody:
-        'Visitors using the private feedback form agree to maintain respectful, constructive, and relevant communication. Submissions are transmitted to the maintainer and are not published on the site.',
+      commentsTitle: '3. Respectful Community Conduct',
+      commentsBody: `Visitors participating in public community discussions via Giscus agree to maintain respectful, constructive, and relevant communication. Private feedback submitted via Web3Forms is transmitted directly to the maintainer (${CONTACT_EMAIL}).`,
       ipTitle: '4. Intellectual Property',
       ipBody:
         'The brand name mzilab, documentation, and original software design belong to Farid Oubbati / mzilab. Open-source projects remain licensed under their respective repository licenses.',
@@ -390,6 +430,21 @@ export const translations: Record<Locale, TranslationDictionary> = {
       article: 'Article',
       by: 'Par',
       readArticle: 'Lire l\'article',
+    },
+    hero: {
+      station: 'mzilab@developer-station:~$ ./welcome.sh',
+      titleStart: 'Ingénierie Mobile & ',
+      titleHighlight: 'Vitrine d\'Applications',
+      subtitle: 'Conçu et géré par Farid Oubbati.',
+      description:
+        'Explorez des applications mobiles en production, des projets open source et des articles techniques sur Jetpack Compose, Next.js, Rust et l\'ingénierie assistée par IA.',
+      exploreApps: 'Explorer les apps',
+      requestApp: 'Demander une app',
+      featuredAppsTitle: 'Applications Mobiles à la Une',
+      featuredAppsSub: 'Applications phares en développement actif ou en test bêta.',
+      allAppsDirectory: 'Répertoire complet des apps',
+      recentUpdatesTitle: 'Notes de Version Récentes',
+      recentUpdatesSub: 'Dernières publications de journaux de modifications et commits.',
     },
     apps: {
       catalogHeader: 'Catalogue d\'Applications',
@@ -455,12 +510,12 @@ export const translations: Record<Locale, TranslationDictionary> = {
       sub: 'Une question ou une suggestion ? Envoyez votre message directement au développeur.',
       nameLabel: 'Nom',
       namePlaceholder: 'ex. Salim B. ou Visiteur',
-      nameError: 'Veuillez saisir un nom entre 2 et 60 caractères.',
+      nameError: 'Veuillez saisir un nom entre 1 et 80 caractères.',
       ratingLabel: 'Note (1 à 5 étoiles)',
       starAria: 'Noter {star} sur 5 étoiles',
       messageLabel: 'Message / Commentaire',
       messagePlaceholder: 'Partagez votre expérience, votre demande ou votre question au sujet de {title}...',
-      messageError: 'Veuillez saisir un message entre 3 et 2000 caractères.',
+      messageError: 'Veuillez saisir un message entre 10 et 2000 caractères.',
       honeypotLabel: 'Laissez ce champ vide',
       sendButton: 'Envoyer le message',
       sendingButton: 'Transmission...',
@@ -488,7 +543,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     privacyPage: {
       title: 'Politique de Confidentialité',
-      lastUpdated: 'Dernière mise à jour : Novembre 2026',
+      lastUpdated: 'Novembre 2026',
       intro:
         'Chez mzilab, la confidentialité est un principe fondamental. Cette plateforme est conçue comme un site statique sans serveur qui respecte votre vie privée numérique.',
       zeroServerTitle: '1. Aucun Suivi & Aucun Journal Serveur',
@@ -497,8 +552,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
       localStorageTitle: '2. Stockage Local sur Votre Appareil',
       localStorageBody:
         'Vos préférences d\'interface (mode d\'affichage et langue) sont enregistrées localement dans votre navigateur (localStorage) et ne sont jamais vendues ni transmises à des tiers.',
-      feedbackTitle: '3. Retours & Messages Privés',
-      feedbackBody: `Les pages des applications, projets et articles comportent un formulaire de retour privé. Quand vous l'envoyez, votre nom, votre note (si donnée), votre message et une date créée par le service de formulaire sont transmis via Web3Forms au responsable (${CONTACT_EMAIL}). Ces messages sont envoyés en privé et ne sont jamais publiés sur le site.`,
+      feedbackTitle: '3. Retours & Discussions Publiques',
+      feedbackBody: `Les pages d'applications, de projets et d'articles incluent un formulaire de retour privé (transmis via Web3Forms au responsable ${CONTACT_EMAIL}) ainsi qu'une section de discussion publique hébergée via Giscus et GitHub Discussions (giscus.app) où les commentaires publiés sont visibles par les autres visiteurs.`,
       mobileAppsTitle: '4. Applications Mobiles',
       mobileAppsBody:
         'Nos applications mobiles (Android & iOS) fonctionnent selon un modèle axé sur la confidentialité. Toutes les données locales restent sur votre appareil.',
@@ -507,7 +562,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     termsPage: {
       title: 'Conditions d\'Utilisation',
-      lastUpdated: 'Dernière mise à jour : Novembre 2026',
+      lastUpdated: 'Novembre 2026',
       intro:
         'Bienvenue sur mzilab. En accédant à ce site ou en téléchargeant nos applications et documentation, vous acceptez ces conditions d\'utilisation.',
       licenseTitle: '1. Vitrine de Logiciels & Contenus',
@@ -515,13 +570,12 @@ export const translations: Record<Locale, TranslationDictionary> = {
         'Toutes les applications et articles présentés sur mzilab sont fournis à des fins démonstratives, d\'évaluation et éducatives.',
       asIsTitle: '2. Fourni « En l\'État » sans Garantie',
       asIsBody:
-        'Les applications et codes de démonstration sont fournis « en l\'état », sans garantie expresse ou implicite. L\'utilisation se fait à votre entière discrétion.',
+        'Les applications et codes de démonstration sont fournis « en l\'état », sans garantie expresse ou implicit. L\'utilisation se fait à votre entière discrétion.',
       commentsTitle: '3. Conduite Respectueuse',
-      commentsBody:
-        "Les utilisateurs du formulaire de retour privé s'engagent à maintenir une communication respectueuse, constructive et pertinente. Les envois sont transmis au responsable et ne sont pas publiés sur le site.",
+      commentsBody: `Les visiteurs participant aux discussions publiques via Giscus s'engagent à maintenir une communication respectueuse, constructive et pertinente. Les retours privés transmis via Web3Forms sont envoyés directement au responsable (${CONTACT_EMAIL}).`,
       ipTitle: '4. Propriété Intellectuelle',
       ipBody:
-        'La marque mzilab et la documentation originale restent la propriété de Farid Oubbati / mzilab.',
+        'La marque mzilab et la documentation originale restent la propriété de Farid Oubbati / mzilab. Open-source projects remain licensed under their respective repository licenses.',
       contactTitle: '5. Contact & Support',
       contactBody: `Pour toute question ou demande de support, écrivez à ${CONTACT_EMAIL}.`,
     },
@@ -576,6 +630,21 @@ export const translations: Record<Locale, TranslationDictionary> = {
       article: 'مقال',
       by: 'بقلم',
       readArticle: 'قراءة المقال',
+    },
+    hero: {
+      station: 'mzilab@developer-station:~$ ./welcome.sh',
+      titleStart: 'هندسة الجوال و',
+      titleHighlight: 'معرض التطبيقات',
+      subtitle: 'من تصميم فريد أوباتي وإدارته.',
+      description:
+        'استكشف تطبيقات الجوال للإنتاج، والمشاريع مفتوحة المصدر، والمقالات التقنية حول Jetpack Compose وNext.js وRust وهندسة البرمجيات بمساعدة الذكاء الاصطناعي.',
+      exploreApps: 'استكشف التطبيقات',
+      requestApp: 'طلب تطبيق',
+      featuredAppsTitle: 'تطبيقات الجوال المميزة',
+      featuredAppsSub: 'تطبيقات بارزة قيد التطوير النشط أو الاختيار التجريبي.',
+      allAppsDirectory: 'دليل كل التطبيقات',
+      recentUpdatesTitle: 'ملاحظات الإصدار الحديثة',
+      recentUpdatesSub: 'أحدث التحديثات وسجلات الميزات.',
     },
     apps: {
       catalogHeader: 'كتالوج التطبيقات',
@@ -641,12 +710,12 @@ export const translations: Record<Locale, TranslationDictionary> = {
       sub: 'هل لديك سؤال أو طلب ميزة أو بلاغ عن خلل؟ أرسل رسالتك مباشرة إلى المطور.',
       nameLabel: 'الاسم',
       namePlaceholder: 'مثال: سليم ب. أو زائر',
-      nameError: 'يرجى إدخال اسم يتكون من حرفين إلى 60 حرفًا.',
+      nameError: 'يرجى إدخال اسم يتكون من حرف واحد إلى 80 حرفًا.',
       ratingLabel: 'التقييم (1 - 5 نجوم)',
       starAria: 'تقييم {star} من 5 نجوم',
       messageLabel: 'الملاحظات / الاستفسار',
       messagePlaceholder: 'شارك تجربتك أو طلبك لميزة أو سؤالك حول {title}...',
-      messageError: 'يرجى إدخال رسالة تتكون من 3 إلى 2000 حرف.',
+      messageError: 'يرجى إدخال رسالة تتكون من 10 إلى 2000 حرف.',
       honeypotLabel: 'اترك هذا الحقل فارغًا',
       sendButton: 'إرسال الملاحظات',
       sendingButton: 'جارٍ الإرسال...',
@@ -674,7 +743,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     privacyPage: {
       title: 'سياسة الخصوصية',
-      lastUpdated: 'آخر تحديث: نوفمبر 2026',
+      lastUpdated: 'نوفمبر 2026',
       intro:
         'في mzilab، الخصوصية مبدأ أساسي. صُممت هذه المنصة كموقع ثابت لا يعتمد على خادم، احتراماً لخصوصيتك الرقمية.',
       zeroServerTitle: '1. لا تتبع ولا تسجيل للبيانات على الخادم',
@@ -683,8 +752,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
       localStorageTitle: '2. التخزين المحلي على جهازك',
       localStorageBody:
         'تُحفظ تفضيلات واجهة الموقع الوحيدة (المظهر واللغة) محلياً في متصفحك (localStorage)، ولا تُباع أو تُرفع إلى جهات خارجية.',
-      feedbackTitle: '3. الملاحظات والرسائل الخاصة',
-      feedbackBody: `تحتوي صفحات التطبيقات والمشاريع والمقالات على نموذج ملاحظات خاص. عند إرساله، يُنقل اسمك وتقييمك (إن وجد) ورسالتك وتاريخ الإنشاء الناتج عن خدمة النموذج عبر Web3Forms إلى المسؤول (${CONTACT_EMAIL})، وهذه الرسائل تُرسل كرسائل بريد إلكتروني خاصة ولا يُنشَر منها أي شيء على الموقع.`,
+      feedbackTitle: '3. الملاحظات والمناقشات العامة',
+      feedbackBody: `تحتوي صفحات التطبيقات والمشاريع والمقالات على نموذج ملاحظات خاص (يُرسل عبر Web3Forms إلى المسؤول ${CONTACT_EMAIL}) وقسم مناقشات عامة متاح عبر خدمة Giscus ومناقشات GitHub حيث تكون التعليقات المنشورة مرئية للزوار الآخرين.`,
       mobileAppsTitle: '4. تطبيقات الجوال',
       mobileAppsBody:
         'تعمل تطبيقاتنا الأصلية للهواتف (Android وiOS) وفق نهج يضع الخصوصية أولاً. وتبقى أي بيانات مخزنة محلياً أو أذونات مستخدمة، مثل التخزين المؤقت للبيانات دون اتصال، ضمن نطاق جهازك.',
@@ -693,7 +762,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     termsPage: {
       title: 'شروط الخدمة',
-      lastUpdated: 'آخر تحديث: نوفمبر 2026',
+      lastUpdated: 'نوفمبر 2026',
       intro:
         'مرحباً بك في mzilab. باستخدام هذا الموقع أو تنزيل برمجياته أو تطبيقاته أو وثائقه، فإنك توافق على شروط الخدمة هذه.',
       licenseTitle: '1. عرض البرمجيات والمحتوى',
@@ -702,9 +771,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
       asIsTitle: '2. تقديم البرمجيات «كما هي» دون ضمان',
       asIsBody:
         'تُقدّم إصدارات البرمجيات والتطبيقات التجريبية والشروحات البرمجية «كما هي»، دون أي ضمان صريح أو ضمني. ويكون استخدامها واختبارها على مسؤوليتك.',
-      commentsTitle: '3. سلوك محترم',
-      commentsBody:
-        'يلتزم الزوار الذين يستخدمون نموذج الملاحظات الخاصة بأن تكون مساهماتهم محترمة وبنّاءة وذات صلة. تُرسل الرسائل إلى المسؤول ولا تُنشر على الموقع.',
+      commentsTitle: '3. السلوك المحترم',
+      commentsBody: `يلتزم الزوار المشاركون في المناقشات العامة عبر Giscus بالحفاظ على تواصل محترم وبنّاء وذات صلة. وتُرسل الملاحظات الخاصة عبر Web3Forms مباشرة إلى المسؤول (${CONTACT_EMAIL}).`,
       ipTitle: '4. الملكية الفكرية',
       ipBody:
         'علامة mzilab التجارية والوثائق والتصاميم البرمجية الأصلية مملوكة لفريد أوباتي / mzilab. وتظل المشاريع مفتوحة المصدر خاضعة للتراخيص المحددة في مستودعاتها.',
