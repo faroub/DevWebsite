@@ -23,6 +23,16 @@ export const externalUrlSchema = z.string().refine(
   }
 );
 
+export const userManualSchema = z.object({
+  title: z.string(),
+  title_fr: z.string().optional(),
+  title_ar: z.string().optional(),
+  url: externalUrlSchema,
+  format: z.string().optional(),
+});
+
+export type UserManualItem = z.infer<typeof userManualSchema>;
+
 export const appSchema = z.object({
   title: z.string(),
   title_fr: z.string().optional(),
@@ -49,6 +59,8 @@ export const appSchema = z.object({
       web: externalUrlSchema.optional(),
     })
     .optional(),
+  userManualUrl: externalUrlSchema.optional(),
+  userManuals: z.array(userManualSchema).optional(),
   screenshots: z.array(z.string()).optional(),
 });
 
