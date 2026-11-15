@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
+import fs from 'fs';
+import path from 'path';
+import os from 'os';
 import { appSchema, projectSchema, externalUrlSchema } from './schemas';
+import { loadContentDirectory, loadRequiredContentDirectory } from './load';
 
 describe('Content Validation Schemas', () => {
   it('validates a valid app frontmatter', () => {
@@ -72,5 +76,30 @@ describe('Content Validation Schemas', () => {
       githubUrl: 'https://github.com/faroub/DevWebsite',
     };
     expect(projectSchema.safeParse(validProject).success).toBe(true);
+  });
+});
+
+describe('Required Content Directory Enforcement', () => {
+  it('throws descriptive error when required directory is missing', () => {
+    const fakeDir = path.join(os.tmpdir(), 'non-existent-content-dir-xyz');
+    expect(() => loadRequiredContentDirectory(fakeDir, appSchema)).toThrow(
+      /Missing required content directory/
+    );
+  });
+
+  it('throws descriptive error when required directory is empty', () => {
+    const emptyDir = fs.mkdtempSync(path.join(os.tmpdir(), 'empty-content-dir-'));
+    try {
+      expect(() => loadRequiredContentDirectory(emptyDir, appSchema)).toThrow(
+        /Required content directory is empty/
+      );
+    } finally {
+      fs.rmdirSync(emptyDir);
+    }
+  });
+
+  it('loadContentDirectory returns empty array for missing optional directory', () => {
+    const fakeOptionalDir = path.join(os.tmpdir(), 'non-existent-changelogs');
+    expect(loadContentDirectory(fakeOptionalDir, appSchema)).toEqual([]);
   });
 });

@@ -19,12 +19,7 @@ function describeParseError(error: z.ZodError): string {
 /**
  * Reads one Markdown/MDX file and validates its frontmatter against a Zod
  * schema. For collection files the slug is derived from the filename and the
- * frontmatter `slug` must match it, so listing links, generateStaticParams,
- * the sitemap and detail lookups all resolve to the same route. Pass
- * `{ requireSlug: false }` for standalone files that are not routed by slug
- * (e.g. about.mdx). Every failure throws an error that names the file.
- *
- * The file location is always relative to the current working directory.
+ * frontmatter `slug` must match it. Every failure throws an error that names the file.
  */
 export function loadContentFile<T>(
   fullPath: string,
@@ -69,11 +64,8 @@ export function loadContentFile<T>(
 
 /**
  * Loads and validates every Markdown/MDX file in a content directory.
- * Returns entries sorted by filename for stable build output.
- *
- * Pass `sort` to sort parsed entries by a date field instead of filename.
- * `updatedAt`-sorted loaded entries compare dates, and every entry with an
- * unparsable date throws.
+ * Returns entries sorted by filename or custom sort function.
+ * Returns empty array if optional collection directory does not exist.
  */
 export function loadContentDirectory<T>(
   directory: string,
@@ -90,4 +82,30 @@ export function loadContentDirectory<T>(
     .sort()
     .map((fileName) => loadContentFile(path.join(directory, fileName), schema))
     .sort(sort ?? undefined);
+}
+
+/**
+ * Enforces existence and non-emptiness for mandatory content collections.
+ * Throws a descriptive error with directory path if missing or empty.
+ */
+export function loadRequiredContentDirectory<T>(
+  directory: string,
+  schema: ZodType<T>,
+  sort?: (a: ContentEntry<T>, b: ContentEntry<T>) => number
+): ContentEntry<T>[] {
+  const rel = path.relative(process.cwd(), directory);
+
+  if (!fs.existsSync(directory)) {
+    throw new Error(`Missing required content directory: ${rel || directory}`);
+  }
+
+  const files = fs
+    .readdirSync(directory)
+    .filter((fileName) => fileName.endsWith('.md') || fileName.endsWith('.mdx'));
+
+  if (files.length === 0) {
+    throw new Error(`Required content directory is empty: ${rel || directory}`);
+  }
+
+  return loadContentDirectory(directory, schema, sort);
 }

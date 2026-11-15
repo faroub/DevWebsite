@@ -1,5 +1,5 @@
 import path from 'path';
-import { loadContentDirectory } from './content/load';
+import { loadRequiredContentDirectory } from './content/load';
 import { projectSchema, type ProjectFrontmatter } from './content/schemas';
 
 /** The Project collection frontmatter as declared in `content/projects/*.mdx`. */
@@ -14,7 +14,7 @@ const PROJECTS_DIRECTORY = path.join(process.cwd(), 'content/projects');
 
 /** Returns every project sorted by newest `updatedAt` first. */
 export function getAllProjects(): ProjectFrontmatter[] {
-  return loadContentDirectory(
+  return loadRequiredContentDirectory(
     PROJECTS_DIRECTORY,
     projectSchema,
     (a, b) => new Date(b.frontmatter.updatedAt).getTime() - new Date(a.frontmatter.updatedAt).getTime()
@@ -22,7 +22,7 @@ export function getAllProjects(): ProjectFrontmatter[] {
 }
 
 export function getProjectBySlug(slug: string): ProjectData | null {
-  const entry = loadContentDirectory(PROJECTS_DIRECTORY, projectSchema).find(
+  const entry = loadRequiredContentDirectory(PROJECTS_DIRECTORY, projectSchema).find(
     (item) => item.slug === slug
   );
 

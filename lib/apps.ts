@@ -1,5 +1,5 @@
 import path from 'path';
-import { loadContentDirectory } from './content/load';
+import { loadRequiredContentDirectory } from './content/load';
 import { appSchema, type AppFrontmatter } from './content/schemas';
 
 /** The App collection frontmatter as declared in `content/apps/*.mdx`. */
@@ -14,7 +14,7 @@ const APPS_DIRECTORY = path.join(process.cwd(), 'content/apps');
 
 /** Returns every app sorted by newest `updatedAt` first. */
 export function getAllApps(): AppFrontmatter[] {
-  return loadContentDirectory(
+  return loadRequiredContentDirectory(
     APPS_DIRECTORY,
     appSchema,
     (a, b) => new Date(b.frontmatter.updatedAt).getTime() - new Date(a.frontmatter.updatedAt).getTime()
@@ -22,7 +22,7 @@ export function getAllApps(): AppFrontmatter[] {
 }
 
 export function getAppBySlug(slug: string): AppData | null {
-  const entry = loadContentDirectory(APPS_DIRECTORY, appSchema).find(
+  const entry = loadRequiredContentDirectory(APPS_DIRECTORY, appSchema).find(
     (item) => item.slug === slug
   );
 

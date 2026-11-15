@@ -151,14 +151,25 @@ console.log('\nChecking content frontmatter...\n');
 
 for (const type of CONTENT_TYPES) {
   const dir = path.join(ROOT, 'content', type);
-  if (!fs.existsSync(dir)) continue;
+  const relDir = path.relative(ROOT, dir);
+  if (!fs.existsSync(dir)) {
+    fail(`content/${type}`, `missing required collection directory: ${relDir}`);
+    continue;
+  }
   const files = fs.readdirSync(dir).filter((f) => f.endsWith('.md') || f.endsWith('.mdx'));
-  if (files.length === 0) continue;
+  if (files.length === 0) {
+    fail(`content/${type}`, `required collection directory is empty: ${relDir}`);
+    continue;
+  }
   for (const file of files) checkFrontmatterFile(path.join(dir, file), type);
 }
 
 const aboutFile = path.join(ROOT, 'content', 'about.mdx');
-if (fs.existsSync(aboutFile)) checkFrontmatterFile(aboutFile, 'about');
+if (fs.existsSync(aboutFile)) {
+  checkFrontmatterFile(aboutFile, 'about');
+} else {
+  fail('content/about.mdx', 'missing required standalone content file');
+}
 
 console.log('');
 if (failures.length === 0) {
