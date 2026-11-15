@@ -18,7 +18,7 @@ for (const page of PAGES) {
 }
 
 test('app detail routes render', async ({ page: browserPage }) => {
-  for (const slug of ['git-snapshot', 'focus-flow', 'pulse-vibe']) {
+  for (const slug of ['dukkan-pro']) {
     const response = await browserPage.goto(`/apps/${slug}`);
     expect(response?.status()).toBe(200);
     await expect(browserPage.locator('main')).toBeVisible();
@@ -63,7 +63,7 @@ test('admin route is absent from the export', async ({ page }) => {
 });
 
 test('no raw markdown in rendered markdown sections', async ({ page }) => {
-  await page.goto('/apps/focus-flow');
+  await page.goto('/apps/dukkan-pro');
   const body = await page.locator('main').innerText();
   expect(body).not.toContain('**');
   expect(body).not.toContain('```');

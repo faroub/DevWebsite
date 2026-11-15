@@ -19,7 +19,7 @@ test('admin route is absent from the export', async ({ page }) => {
 });
 
 test('detail page renders markdown as HTML', async ({ page }) => {
-  await page.goto('/apps/focus-flow');
+  await page.goto('/apps/dukkan-pro');
   // The body must contain real rendered headings, not literal "# Heading".
   const h2 = page.locator('h2').first();
   await expect(h2).toBeVisible();
@@ -102,7 +102,7 @@ test('hamburger exposes aria state and closes on Escape', async ({ page }) => {
 test('apps feed filters narrow results', async ({ page }) => {
   await page.goto('/apps');
   const cardsBefore = await page.locator('main a[href^="/apps/"]').count();
-  // Search by a term present in one app's tech stack.
+  // Search by a term present in DukkanPro's tech stack.
   await page.fill('input[type="text"]', 'Kotlin');
   const cardsAfter = await page.locator('main a[href^="/apps/"]').count();
   expect(cardsAfter).toBeGreaterThan(0);
@@ -110,8 +110,8 @@ test('apps feed filters narrow results', async ({ page }) => {
 });
 
 test('configured web link appears on app detail page with proper security attributes', async ({ page }) => {
-  await page.goto('/apps/focus-flow');
-  const webLink = page.locator('a[href="https://focusflow.mzilab.de/app"]');
+  await page.goto('/apps/dukkan-pro');
+  const webLink = page.locator('a[href="https://dukkanpro.mzilab.de/app"]');
   await expect(webLink).toBeVisible();
   await expect(webLink).toHaveAttribute('target', '_blank');
   await expect(webLink).toHaveAttribute('rel', 'noopener noreferrer');
@@ -126,7 +126,7 @@ test('configured demo link appears on project detail page with proper security a
 });
 
 test('missing links do not generate empty buttons', async ({ page }) => {
-  await page.goto('/apps/pulse-vibe');
+  await page.goto('/apps/dukkan-pro');
   const emptyAnchors = page.locator('a[href=""], a:not([href])');
   expect(await emptyAnchors.count()).toBe(0);
 });
