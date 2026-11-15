@@ -18,9 +18,9 @@ const feedbackSchema = z.object({
 });
 
 /**
- * Rate limit is kept in memory for the current session only.
- * Nothing is persisted in localStorage, so nothing looks like
- * shared or public feedback.
+ * Rate limit cooldown applied ONLY after confirmed successful submissions.
+ * Session memory prevents accidental rapid duplicate postings from the UI.
+ * Real spam protection and domain restrictions are configured on Web3Forms dashboard.
  */
 const RATE_LIMIT_MS = 60_000;
 let lastSent = 0;
@@ -56,6 +56,8 @@ export function FeedbackForm({ itemTitle }: FeedbackFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (status === 'sending') return;
+
     const parsed = feedbackSchema.safeParse({
       name: name.trim(),
       rating,
@@ -88,7 +90,6 @@ export function FeedbackForm({ itemTitle }: FeedbackFormProps) {
 
     setStatus('sending');
     try {
-      lastSent = Date.now();
       const res = await fetch(WEB3FORMS_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -104,6 +105,7 @@ export function FeedbackForm({ itemTitle }: FeedbackFormProps) {
       });
       const json = await res.json();
       if (res.ok && json.success) {
+        lastSent = Date.now();
         setStatus('success');
         setName('');
         setMessage('');
